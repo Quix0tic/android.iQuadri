@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        icon="@drawable/ic_import_contacts_black_24dp"
+        id="@+id/tab_circolari"
+        title="Circolari" />
+    <tab
+        icon="@drawable/ic_access_time_black_24dp"
+        id="@+id/tab_orario"
+        title="Orario" />
+    <tab
+        icon="@drawable/ic_home_black_24dp"
+        id="@+id/tab_home"
+        title="Home"/>
+    <tab
+        icon="@drawable/ic_info_outline_black_24dp"
+        id="@+id/tab_avvisi"
+        title="Avvisi" />
+    <tab
+        icon="@drawable/ic_book_black_24dp"
+        id="@+id/tab_registro"
+        title="Registro" />
+</tabs>

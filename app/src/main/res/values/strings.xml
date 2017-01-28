@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">iQuadri</string>
+    <string name="home">Home</string>
+    <string name="circolari">Circolari</string>
+
+    <string name="login">Login</string>
+    <string name="login_msg">Login riuscito</string>
+    <string name="mail">Username</string>
+    <string name="password">Password</string>
+    <string name="caricamento">Caricamento…</string>
+    <string name="login_msg_failer">Login fallito</string>
+    <string name="nointernet">Non sei connesso ad internet!</string>
+    <string name="classe">Classe</string>
+    <string name="title_activity_settings">Impostazioni</string>
+
+    <string name="pref_title_sync_frequency">Frequenza aggiornamento</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minuti</item>
+        <item>30 minuti</item>
+        <item>1 ora</item>
+        <item>3 ore</item>
+        <item>6 ore</item>
+        <item>24 ore</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>900000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+        <item>10800000</item>
+        <item>21600000</item>
+        <item>86400000</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifiche</string>
+    <string name="pref_header_circolari">Circolari</string>
+
+    <string name="pref_title_new_message_notifications">Notifiche</string>
+
+    <string name="pref_title_ringtone">Suoneria</string>
+    <string name="pref_ringtone_silent">Silenzioso</string>
+
+    <string name="pref_title_vibrate">Vibrazione</string>
+    <string name="nessun_voto_numerico">Nessun voto numerico</string>
+    <string name="pref_title_sound">Suono</string>
+    <string name="logout">LOGOUT</string>
+    <string name="header_notification_summary">Personalizza le tue notifiche</string>
+
+    <string name="title_activity_orario">OrarioActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+</resources>
