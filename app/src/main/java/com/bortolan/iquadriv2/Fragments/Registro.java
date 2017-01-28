@@ -75,7 +75,7 @@ public class Registro extends Fragment {
 
 
     public void addSubjects(List<MarkSubject> markSubjects) {
-        if (!markSubjects.isEmpty()) {
+        if (!markSubjects.isEmpty() && adapter != null) {
             adapter.clear();
 
             if (periodo == 0)
@@ -84,7 +84,7 @@ public class Registro extends Fragment {
                 adapter.addAll(getMarksOfThisPeriod(markSubjects, PERIOD[1]));
             else
                 adapter.addAll(markSubjects);
+
         }
     }
-
 }
