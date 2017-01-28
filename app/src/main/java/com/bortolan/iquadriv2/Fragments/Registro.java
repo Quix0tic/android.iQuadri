@@ -8,7 +8,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +15,12 @@ import android.view.ViewGroup;
 import com.bortolan.iquadriv2.Adapters.AdapterMedie;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
 import com.bortolan.iquadriv2.R;
-import com.bortolan.iquadriv2.Tasks.CacheListObservable;
 import com.bortolan.iquadriv2.Utils.ItemOffsetDecoration;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.bortolan.iquadriv2.Utils.Methods.PERIOD;
@@ -48,13 +43,13 @@ public class Registro extends Fragment {
     public Registro() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_registro, container, false);
         ButterKnife.bind(this, layout);
-        mContext = getContext();
+
+        mContext = getActivity();
         periodo = getArguments().getInt("q");
         logoutView.setOnClickListener(this::logout);
 
@@ -63,7 +58,6 @@ public class Registro extends Fragment {
         recyclerView.addItemDecoration(new ItemOffsetDecoration(mContext, R.dimen.card_margin));
         recyclerView.setAdapter(adapter);
         recyclerView.setNestedScrollingEnabled(false);
-        bindMarksSubjectsCache();
 
         return layout;
     }
@@ -72,7 +66,11 @@ public class Registro extends Fragment {
         SharedPreferences settings = mContext.getSharedPreferences("registro", MODE_PRIVATE);
         settings.edit().putBoolean("logged", false).apply();
 
-        getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, new Login()).commit();
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                .replace(R.id.content, new Login())
+                .commit();
     }
 
 
@@ -89,21 +87,4 @@ public class Registro extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        bindMarksSubjectsCache();
-        Log.d(TAG, "RESUME " + periodo);
-    }
-
-    private void bindMarksSubjectsCache() {
-        new CacheListObservable(new File(mContext.getCacheDir(), TAG))
-                .getCachedList(MarkSubject.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(marksSubjects -> {
-                    addSubjects(marksSubjects);
-                    Log.d(TAG, "Restored cache");
-                }, Throwable::printStackTrace);
-    }
 }

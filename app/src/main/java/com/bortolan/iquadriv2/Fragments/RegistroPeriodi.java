@@ -9,9 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +60,9 @@ public class RegistroPeriodi extends Fragment {
         viewPager.setAdapter(periodiAdapter);
         viewPager.setOffscreenPageLimit(2);
         tabLayout.setupWithViewPager(viewPager);
+
+        //update data
+        bindMarksSubjectsCache();
         UpdateMedie();
 
         return layout;
@@ -80,16 +81,13 @@ public class RegistroPeriodi extends Fragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        bindMarksSubjectsCache();
-        super.onResume();
-    }
-
     private void addSubjects(List<MarkSubject> markSubjects, boolean docache) {
         if (!markSubjects.isEmpty()) {
-            Registro fragment = (Registro) periodiAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
-            fragment.addSubjects(markSubjects);
+            Registro fragment;
+            for (int i = 0; i < periodiAdapter.getCount(); i++) {
+                fragment = (Registro) periodiAdapter.instantiateItem(viewPager, i);
+                fragment.addSubjects(markSubjects);
+            }
 
             if (docache) {
                 // Update cache
@@ -97,6 +95,7 @@ public class RegistroPeriodi extends Fragment {
             }
         }
     }
+
     private void bindMarksSubjectsCache() {
         new CacheListObservable(new File(mContext.getCacheDir(), Registro.TAG))
                 .getCachedList(MarkSubject.class)
@@ -107,7 +106,9 @@ public class RegistroPeriodi extends Fragment {
                     Log.d(Registro.TAG, "Restored cache");
                 });
     }
+
     class PeriodiPager extends FragmentPagerAdapter {
+
         PeriodiPager(FragmentManager fm) {
             super(fm);
         }

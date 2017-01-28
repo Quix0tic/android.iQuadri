@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.bortolan.iquadriv2.Broadcasts.Notifiche;
+import com.bortolan.iquadriv2.BuildConfig;
 import com.bortolan.iquadriv2.Fragments.Circolari;
 import com.bortolan.iquadriv2.Fragments.Home;
 import com.bortolan.iquadriv2.Fragments.Login;
@@ -45,12 +46,15 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         fragmentManager = getSupportFragmentManager();
-
-        Fabric.with(this, new Crashlytics(), new Answers());
+        if (!BuildConfig.DEBUG) {
+            final Fabric fabric = new Fabric.Builder(this)
+                    .kits(new Crashlytics(), new Answers())
+                    .build();
+            Fabric.with(fabric);
+        }
 
         checkNotifications();
 
