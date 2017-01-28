@@ -1,9 +1,9 @@
 package com.bortolan.iquadriv2.Adapters;
 
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
 import com.bortolan.iquadriv2.Interfaces.Media;
 import com.bortolan.iquadriv2.R;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import devlight.io.library.ArcProgressStackView;
 
 import static com.bortolan.iquadriv2.Utils.Methods.MessaggioVoto;
 import static com.bortolan.iquadriv2.Utils.Methods.getMediaColor;
+import static com.bortolan.iquadriv2.Utils.Methods.isAppInstalled;
 
 public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder> {
     final private String TAG = AdapterMedie.class.getSimpleName();
@@ -74,10 +76,18 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
         ViewHolder.mTextViewMateria.setText(media.getMateria());
 
         ViewHolder.mCardViewMedia.setOnClickListener(v -> {
-            try {
-                mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.sharpdroid.registroelettronico")));
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(mContext, "Nessuna applicazione può aprire questo link", Toast.LENGTH_SHORT).show();
+            if (isAppInstalled(mContext, "com.sharpdroid.registroelettronico")) {
+                // TODO: 28/01/2017 update
+                Intent LaunchIntent = mContext.getPackageManager().getLaunchIntentForPackage("com.sharpdroid.registroelettronico");
+                //Intent LaunchIntent = new Intent("com.sharpdroid.registroelettronico.DETAILS");
+                //LaunchIntent.putExtra("data", new Gson().toJson(marksubject));
+                mContext.startActivity(LaunchIntent);
+            } else {
+                try {
+                    mContext.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.sharpdroid.registroelettronico")));
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(mContext, "Nessuna applicazione può aprire questo link", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.SystemClock;
@@ -47,6 +48,15 @@ public class Methods {
         return string == null || string.isEmpty();
     }
 
+    public static boolean isAppInstalled(Context c, String uri) {
+        PackageManager pm = c.getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return false;
+    }
 
     public static String MessaggioVoto(float Obb, float media, int voti) {
         // Calcolo
