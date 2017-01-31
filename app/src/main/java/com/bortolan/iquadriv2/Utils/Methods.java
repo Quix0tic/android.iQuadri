@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -44,7 +45,7 @@ public class Methods {
         else return name;
     }
 
-    public static boolean isEmptyOrNull(String string) {
+    private static boolean isEmptyOrNull(String string) {
         return string == null || string.isEmpty();
     }
 
@@ -117,11 +118,16 @@ public class Methods {
 
     public static void setAlarm(AlarmManager alarmManager, SharedPreferences preferences, PendingIntent operation) {
         Log.d("ALARM", "SET NOTIFICATION INEXACT REPEATING");
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, Long.parseLong(preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR))), operation);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, Long.parseLong(preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR))), operation);
+        } else {
+            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, Long.parseLong(preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR))), operation);
+        }
+
         //alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10, 60000, operation);
     }
 
-    public static int getMarkColor(float voto, float voto_obiettivo) {
+    private static int getMarkColor(float voto, float voto_obiettivo) {
         if (voto >= voto_obiettivo)
             return R.color.greenmaterial;
         else if (voto < 5)
@@ -130,22 +136,6 @@ public class Methods {
             return R.color.orangematerial;
         else
             return R.color.lightgreenmaterial;
-    }
-
-    public static int getMarkColor(Mark mark, float voto_obiettivo) {
-        if (!mark.isNs()) {
-            float voto = Float.parseFloat(mark.getMark());
-            if (voto >= voto_obiettivo)
-                return R.color.greenmaterial;
-            else if (voto < 5)
-                return R.color.redmaterial;
-            else if (voto >= 5 && voto < 6)
-                return R.color.orangematerial;
-            else
-                return R.color.lightgreenmaterial;
-        } else {
-            return R.color.intro_blue;
-        }
     }
 
     public static List<MarkSubject> getMarksOfThisPeriod(List<MarkSubject> markssubject, String p) {
