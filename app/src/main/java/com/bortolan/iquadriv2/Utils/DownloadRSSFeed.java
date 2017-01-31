@@ -54,20 +54,22 @@ public class DownloadRSSFeed extends AsyncTask<String, Void, List<Circolare>> {
                 json = new XmlToJson.Builder(inputStream, null).build();
             }
 
-            try {
-                JSONArray items = json.toJson().getJSONObject("rss").getJSONObject("channel").getJSONArray("item");
+            if (json != null) {
+                try {
+                    JSONArray items = json.toJson().getJSONObject("rss").getJSONObject("channel").getJSONArray("item");
 
-                for (int i = 0; i < items.length(); i++) {                              //PER OGNI ITEM
-                    JSONObject item = items.getJSONObject(i);
-                    JSONArray cat = item.getJSONArray("category");
+                    for (int i = 0; i < items.length(); i++) {                              //PER OGNI ITEM
+                        JSONObject item = items.getJSONObject(i);
+                        JSONArray cat = item.getJSONArray("category");
 
-                    if (!removeItemNotInCategory(cat, preferences)) {
-                        result.add(new Circolare(item.getString("title"), item.getString("description"), item.getString("link")));
+                        if (!removeItemNotInCategory(cat, preferences)) {
+                            result.add(new Circolare(item.getString("title"), item.getString("description"), item.getString("link")));
+                        }
                     }
-                }
 
-            } catch (JSONException e) {
-                e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
             try {
