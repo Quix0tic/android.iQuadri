@@ -79,20 +79,21 @@ dependencies {
     }
 
 
-    ext.supportLibsVersion = "25.1.0"
+    ext.supportLibsVersion = "25.1.1"
     compile "com.android.support:appcompat-v7:$supportLibsVersion"
     compile "com.android.support:preference-v7:$supportLibsVersion"
+    compile "com.android.support:cardview-v7:$supportLibsVersion"
+    compile "com.android.support:appcompat-v7:$supportLibsVersion"
+    compile "com.android.support:design:$supportLibsVersion"
+    compile "com.android.support:support-vector-drawable:$supportLibsVersion"
 
     compile 'net.xpece.android:support-preference:1.2.4'
     compile 'com.crazyhitty.chdev.ks:rss-manager:0.23'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
-    compile 'com.android.support:cardview-v7:25.1.0'
     compile 'com.jakewharton:butterknife:8.4.0'
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
     compile 'com.roughike:bottom-bar:2.0.2'
     compile 'com.github.jrvansuita:GaussianBlur:v1.0.2'
-    compile 'com.android.support:support-v4:25.1.0'
+    compile 'com.android.support:support-v4:25.1.1'
     compile 'devlight.io:arcprogressstackview:1.0.4'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
@@ -103,7 +104,8 @@ dependencies {
     compile 'org.jsoup:jsoup:1.10.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.smart-fun:XmlToJson:1.2.0'
-    compile 'com.android.support:support-vector-drawable:25.1.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
