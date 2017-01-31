@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -118,11 +117,8 @@ public class Methods {
 
     public static void setAlarm(AlarmManager alarmManager, SharedPreferences preferences, PendingIntent operation) {
         Log.d("ALARM", "SET NOTIFICATION INEXACT REPEATING");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, Long.parseLong(preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR))), operation);
-        } else {
-            alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, Long.parseLong(preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR))), operation);
-        }
+
+        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, Long.parseLong(preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR))), operation);
 
         //alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10, 60000, operation);
     }
