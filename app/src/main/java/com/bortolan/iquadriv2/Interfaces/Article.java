@@ -1,12 +1,12 @@
 package com.bortolan.iquadriv2.Interfaces;
 
-import android.text.SpannableString;
+import android.text.Spanned;
 
 public class Article {
     private String title, image;
-    private SpannableString body;
+    private Spanned body;
 
-    public Article(String title, String image, SpannableString body) {
+    public Article(String title, String image, Spanned body) {
         this.title = title;
         this.image = image;
         this.body = body;
@@ -20,7 +20,7 @@ public class Article {
         return image;
     }
 
-    public SpannableString getBody() {
+    public Spanned getBody() {
         return body;
     }
 }

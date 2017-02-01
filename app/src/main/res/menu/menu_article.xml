@@ -4,7 +4,8 @@
     tools:context="com.bortolan.iquadriv2.Activities.ArticleActivity">
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:icon="@drawable/ic_open_in_browser_black_24dp"
+        android:onClick="openBrowser"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

@@ -31,12 +31,15 @@ public class DownloadArticle extends AsyncTask<String, Void, Article> {
             Element body = doc.select("#entry").get(0);
             Log.d("DOWNLOAD", String.valueOf(body.children().size()));
             for (Element el : body.children()) {
-                if (el.is("h1") || el.is("img") || el.is("hr") || el.is("div") || el.is("span") || el.text().length() == 0) {
-
-                } else {
-
-                    if (el.select("strong").size() > 0) {
+                if (!el.is("h1") && !el.is("img") && !el.is("hr") && !el.is("div") && !el.is("span") && el.text().length() != 0) {
+                    if (el.is("p")) {
                         b += "\n" + el.text();
+
+                        for (Element child : el.children()) {
+                            if (child.is("a") && child.select("img").size() == 0) {
+                                b = b.replace(child.text(), child.attr("href"));
+                            }
+                        }
                     } else if (el.is("ul")) {
                         for (Element child : el.children()) {
                             b += child.text();
@@ -50,20 +53,24 @@ public class DownloadArticle extends AsyncTask<String, Void, Article> {
                 }
             }
             SpannableString spannable = new SpannableString(b);
-
             String c = "";
             for (Element el : body.children()) {
-                if (el.is("h1") || el.is("img") || el.is("hr") || el.is("div") || el.is("span") || el.text().length() == 0) {
-
-                } else {
-                    if (el.select("strong").size() > 0) {
-                        spannable.setSpan(new StyleSpan(Typeface.BOLD), c.length(), c.length() + el.text().length() + 1, 0);
+                if (!el.is("h1") && !el.is("img") && !el.is("hr") && !el.is("div") && !el.is("span") && el.text().length() != 0) {
+                    if (el.is("p")) {
                         c += "\n" + el.text();
 
-                    } else if (el.is("ul")) {
                         for (Element child : el.children()) {
-                            spannable.setSpan(new BulletSpan(10), c.length(), c.length() + child.text().length(), 0);
+                            if (child.is("strong") || child.is("b")) {
+                                spannable.setSpan(new StyleSpan(Typeface.BOLD), c.indexOf(child.text()), c.indexOf(child.text()) + child.text().length() + 1, 0);
+                            } else if (child.is("a") && child.select("img").size() == 0) {
+                                c = c.replace(child.text(), child.attr("href"));
+                            }
+                        }
+
+                    } else if (el.is("ul")) {   //LISTA
+                        for (Element child : el.children()) {
                             c += child.text();
+                            spannable.setSpan(new BulletSpan(20), c.indexOf(child.text()), c.indexOf(child.text()) + child.text().length(), 0);
                             if (!c.isEmpty()) c += "\n";
                         }
                     } else {
