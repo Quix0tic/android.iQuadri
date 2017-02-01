@@ -52,7 +52,7 @@ public class FavouritesDB extends SQLiteOpenHelper {
 
     public boolean isFavourite(GitHubItem item) {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + TABLE + " WHERE " + columns[1] + "=? OR " + columns[2] + "=?", new String[]{item.getName(), item.getUrl()});
+        Cursor c = db.rawQuery("SELECT * FROM ? WHERE ?=? OR ?=?", new String[]{TABLE, columns[1], item.getName(), columns[2], item.getUrl()});
         boolean exists = c.moveToFirst();
         c.close();
         return exists;
@@ -60,7 +60,7 @@ public class FavouritesDB extends SQLiteOpenHelper {
 
     public List<GitHubItem> getAll() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT " + columns[1] + "," + columns[2] + " FROM " + TABLE, null);
+        Cursor c = db.rawQuery("SELECT ?,? FROM ?", new String[]{columns[1], columns[2], TABLE});
         List<GitHubItem> list = new LinkedList<>();
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
@@ -72,6 +72,6 @@ public class FavouritesDB extends SQLiteOpenHelper {
     }
 
     public boolean remove(GitHubItem remove) {
-        return getWritableDatabase().delete(TABLE, columns[1] + "=? OR " + columns[2] + "=?", new String[]{remove.getName(), remove.getUrl()}) != 0;
+        return getWritableDatabase().delete(TABLE, "?=? OR ?=?", new String[]{columns[1], remove.getName(), columns[2], remove.getUrl()}) != 0;
     }
 }
