@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
 
@@ -54,6 +55,7 @@ public class FavouritesDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE + " WHERE " + columns[1] + "=? OR " + columns[2] + "=?", new String[]{item.getName(), item.getUrl()});
         boolean exists = c.moveToFirst();
+        Log.d("DB", "Exists: " + String.valueOf(exists));
         c.close();
         return exists;
     }
@@ -72,6 +74,6 @@ public class FavouritesDB extends SQLiteOpenHelper {
     }
 
     public boolean remove(GitHubItem remove) {
-        return getWritableDatabase().delete(TABLE, "?=? OR ?=?", new String[]{columns[1], remove.getName(), columns[2], remove.getUrl()}) != 0;
+        return getWritableDatabase().delete(TABLE, columns[1] + "=? OR " + columns[2] + "=?", new String[]{remove.getName(), remove.getUrl()}) != 0;
     }
 }
