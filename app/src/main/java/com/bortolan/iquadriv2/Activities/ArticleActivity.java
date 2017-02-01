@@ -31,10 +31,12 @@ public class ArticleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
 
+
+        setCollapsingToolbarLayoutTitle(getIntent().getStringExtra("title"));
+
         new DownloadArticle(article -> {
-            Picasso.with(this).load(article.getImage()).into(image);
+            Picasso.with(this).load(article.getImage()).resize(600, 0).onlyScaleDown().into(image);
             content.setText(article.getBody());
-            setCollapsingToolbarLayoutTitle(article.getTitle());
         }).execute(getIntent().getStringExtra("url"));
 
     }

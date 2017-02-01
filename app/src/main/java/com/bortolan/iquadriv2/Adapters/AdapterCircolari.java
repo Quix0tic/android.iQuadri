@@ -44,7 +44,7 @@ public class AdapterCircolari extends RecyclerView.Adapter<AdapterCircolari.Circ
 
         holder.surface.setOnClickListener((view) -> {
             if (!openbrowser)
-                mContext.startActivity(new Intent(mContext, ArticleActivity.class).putExtra("url", row.getLink()));
+                mContext.startActivity(new Intent(mContext, ArticleActivity.class).putExtra("url", row.getLink()).putExtra("title", row.getTitle()));
             else
                 openBrowser(row.getLink());
         });
