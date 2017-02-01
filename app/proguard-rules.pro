@@ -16,10 +16,14 @@
 #   public *;
 #}
 
+#retrolambda
 -dontwarn java.lang.invoke.*
 
--keep class com.bortolan.iquadriv2.Interfaces.** { *; }
+-dontwarn com.squareup.okhttp.**
 
+-keep class com.bortolan.iquadriv2.Interfaces.** {*;}
+
+#retrofit
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
 -keepattributes Signature
@@ -29,6 +33,7 @@
     @retrofit2.http.* <methods>;
 }
 
+#Fabric
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 -keep class com.crashlytics.** { *; }

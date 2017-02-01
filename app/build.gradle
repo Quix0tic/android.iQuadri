@@ -39,18 +39,25 @@ android {
     }
     buildTypes {
         debug {
-            debuggable true
+            debuggable false
+            zipAlignEnabled true
+            shrinkResources true
+            minifyEnabled true
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             return void
         }
 
         release {
             debuggable false
-
-            useProguard false
+            zipAlignEnabled true
+            shrinkResources true
+            minifyEnabled true
+            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
             return void
         }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
