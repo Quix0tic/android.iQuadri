@@ -20,6 +20,7 @@
 -dontwarn java.lang.invoke.*
 
 -dontwarn com.squareup.okhttp.**
+-keep class android.support.v8.renderscript.** { *; }
 
 -keep class com.bortolan.iquadriv2.Interfaces.** {*;}
 
@@ -42,5 +43,9 @@
 
 -dontwarn okio.**
 
--keep class com.roughike.bottombar.**
+#-keep class com.roughike.bottombar.**
 -dontwarn com.roughike.bottombar.**
+
+-keep public class org.jsoup.** {
+public *;
+}
