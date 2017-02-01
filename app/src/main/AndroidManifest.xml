@@ -47,7 +47,11 @@
             android:name=".Activities.OrarioActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_orario"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".Activities.ArticleActivity"
+            android:label="@string/title_activity_article"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

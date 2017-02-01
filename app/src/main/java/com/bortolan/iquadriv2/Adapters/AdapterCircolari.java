@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bortolan.iquadriv2.Activities.ArticleActivity;
 import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
 
@@ -21,10 +22,12 @@ import butterknife.ButterKnife;
 public class AdapterCircolari extends RecyclerView.Adapter<AdapterCircolari.CircolariHolder> {
     private List<Circolare> data;
     private Context mContext;
+    private boolean openbrowser;
 
-    public AdapterCircolari(Context c) {
+    public AdapterCircolari(Context c, boolean openbrowser) {
         data = new ArrayList<>();
         mContext = c;
+        this.openbrowser = openbrowser;
     }
 
     @Override
@@ -39,7 +42,12 @@ public class AdapterCircolari extends RecyclerView.Adapter<AdapterCircolari.Circ
         holder.title.setText(row.getTitle().trim());
         holder.description.setText(row.getDescription().trim());
 
-        holder.surface.setOnClickListener((view) -> openBrowser(row.getLink()));
+        holder.surface.setOnClickListener((view) -> {
+            if (!openbrowser)
+                mContext.startActivity(new Intent(mContext, ArticleActivity.class).putExtra("url", row.getLink()));
+            else
+                openBrowser(row.getLink());
+        });
 
     }
 

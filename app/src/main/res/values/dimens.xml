@@ -4,4 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="card_margin">4dp</dimen>
     <integer name="transition_duration">125</integer>
+    <dimen name="app_bar_height">260dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

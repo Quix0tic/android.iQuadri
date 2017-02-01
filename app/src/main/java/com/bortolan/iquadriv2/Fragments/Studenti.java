@@ -63,7 +63,7 @@ public class Studenti extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         ButterKnife.bind(this, layout);
         mContext = getContext();
 
-        adapter = new AdapterCircolari(mContext);
+        adapter = new AdapterCircolari(mContext, false);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(mContext).color(Color.parseColor("#BDBDBD")).size(1).build());
         recyclerView.setAdapter(adapter);
