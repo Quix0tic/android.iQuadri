@@ -86,9 +86,10 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
     //load feeds
     private void loadFeeds() {
         new DownloadRSSFeed("Circolari", PreferenceManager.getDefaultSharedPreferences(mContext), list -> {
-            addAnnouncements(list, true);
             swipeRefreshLayout.setRefreshing(false);
-            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", (!list.isEmpty()) ? list.get(0).getTitle().toLowerCase().trim() : "").apply();
+            addAnnouncements(list, true);
+            if (!list.isEmpty())
+                PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", list.get(0).getTitle().toLowerCase().trim()).apply();
         }).execute(CIRCOLARI);
     }
 

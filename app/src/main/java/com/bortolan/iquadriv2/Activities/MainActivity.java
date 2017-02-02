@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
             final Fabric fabric = new Fabric.Builder(this)
                     .kits(new Crashlytics(), new Answers())
                     .build();
-            Fabric.with(fabric);
+            Fabric.with(fabric, new Crashlytics());
         }
 
         checkNotifications();

@@ -96,9 +96,10 @@ public class Studenti extends Fragment implements SwipeRefreshLayout.OnRefreshLi
         //you can also pass multiple urls
 
         new DownloadRSSFeed("Studenti", PreferenceManager.getDefaultSharedPreferences(mContext), list -> {
-            addAnnouncements(list, true);
             swipeRefreshLayout.setRefreshing(false);
-            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_studenti", list.get(0).getTitle().toLowerCase().trim()).apply();
+            addAnnouncements(list, true);
+            if (!list.isEmpty())
+                PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_studenti", list.get(0).getTitle().toLowerCase().trim()).apply();
         }).execute(STUDENTI);
 
     }
