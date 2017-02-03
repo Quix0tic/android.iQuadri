@@ -97,7 +97,7 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment, Sea
     public void bindSchedulesCache() {
         new CacheObjectObservable(new File(mContext.getCacheDir(), TAG))
                 .getCachedObject(GitHubResponse.class)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> addAll(response, false));
     }

@@ -22,10 +22,9 @@ import static com.bortolan.iquadriv2.Utils.DownloadRSSFeed.STUDENTI;
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class Notifiche extends BroadcastReceiver {
-    private int nNotif = 0;
-
     private final static String last_circolare = "last_circolare";
     private final static String last_studenti = "last_studenti";
+    private int nNotif = 0;
 
     public Notifiche() {
     }
@@ -38,8 +37,14 @@ public class Notifiche extends BroadcastReceiver {
 
     private void download(SharedPreferences preferences, Context context) {
         if (isNetworkAvailable(context)) {
-            new DownloadRSSFeed(last_circolare, preferences, list -> checkUpdates(context, list.get(0), preferences, last_circolare, preferences.getBoolean("notify_circolari", true))).execute(CIRCOLARI);
-            new DownloadRSSFeed(last_studenti, preferences, list -> checkUpdates(context, list.get(0), preferences, last_studenti, preferences.getBoolean("notify_studenti", true))).execute(STUDENTI);
+            new DownloadRSSFeed(last_circolare, preferences, list -> {
+                if (!list.isEmpty() && list.size() > 0)
+                    checkUpdates(context, list.get(0), preferences, last_circolare, preferences.getBoolean("notify_circolari", true));
+            }).execute(CIRCOLARI);
+            new DownloadRSSFeed(last_studenti, preferences, list -> {
+                if (!list.isEmpty() && list.size() > 0)
+                    checkUpdates(context, list.get(0), preferences, last_studenti, preferences.getBoolean("notify_studenti", true));
+            }).execute(STUDENTI);
         }
     }
 
