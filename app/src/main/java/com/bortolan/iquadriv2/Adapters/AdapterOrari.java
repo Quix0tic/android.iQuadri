@@ -75,6 +75,7 @@ public class AdapterOrari extends RecyclerView.Adapter<AdapterOrari.OrarioHolder
 
     public GitHubItem getItem(int i) {
         if (items.isEmpty()) return null;
+        if (i + 1 > items.size()) return items.get(items.size() - 1);
         return items.get(i);
     }
 

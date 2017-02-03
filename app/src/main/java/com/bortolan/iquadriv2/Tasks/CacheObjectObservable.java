@@ -20,7 +20,7 @@ public class CacheObjectObservable {
         this.file = file;
     }
 
-    public <T> Observable<T> getCachedList(Class<T> klazz) {
+    public <T> Observable<T> getCachedObject(Class<T> klazz) {
         return Observable.fromCallable(() -> {
                     ObjectInputStream objectInputStream = null;
                     Object obj = null;
