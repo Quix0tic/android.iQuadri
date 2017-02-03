@@ -39,6 +39,7 @@
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:padding="8dp"
+            android:visibility="gone"
             android:theme="@style/AppTheme.Dark"
             app:srcCompat="@drawable/ic_info_outline_black_24dp" />
 
