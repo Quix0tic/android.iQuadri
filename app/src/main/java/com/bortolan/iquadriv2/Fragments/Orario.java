@@ -15,17 +15,12 @@ import com.bortolan.iquadriv2.Adapters.AdapterOrari;
 import com.bortolan.iquadriv2.Databases.FavouritesDB;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse;
 import com.bortolan.iquadriv2.R;
-import com.bortolan.iquadriv2.Tasks.CacheObjectObservable;
 import com.bortolan.iquadriv2.Tasks.CacheObjectTask;
 import com.bortolan.iquadriv2.Utils.DownloadSchedules;
 import com.bortolan.iquadriv2.Views.ScheduleList;
 
-import java.io.File;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
@@ -63,7 +58,7 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment, Sea
 
         searchView.setOnQueryTextListener(this);
 
-        bindSchedulesCache();
+        //bindSchedulesCache();
         if (isNetworkAvailable(mContext)) {
             new DownloadSchedules(response -> addAll(response, true)).execute();
         }
@@ -95,11 +90,6 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment, Sea
     }
 
     public void bindSchedulesCache() {
-        new CacheObjectObservable(new File(mContext.getCacheDir(), TAG))
-                .getCachedObject(GitHubResponse.class)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> addAll(response, false));
     }
 
     @Override
