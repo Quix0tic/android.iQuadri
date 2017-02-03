@@ -31,7 +31,7 @@ public class AdapterOrari extends RecyclerView.Adapter<AdapterOrari.OrarioHolder
     private List<GitHubItem> items, all;
     private FavouritesDB db;
     private UpdateFragment update;
-    Vibrator v;
+    private Vibrator v;
 
     public AdapterOrari(Context mContext, FavouritesDB db, UpdateFragment update) {
         this.mContext = mContext;

@@ -20,17 +20,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ScheduleList extends LinearLayout {
-    private Context mContext;
-
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.recycler)
     RecyclerView recycler;
-
-    private AdapterOrari adapter;
-    private List<GitHubItem> items;
     FavouritesDB db;
     AdapterOrari.UpdateFragment updateFragment;
+    private Context mContext;
+    private AdapterOrari adapter;
+    private List<GitHubItem> items;
 
     public ScheduleList(Context context) {
         super(context);
@@ -89,11 +87,11 @@ public class ScheduleList extends LinearLayout {
 
 
     protected class myScrollListener extends RecyclerView.OnScrollListener {
-        private TextView textView;
         String _text;
         int myState, firstVisible;
+        private TextView textView;
 
-        public myScrollListener(TextView title) {
+        myScrollListener(TextView title) {
             super();
             textView = title;
             _text = title.getText().toString();
