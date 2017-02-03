@@ -7,11 +7,10 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadArticle;
@@ -45,8 +44,13 @@ public class ArticleActivity extends AppCompatActivity {
         setCollapsingToolbarLayoutTitle(getIntent().getStringExtra("title"));
 
         new DownloadArticle(article -> {
-            Picasso.with(this).load(article.getImage()).resize(600, 0).onlyScaleDown().into(image);
-            content.setText(article.getBody());
+            if (article != null) {
+                Picasso.with(this).load(article.getImage()).resize(600, 0).onlyScaleDown().into(image);
+                content.setText(article.getBody());
+            } else {
+                finish();
+                Toast.makeText(this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+            }
         }).execute(getIntent().getStringExtra("url"));
 
     }
