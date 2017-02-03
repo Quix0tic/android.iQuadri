@@ -30,6 +30,8 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.bortolan.iquadriv2.Utils.Methods.PERIOD;
+import static com.bortolan.iquadriv2.Utils.Methods.getMarksOfThisPeriod;
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class RegistroPeriodi extends Fragment {
@@ -74,8 +76,7 @@ public class RegistroPeriodi extends Fragment {
             new SpiaggiariApiClient(mContext).mService.getMarks()
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(marks -> addSubjects(marks, true), throwable -> {
-                    });
+                    .subscribe(marks -> addSubjects(marks, true), Throwable::printStackTrace);
         } else {
             Snackbar.make(mCoordinatorLayout, R.string.nointernet, Snackbar.LENGTH_LONG).show();
         }
@@ -87,6 +88,9 @@ public class RegistroPeriodi extends Fragment {
             for (int i = 0; i < periodiAdapter.getCount(); i++) {
                 fragment = (Registro) periodiAdapter.instantiateItem(viewPager, i);
                 fragment.addSubjects(markSubjects);
+                if (i == 1 && !getMarksOfThisPeriod(markSubjects, PERIOD[1]).isEmpty()) {
+                    viewPager.setCurrentItem(1, false);
+                }
             }
 
             if (docache) {
