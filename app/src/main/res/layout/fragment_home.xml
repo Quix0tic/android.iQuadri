@@ -39,8 +39,8 @@
             android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
             android:padding="8dp"
-            android:visibility="gone"
             android:theme="@style/AppTheme.Dark"
+            android:visibility="gone"
             app:srcCompat="@drawable/ic_info_outline_black_24dp" />
 
         <ImageView
@@ -53,5 +53,24 @@
             android:padding="8dp"
             android:theme="@style/AppTheme.Dark"
             app:srcCompat="@drawable/ic_settings_black_24dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:gravity="bottom|end">
+
+        <ImageView
+            android:id="@+id/favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:padding="8dp"
+            android:theme="@style/AppTheme.Dark"
+            android:visibility="gone"
+            app:srcCompat="@drawable/ic_favorite_black_24dp" />
     </LinearLayout>
 </RelativeLayout>

@@ -28,8 +28,8 @@ android {
         applicationId "com.bortolan.iquadriv2"
         minSdkVersion 11
         targetSdkVersion 25
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -85,6 +85,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportLibsVersion"
     compile "com.android.support:design:$supportLibsVersion"
     compile "com.android.support:support-vector-drawable:$supportLibsVersion"
+    compile "com.android.support:support-v4:$supportLibsVersion"
 
     compile 'net.xpece.android:support-preference:1.2.4'
     compile 'com.crazyhitty.chdev.ks:rss-manager:0.23'
@@ -92,7 +93,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.roughike:bottom-bar:2.0.2'
     compile 'com.github.jrvansuita:GaussianBlur:v1.0.2'
-    compile 'com.android.support:support-v4:25.1.1'
     compile 'devlight.io:arcprogressstackview:1.0.4'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
