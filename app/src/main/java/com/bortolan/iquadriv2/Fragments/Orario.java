@@ -29,7 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
-public class Orario extends Fragment implements AdapterOrari.UpdateFragment {
+public class Orario extends Fragment implements AdapterOrari.UpdateFragment, SearchView.OnQueryTextListener {
     private final static String TAG = Orario.class.getSimpleName();
     Context mContext;
     @BindView(R.id.search_card)
@@ -61,32 +61,11 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment {
         mContext = getContext();
         db = new FavouritesDB(mContext);
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+        searchView.setOnQueryTextListener(this);
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                preferiti.filter(newText);
-                classi.filter(newText);
-                prof.filter(newText);
-                aule.filter(newText);
-
-                return true;
-            }
-        });
         bindSchedulesCache();
         if (isNetworkAvailable(mContext)) {
-            new DownloadSchedules(response -> {
-                if (response != null) {
-                    classi.setData("classi", response.getClassi(), db, this);
-                    prof.setData("prof", response.getProf(), db, this);
-                    aule.setData("aule", response.getAule(), db, this);
-                    new CacheObjectTask(mContext.getCacheDir(), TAG).execute(response);
-                }
-            }).execute();
+            new DownloadSchedules(response -> addAll(response, true)).execute();
         }
         return layout;
     }
@@ -98,10 +77,21 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment {
         preferiti.setData("preferiti", db.getAll(), db, this);
     }
 
+    public void addAll(GitHubResponse response, boolean docache) {
+        if (response != null) {
+            classi.setData("classi", response.getClassi(), db, this);
+            prof.setData("prof", response.getProf(), db, this);
+            aule.setData("aule", response.getAule(), db, this);
+
+            if (docache) {
+                new CacheObjectTask(mContext.getCacheDir(), TAG).execute(response);
+            }
+        }
+    }
+
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        db.close();
+    public void update() {
+        preferiti.setData("preferiti", db.getAll(), db, this);
     }
 
     public void bindSchedulesCache() {
@@ -109,17 +99,26 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment {
                 .getCachedObject(GitHubResponse.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(response -> {
-                    if (response != null) {
-                        classi.setData("classi", response.getClassi(), db, this);
-                        prof.setData("prof", response.getProf(), db, this);
-                        aule.setData("aule", response.getAule(), db, this);
-                    }
-                });
+                .subscribe(response -> addAll(response, false));
     }
 
     @Override
-    public void update() {
-        preferiti.setData("preferiti", db.getAll(), db, this);
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        preferiti.filter(newText);
+        classi.filter(newText);
+        prof.filter(newText);
+        aule.filter(newText);
+        return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 }

@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-public class GitHubResponse implements Serializable{
+public class GitHubResponse implements Serializable {
     private List<GitHubItem> prof;
     private List<GitHubItem> classi;
     private List<GitHubItem> aule;
@@ -21,7 +21,12 @@ public class GitHubResponse implements Serializable{
         }).fromJson(classi.toString());
         this.aule = new Gson().getAdapter(new TypeToken<List<GitHubItem>>() {
         }).fromJson(aule.toString());
+    }
 
+    public GitHubResponse(List<GitHubItem> prof, List<GitHubItem> classi, List<GitHubItem> aule) {
+        this.prof = prof;
+        this.classi = classi;
+        this.aule = aule;
     }
 
     public List<GitHubItem> getProf() {
