@@ -23,12 +23,6 @@ public class GitHubResponse implements Serializable {
         }).fromJson(aule.toString());
     }
 
-    public GitHubResponse(List<GitHubItem> prof, List<GitHubItem> classi, List<GitHubItem> aule) {
-        this.prof = prof;
-        this.classi = classi;
-        this.aule = aule;
-    }
-
     public List<GitHubItem> getProf() {
         return prof;
     }
@@ -36,7 +30,6 @@ public class GitHubResponse implements Serializable {
     public List<GitHubItem> getClassi() {
         return classi;
     }
-
 
     public List<GitHubItem> getAule() {
         return aule;

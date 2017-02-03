@@ -18,7 +18,6 @@ import com.bortolan.iquadriv2.Fragments.Circolari;
 import com.bortolan.iquadriv2.Fragments.Home;
 import com.bortolan.iquadriv2.Fragments.Login;
 import com.bortolan.iquadriv2.Fragments.Orario;
-import com.bortolan.iquadriv2.Fragments.Registro;
 import com.bortolan.iquadriv2.Fragments.RegistroPeriodi;
 import com.bortolan.iquadriv2.Fragments.Studenti;
 import com.bortolan.iquadriv2.R;
@@ -59,14 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
         checkNotifications();
 
         navigation_bar.setOnTabSelectListener(this);
-        if (savedInstanceState != null)
-            try {
-                navigation_bar.setDefaultTab(getIntent().getExtras().getInt("tab"));
-            } catch (Exception e) {
-                navigation_bar.setDefaultTab(R.id.tab_home);
-            }
-        else
-            navigation_bar.setDefaultTab(R.id.tab_home);
+        navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
     }
 
     private void checkNotifications() {
