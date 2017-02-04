@@ -74,7 +74,7 @@ public class SettingsNotifications extends XpPreferenceFragment implements Share
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
         PendingIntent operation = PendingIntent.getBroadcast(getContext(), NOTIFICATION_ID, new Intent(getContext(), Notifiche.class), 0);
 
-        if (preferences.getBoolean("notify", true) && (preferences.getBoolean("notify_circolari", true) || preferences.getBoolean("notify_studenti", true))) {
+        if (preferences.getBoolean("notify", true)) {
             Log.d("NOTIFICATION", "NOTIFICATION UPDATED: " + preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR)));
             setAlarm(alarmManager, preferences, operation);
         } else {
