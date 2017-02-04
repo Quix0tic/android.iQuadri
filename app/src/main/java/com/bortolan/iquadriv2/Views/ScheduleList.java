@@ -110,8 +110,7 @@ public class ScheduleList extends LinearLayout {
 
             if (myState != RecyclerView.SCROLL_STATE_IDLE) {
                 firstVisible = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-                //QUANDO FALLISCE IL DOWNLOAD NON CI SONO ITEM -> IndexOutOfBound
-                if (((AdapterOrari) recyclerView.getAdapter()).getItem(firstVisible) != null)
+                if (firstVisible != -1 && ((AdapterOrari) recyclerView.getAdapter()).getItem(firstVisible) != null)
                     textView.setText(_text + " - " + ((AdapterOrari) recyclerView.getAdapter()).getItem(firstVisible).getName().substring(0, 2).toUpperCase());
             }
 

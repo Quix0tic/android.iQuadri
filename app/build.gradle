@@ -87,6 +87,8 @@ dependencies {
     compile "com.android.support:support-vector-drawable:$supportLibsVersion"
     compile "com.android.support:support-v4:$supportLibsVersion"
 
+    compile 'com.google.android.gms:play-services-safetynet:10.0.1'
+
     compile 'net.xpece.android:support-preference:1.2.4'
     compile 'com.crazyhitty.chdev.ks:rss-manager:0.23'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'
