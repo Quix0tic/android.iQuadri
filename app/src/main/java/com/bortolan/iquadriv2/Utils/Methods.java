@@ -12,6 +12,8 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.bortolan.iquadriv2.Interfaces.Mark;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
@@ -228,7 +230,6 @@ public class Methods {
         return getMarkColor(media, voto_obiettivo);
     }
 
-
     public static int getMediaColor(float media, float voto_obiettivo) {
         return getMediaColor(media, "Generale", voto_obiettivo);
     }
@@ -237,5 +238,12 @@ public class Methods {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return Math.round(px);
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

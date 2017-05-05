@@ -49,13 +49,13 @@ class Registro : Fragment() {
 
 
     fun addSubjects(markSubjects: List<Average>) {
-        if (markSubjects.isNotEmpty() && adapter != null) {
-            adapter!!.clear()
-            adapter!!.addAll(markSubjects)
+        if (markSubjects.isNotEmpty()) {
+            adapter?.clear()
+            adapter?.addAll(markSubjects)
         }
     }
 
     companion object {
-        internal val TAG = Registro::class.java.simpleName
+        internal val TAG = "Registro"
     }
 }

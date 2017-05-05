@@ -31,6 +31,8 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
         super.onViewCreated(view, savedInstanceState)
 
         search_view.setOnQueryTextListener(this)
+        search_view.queryHint = "Cerca..."
+        search_view.setIconifiedByDefault(false)
 
         load()
         if (Methods.isNetworkAvailable(context)) {
@@ -65,6 +67,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
+        search_view.clearFocus()
         return true
     }
 
