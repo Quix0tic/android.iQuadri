@@ -65,11 +65,6 @@ class RegistroPeriodi : Fragment() {
 
     }
 
-    override fun onStop() {
-        super.onStop()
-        RegistroDB.getInstance(context).close()
-    }
-
     internal inner class PeriodiPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {

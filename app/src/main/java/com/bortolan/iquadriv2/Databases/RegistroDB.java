@@ -71,7 +71,7 @@ public class RegistroDB extends SQLiteOpenHelper {
     }
 
     public boolean isSecondPeriodStarted() {
-        boolean second = false;
+        boolean second;
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM marks WHERE period='q3'", null);
         second = c.moveToFirst();

@@ -8,7 +8,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,6 @@ public class Registro extends Fragment {
 
     public void addSubjects(List<Average> markSubjects) {
         if (!markSubjects.isEmpty() && adapter != null) {
-            Log.d("AVERAGE", "ADD");
             adapter.clear();
             adapter.addAll(markSubjects);
         }

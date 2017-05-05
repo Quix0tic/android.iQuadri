@@ -50,12 +50,10 @@ public class FavouritesDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
 
-        /**START**/
         ContentValues values = new ContentValues();
         values.put(columns[1], item.getName());
         values.put(columns[2], item.getUrl());
         db.insert(TABLE, null, values);
-        /**END**/
 
         db.setTransactionSuccessful();
         db.endTransaction();
