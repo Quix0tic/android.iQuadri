@@ -45,12 +45,12 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     }
 
     fun addAll(response: GitHubResponse, doCache: Boolean) {
-        classi.setData("classi", response.classi, FavouritesDB.getInstance(context), this, true)
-        prof.setData("prof", response.prof, FavouritesDB.getInstance(context), this, true)
-        aule.setData("aule", response.aule, FavouritesDB.getInstance(context), this, true)
+        classi?.setData("classi", response.classi, FavouritesDB.getInstance(context), this, true)
+        prof?.setData("prof", response.prof, FavouritesDB.getInstance(context), this, true)
+        aule?.setData("aule", response.aule, FavouritesDB.getInstance(context), this, true)
 
         if (doCache) {
-            CacheObjectTask(context.cacheDir, TAG).execute(response)
+            CacheObjectTask(context?.cacheDir, TAG).execute(response)
         }
     }
 
@@ -65,7 +65,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        return false
+        return true
     }
 
     override fun onQueryTextChange(newText: String): Boolean {

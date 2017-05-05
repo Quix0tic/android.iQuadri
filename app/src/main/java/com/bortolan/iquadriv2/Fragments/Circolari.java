@@ -109,9 +109,7 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
                 .getCachedList(Circolare.class)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(list -> {
-                    addAnnouncements(list, false);
-                });
+                .subscribe(list -> addAnnouncements(list, false));
     }
 }
 

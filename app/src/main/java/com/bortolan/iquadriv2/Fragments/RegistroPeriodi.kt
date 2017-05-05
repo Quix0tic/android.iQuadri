@@ -56,9 +56,9 @@ class RegistroPeriodi : Fragment() {
     }
 
     private fun load() {
-        (periodiAdapter!!.instantiateItem(pager, 0) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.FIRST, "ORDER BY subject"))
-        (periodiAdapter!!.instantiateItem(pager, 1) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.SECOND, "ORDER BY subject"))
-        (periodiAdapter!!.instantiateItem(pager, 2) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.ALL, "ORDER BY subject"))
+        (periodiAdapter?.instantiateItem(pager, 0) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.FIRST, "ORDER BY subject"))
+        (periodiAdapter?.instantiateItem(pager, 1) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.SECOND, "ORDER BY subject"))
+        (periodiAdapter?.instantiateItem(pager, 2) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.ALL, "ORDER BY subject"))
 
         if (RegistroDB.getInstance(context).isSecondPeriodStarted)
             pager.setCurrentItem(1, true)

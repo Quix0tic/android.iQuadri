@@ -14,6 +14,8 @@ import android.util.Log;
 
 import com.bortolan.iquadriv2.Broadcasts.Notifiche;
 import com.bortolan.iquadriv2.BuildConfig;
+import com.bortolan.iquadriv2.Databases.FavouritesDB;
+import com.bortolan.iquadriv2.Databases.RegistroDB;
 import com.bortolan.iquadriv2.Fragments.Circolari;
 import com.bortolan.iquadriv2.Fragments.Home;
 import com.bortolan.iquadriv2.Fragments.Libri;
@@ -24,7 +26,6 @@ import com.bortolan.iquadriv2.Fragments.Studenti;
 import com.bortolan.iquadriv2.R;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
                     .build();
             Fabric.with(fabric);
         }
-        Log.d("FIREBASE TOKEN", FirebaseInstanceId.getInstance().getToken());
+        //Log.d("FIREBASE TOKEN", FirebaseInstanceId.getInstance().getToken());
 
         checkNotifications();
 
@@ -115,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
     @Override
     protected void onStop() {
         super.onStop();
+        FavouritesDB.getInstance(this).close();
+        RegistroDB.getInstance(this).close();
     }
 
     @Override

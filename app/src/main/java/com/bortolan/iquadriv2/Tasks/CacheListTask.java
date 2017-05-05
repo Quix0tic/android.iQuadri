@@ -27,8 +27,6 @@ public class CacheListTask extends AsyncTask<List, Void, Void> {
      */
     private final String cacheSubDir;
 
-    private OnPostExecute postExecute = null;
-
     /**
      * @param cacheDir    the directory in which the data will be stored.
      * @param cacheSubDir the subdirectory in which the data will be stored.
@@ -37,11 +35,7 @@ public class CacheListTask extends AsyncTask<List, Void, Void> {
         this.cacheDir = cacheDir;
         this.cacheSubDir = cacheSubDir;
     }
-    public CacheListTask(File cacheDir, String cacheSubDir, OnPostExecute postExecute) {
-        this.cacheDir = cacheDir;
-        this.cacheSubDir = cacheSubDir;
-        this.postExecute = postExecute;
-    }
+
 
     /**
      * Caches the specified List. Will execute in a separate Thread.
@@ -64,6 +58,7 @@ public class CacheListTask extends AsyncTask<List, Void, Void> {
         } catch (IOException e) {
             Log.e(TAG, "Error while writing cache");
             e.printStackTrace();
+            return null;
         }
         return null;
     }
@@ -71,13 +66,5 @@ public class CacheListTask extends AsyncTask<List, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if(postExecute!=null){
-            postExecute.post();
-        }
     }
-
-    public interface OnPostExecute{
-        void post();
-    }
-
 }
