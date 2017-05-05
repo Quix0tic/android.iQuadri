@@ -5,16 +5,16 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
-import com.bortolan.iquadriv2.API.SpiaggiariAPI;
 import com.bortolan.iquadriv2.Interfaces.Mark;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
-import com.bortolan.iquadriv2.Interfaces.Media;
 import com.bortolan.iquadriv2.R;
 
 import org.json.JSONArray;
@@ -67,39 +67,43 @@ public class Methods {
         double[] array = {0.75, 0.5, 0.25, 0};
         int index = 0;
         float sommaVotiDaPrendere;
-        double[] votiMinimi = new double[20];
+        double[] votiMinimi = new double[5];
         double diff;
         double diff2;
         double resto = 0;
         double parteIntera;
         double parteDecimale;
-        do {
-            index = index + 1;
-            sommaVotiDaPrendere = (Obb * (voti + index)) - (media * voti);
-        } while ((sommaVotiDaPrendere / index) > 10);
-        for (int i = 0; i < index; i = i + 1) {
-            votiMinimi[i] = (sommaVotiDaPrendere / index) + resto;
-            resto = 0;
-            parteIntera = Math.floor(votiMinimi[i]);
-            parteDecimale = (votiMinimi[i] - parteIntera) * 100;
-            if (parteDecimale != 25 && parteDecimale != 50 && parteDecimale != 75) {
-                int k = 0;
-                do {
-                    diff = votiMinimi[i] - (parteIntera + array[k]);
-                    k++;
-                } while (diff < 0);
-                votiMinimi[i] = votiMinimi[i] - diff;
-                resto = diff;
+        try {
+            do {
+                index = index + 1;
+                sommaVotiDaPrendere = (Obb * (voti + index)) - (media * voti);
+            } while ((sommaVotiDaPrendere / index) > 10);
+            for (int i = 0; i < index; i = i + 1) {
+                votiMinimi[i] = (sommaVotiDaPrendere / index) + resto;
+                resto = 0;
+                parteIntera = Math.floor(votiMinimi[i]);
+                parteDecimale = (votiMinimi[i] - parteIntera) * 100;
+                if (parteDecimale != 25 && parteDecimale != 50 && parteDecimale != 75) {
+                    int k = 0;
+                    do {
+                        diff = votiMinimi[i] - (parteIntera + array[k]);
+                        k++;
+                    } while (diff < 0);
+                    votiMinimi[i] = votiMinimi[i] - diff;
+                    resto = diff;
+                }
+                if (votiMinimi[i] > 10) {
+                    diff2 = votiMinimi[i] - 10;
+                    votiMinimi[i] = 10;
+                    resto = resto + diff2;
+                }
             }
-            if (votiMinimi[i] > 10) {
-                diff2 = votiMinimi[i] - 10;
-                votiMinimi[i] = 10;
-                resto = resto + diff2;
-            }
+        } catch (Exception e) {
+            return "Obiettivo non raggiungibile";
         }
         // Stampa
         String toReturn;
-        if (votiMinimi[0] <= 0)
+        if (votiMinimi[0] <= 2)
             return "Puoi stare tranquillo"; // Quando i voti da prendere sono negativi
         if (votiMinimi[0] <= Obb)
             toReturn = "Non prendere meno di " + votiMinimi[0];
@@ -220,20 +224,18 @@ public class Methods {
         }
     }
 
-    public static int getMediaColor(Media media, String tipo, float voto_obiettivo) {
-        switch (tipo) {
-            case SpiaggiariAPI.ORALE:
-                return getMarkColor(media.getMediaOrale(), voto_obiettivo);
-            case SpiaggiariAPI.PRATICO:
-                return getMarkColor(media.getMediaPratico(), voto_obiettivo);
-            case SpiaggiariAPI.SCRITTO:
-                return getMarkColor(media.getMediaScritto(), voto_obiettivo);
-            default:
-                return getMarkColor(media.getMediaGenerale(), voto_obiettivo);
-        }
+    public static int getMediaColor(float media, String tipo, float voto_obiettivo) {
+        return getMarkColor(media, voto_obiettivo);
     }
 
-    public static int getMediaColor(Media media, float voto_obiettivo) {
+
+    public static int getMediaColor(float media, float voto_obiettivo) {
         return getMediaColor(media, "Generale", voto_obiettivo);
+    }
+
+    public static float dpToPx(float dp) {
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return Math.round(px);
     }
 }

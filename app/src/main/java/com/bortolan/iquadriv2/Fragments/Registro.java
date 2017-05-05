@@ -8,12 +8,13 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bortolan.iquadriv2.Adapters.AdapterMedie;
-import com.bortolan.iquadriv2.Interfaces.MarkSubject;
+import com.bortolan.iquadriv2.Interfaces.Average;
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.ItemOffsetDecoration;
 
@@ -23,8 +24,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.bortolan.iquadriv2.Utils.Methods.PERIOD;
-import static com.bortolan.iquadriv2.Utils.Methods.getMarksOfThisPeriod;
 
 public class Registro extends Fragment {
     final static String TAG = Registro.class.getSimpleName();
@@ -74,17 +73,11 @@ public class Registro extends Fragment {
     }
 
 
-    public void addSubjects(List<MarkSubject> markSubjects) {
+    public void addSubjects(List<Average> markSubjects) {
         if (!markSubjects.isEmpty() && adapter != null) {
+            Log.d("AVERAGE", "ADD");
             adapter.clear();
-
-            if (periodo == 0)
-                adapter.addAll(getMarksOfThisPeriod(markSubjects, PERIOD[0]));
-            else if (periodo == 1)
-                adapter.addAll(getMarksOfThisPeriod(markSubjects, PERIOD[1]));
-            else
-                adapter.addAll(markSubjects);
-
+            adapter.addAll(markSubjects);
         }
     }
 }

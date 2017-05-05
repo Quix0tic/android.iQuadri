@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
 
@@ -14,11 +13,22 @@ import java.util.List;
 
 public class FavouritesDB extends SQLiteOpenHelper {
     private final static String TABLE = "Schedules";
-
+    private static FavouritesDB instance;
     private final String columns[] = new String[]{"id", "name", "url"};
 
     public FavouritesDB(Context context) {
         super(context, DB.NAME, null, DB.VERSION);
+    }
+
+    public static FavouritesDB getInstance(Context c) {
+        if (instance == null) instance = new FavouritesDB(c);
+        return instance;
+    }
+
+    @Override
+    public synchronized void close() {
+        super.close();
+        instance = null;
     }
 
     @Override
@@ -55,7 +65,6 @@ public class FavouritesDB extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery("SELECT * FROM " + TABLE + " WHERE " + columns[1] + "=? OR " + columns[2] + "=?", new String[]{item.getName(), item.getUrl()});
         boolean exists = c.moveToFirst();
-        Log.d("DB", "Exists: " + String.valueOf(exists));
         c.close();
         return exists;
     }
@@ -75,5 +84,16 @@ public class FavouritesDB extends SQLiteOpenHelper {
 
     public boolean remove(GitHubItem remove) {
         return getWritableDatabase().delete(TABLE, columns[1] + "=? OR " + columns[2] + "=?", new String[]{remove.getName(), remove.getUrl()}) != 0;
+    }
+
+    public int indexOf(GitHubItem item) {
+        List<GitHubItem> items = getAll();
+        int count = 0;
+        for (GitHubItem i : items) {
+            if (i.equals(item)) return count;
+            count++;
+        }
+
+        return -1;
     }
 }

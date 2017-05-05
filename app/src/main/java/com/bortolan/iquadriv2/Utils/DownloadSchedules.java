@@ -23,7 +23,7 @@ public class DownloadSchedules extends AsyncTask<Void, Void, GitHubResponse> {
     protected GitHubResponse doInBackground(Void... voids) {
         GitHubResponse response = null;
         try {
-            InputStream inputStream = new URL("https://raw.githubusercontent.com/Quix0tic/iQuadri/master/orari.json").openConnection().getInputStream();
+            InputStream inputStream = new URL("https://liceo.quadri.bortolan.ml").openConnection().getInputStream();
 
             if (inputStream != null) {
                 BufferedReader r = new BufferedReader(new InputStreamReader(inputStream));

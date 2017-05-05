@@ -58,11 +58,12 @@ public class AdapterOrari extends RecyclerView.Adapter<AdapterOrari.OrarioHolder
             v.vibrate(30);
 
             if (db.isFavourite(item)) {
+                update.remove(item, db.indexOf(item));
                 db.remove(item);
             } else {
+                update.add(item, db.getAll().size());
                 db.add(item);
             }
-            update.update();
             return true;
         });
 
@@ -83,10 +84,22 @@ public class AdapterOrari extends RecyclerView.Adapter<AdapterOrari.OrarioHolder
         notifyDataSetChanged();
     }
 
+    public void add(GitHubItem t, int position) {
+        items.add(position, t);
+        all.add(position, t);
+        notifyItemInserted(position);
+    }
+
     public void clear() {
         items.clear();
         all.clear();
         notifyDataSetChanged();
+    }
+
+    public void remove(int position) {
+        items.remove(position);
+        all.remove(position);
+        notifyItemRemoved(position);
     }
 
     @Override
@@ -97,7 +110,9 @@ public class AdapterOrari extends RecyclerView.Adapter<AdapterOrari.OrarioHolder
     }
 
     public interface UpdateFragment {
-        void update();
+        void add(GitHubItem item, int position);
+
+        void remove(GitHubItem item, int position);
     }
 
     class OrarioHolder extends RecyclerView.ViewHolder {

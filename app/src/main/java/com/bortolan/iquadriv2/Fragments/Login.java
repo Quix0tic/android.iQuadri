@@ -27,15 +27,13 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class Login extends Fragment {
-    private Context mContext;
-
     @BindView(R.id.mail)
     TextInputEditText mEditTextMail;
     @BindView(R.id.password)
     TextInputEditText mEditTextPassword;
-
     @BindView(R.id.login_btn)
     Button mButtonLogin;
+    private Context mContext;
 
     public Login() {
         // Required empty public constructor
@@ -79,7 +77,7 @@ public class Login extends Fragment {
         mButtonLogin.setText(R.string.caricamento);
 
         new SpiaggiariApiClient(mContext).mService.postLogin(mEmail, mPassword, new DeviceUuidFactory(mContext).getDeviceUuid().toString())
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(login -> {
 

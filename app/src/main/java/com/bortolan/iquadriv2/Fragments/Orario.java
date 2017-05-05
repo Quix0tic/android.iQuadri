@@ -13,14 +13,19 @@ import android.view.ViewGroup;
 
 import com.bortolan.iquadriv2.Adapters.AdapterOrari;
 import com.bortolan.iquadriv2.Databases.FavouritesDB;
+import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse;
 import com.bortolan.iquadriv2.R;
+import com.bortolan.iquadriv2.Tasks.CacheObjectObservable;
 import com.bortolan.iquadriv2.Tasks.CacheObjectTask;
 import com.bortolan.iquadriv2.Utils.DownloadSchedules;
 import com.bortolan.iquadriv2.Views.ScheduleList;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.schedulers.Schedulers;
 
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
@@ -54,11 +59,11 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment, Sea
         View layout = inflater.inflate(R.layout.fragment_orario, container, false);
         ButterKnife.bind(this, layout);
         mContext = getContext();
-        db = new FavouritesDB(mContext);
+        db = FavouritesDB.getInstance(mContext);
 
         searchView.setOnQueryTextListener(this);
 
-        //bindSchedulesCache();
+        bindSchedulesCache();
         if (isNetworkAvailable(mContext)) {
             new DownloadSchedules(response -> addAll(response, true)).execute();
         }
@@ -69,14 +74,14 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment, Sea
     public void onResume() {
         super.onResume();
 
-        preferiti.setData("preferiti", db.getAll(), db, this);
+        preferiti.setData("preferiti", db.getAll(), db, this, false);
     }
 
     public void addAll(GitHubResponse response, boolean docache) {
         if (response != null) {
-            classi.setData("classi", response.getClassi(), db, this);
-            prof.setData("prof", response.getProf(), db, this);
-            aule.setData("aule", response.getAule(), db, this);
+            classi.setData("classi", response.getClassi(), db, this, true);
+            prof.setData("prof", response.getProf(), db, this, true);
+            aule.setData("aule", response.getAule(), db, this, true);
 
             if (docache) {
                 new CacheObjectTask(mContext.getCacheDir(), TAG).execute(response);
@@ -84,12 +89,14 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment, Sea
         }
     }
 
-    @Override
-    public void update() {
-        preferiti.setData("preferiti", db.getAll(), db, this);
-    }
-
     public void bindSchedulesCache() {
+        new CacheObjectObservable(new File(mContext.getCacheDir(), TAG)).getCachedObject(GitHubResponse.class)
+                .subscribeOn(Schedulers.io())
+                .subscribe(response -> {
+                    classi.setData("classi", response.getClassi(), db, this, true);
+                    prof.setData("prof", response.getProf(), db, this, true);
+                    aule.setData("aule", response.getAule(), db, this, true);
+                }, Throwable::printStackTrace);
     }
 
     @Override
@@ -107,8 +114,18 @@ public class Orario extends Fragment implements AdapterOrari.UpdateFragment, Sea
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        db.close();
+    public void add(GitHubItem item, int position) {
+        preferiti.add(item, position);
+    }
+
+    @Override
+    public void remove(GitHubItem item, int position) {
+        preferiti.remove(position);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        FavouritesDB.getInstance(getContext()).close();
     }
 }

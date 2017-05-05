@@ -1,9 +1,15 @@
 package com.bortolan.iquadriv2.Interfaces;
 
+import android.util.Base64;
+
 import java.io.Serializable;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 public class Mark implements Serializable {
+    public static final String PRIMO_PERIODO = "q1";
+    public static final String SECONDO_PERIODO = "q3";
     private String q;
     private boolean ns;
     private String type;
@@ -11,7 +17,7 @@ public class Mark implements Serializable {
     private String mark;
     private String desc;
 
-    Mark(String q, boolean ns, String type, Date date, String mark, String desc) {
+    public Mark(String q, boolean ns, String type, Date date, String mark, String desc) {
         this.q = q;
         this.ns = ns;
         this.type = type;
@@ -26,6 +32,10 @@ public class Mark implements Serializable {
 
     public boolean isNs() {
         return ns;
+    }
+
+    public void setNs(boolean isNs) {
+        ns = isNs;
     }
 
     public String getType() {
@@ -44,7 +54,15 @@ public class Mark implements Serializable {
         return desc;
     }
 
-    public void setNs(boolean ns) {
-        this.ns = ns;
+    public String getHash() {
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(q.concat(type).concat(date.toString()).concat(mark).concat(desc).getBytes());
+            return Base64.encodeToString(messageDigest.digest(), Base64.DEFAULT);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

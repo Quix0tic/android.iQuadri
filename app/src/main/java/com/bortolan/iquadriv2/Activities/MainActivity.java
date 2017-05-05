@@ -16,6 +16,7 @@ import com.bortolan.iquadriv2.Broadcasts.Notifiche;
 import com.bortolan.iquadriv2.BuildConfig;
 import com.bortolan.iquadriv2.Fragments.Circolari;
 import com.bortolan.iquadriv2.Fragments.Home;
+import com.bortolan.iquadriv2.Fragments.Libri;
 import com.bortolan.iquadriv2.Fragments.Login;
 import com.bortolan.iquadriv2.Fragments.Orario;
 import com.bortolan.iquadriv2.Fragments.RegistroPeriodi;
@@ -23,6 +24,7 @@ import com.bortolan.iquadriv2.Fragments.Studenti;
 import com.bortolan.iquadriv2.R;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
                     .build();
             Fabric.with(fabric);
         }
+        Log.d("FIREBASE TOKEN", FirebaseInstanceId.getInstance().getToken());
 
         checkNotifications();
 
@@ -69,11 +72,9 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
 
         if (preferences.getBoolean("first_run", true)) {
             preferences.edit().putBoolean("first_run", false).apply();
-            if (preferences.getBoolean("notify", true)) {
-                if (preferences.getBoolean("notify_circolari", true) || preferences.getBoolean("notify_studenti", true)) {
-                    Log.d("NOTIFICATION", "MAIN/check - INTERVAL: " + preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR)));
-                    setAlarm(alarmManager, preferences, operation);
-                }
+            if (preferences.getBoolean("notify", true) && ((preferences.getBoolean("notify_circolari", true) || preferences.getBoolean("notify_studenti", true)))) {
+                Log.d("NOTIFICATION", "MAIN/check - INTERVAL: " + preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR)));
+                setAlarm(alarmManager, preferences, operation);
             } else {
                 alarmManager.cancel(operation);
             }
@@ -102,10 +103,18 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
             case R.id.tab_orario:
                 fragment = new Orario();
                 break;
+            case R.id.tab_libri:
+                fragment = new Libri();
+                break;
         }
         if (fragment != null)
             fragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, fragment).commit();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override

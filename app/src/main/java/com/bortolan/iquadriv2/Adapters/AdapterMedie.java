@@ -1,11 +1,9 @@
 package com.bortolan.iquadriv2.Adapters;
 
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bortolan.iquadriv2.Interfaces.MarkSubject;
-import com.bortolan.iquadriv2.Interfaces.Media;
+import com.bortolan.iquadriv2.Interfaces.Average;
 import com.bortolan.iquadriv2.R;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +33,7 @@ import static com.bortolan.iquadriv2.Utils.Methods.isAppInstalled;
 public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder> {
     final private String TAG = AdapterMedie.class.getSimpleName();
 
-    private final List<MarkSubject> CVDataList;
+    private final List<Average> CVDataList;
     private final Context mContext;
     private int period;
 
@@ -48,7 +44,7 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
     }
 
 
-    public void addAll(Collection<MarkSubject> list) {
+    public void addAll(Collection<Average> list) {
         CVDataList.addAll(list);
         notifyDataSetChanged();
     }
@@ -68,12 +64,9 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
 
     @Override
     public void onBindViewHolder(MedieHolder ViewHolder, int position) {
-        final MarkSubject marksubject = CVDataList.get(position);
+        final Average average = CVDataList.get(position);
 
-        Media media = new Media();
-        media.setMateria(marksubject.getName());
-        media.addMarks(marksubject.getMarks());
-        ViewHolder.mTextViewMateria.setText(media.getMateria());
+        ViewHolder.mTextViewMateria.setText(average.name);
 
         ViewHolder.mCardViewMedia.setOnClickListener(v -> {
             if (isAppInstalled(mContext, "com.sharpdroid.registroelettronico")) {
@@ -91,22 +84,13 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
             }
         });
 
-        if (media.containsValidMarks()) {
-            ViewHolder.mTextViewMedia.setText(String.format(Locale.getDefault(), "%.2f", media.getMediaGenerale()));
-            final float voto_obiettivo = Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(mContext)
-                    .getString("voto_obiettivo", "8"));
-            List<ArcProgressStackView.Model> models = new ArrayList<>();
-            models.add(new ArcProgressStackView.Model("media", media.getMediaGenerale() * 10, ContextCompat.getColor(mContext, getMediaColor(media, voto_obiettivo))));
-            ViewHolder.mArcProgressStackView.setModels(models);
-            String obbiettivo_string = MessaggioVoto(voto_obiettivo, media.getMediaGenerale(), media.getNumeroVoti());
-            ViewHolder.mTextViewDesc.setText(obbiettivo_string);
-        } else {
-            List<ArcProgressStackView.Model> models = new ArrayList<>();
-            models.add(new ArcProgressStackView.Model("media", 100, ContextCompat.getColor(mContext, R.color.intro_blue)));
-            ViewHolder.mArcProgressStackView.setModels(models);
-            ViewHolder.mTextViewMedia.setText("-");
-            ViewHolder.mTextViewDesc.setText(mContext.getString(R.string.nessun_voto_numerico));
-        }
+        ViewHolder.mTextViewMedia.setText(String.format(Locale.getDefault(), "%.2f", average.avg));
+        List<ArcProgressStackView.Model> models = new ArrayList<>();
+        models.add(new ArcProgressStackView.Model("media", average.avg * 10, ContextCompat.getColor(mContext, getMediaColor(average.avg, average.target))));
+        ViewHolder.mArcProgressStackView.setModels(models);
+        String obbiettivo_string = MessaggioVoto(average.target, average.avg, average.count);
+        ViewHolder.mTextViewDesc.setText(obbiettivo_string);
+
     }
 
     @Override
