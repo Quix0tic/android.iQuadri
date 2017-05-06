@@ -11,7 +11,7 @@ import com.bortolan.iquadriv2.Views.SwipableRecyclerView.OnSwipeActionListener.C
 import com.loopeer.itemtouchhelperextension.ItemTouchHelperExtension
 
 class SwipableRecyclerView : RecyclerView {
-    internal var listener: OnSwipeActionListener? = null
+    var listener: OnSwipeActionListener? = null
 
     constructor(context: Context) : super(context) {
         setupSwipeGesture()
@@ -54,14 +54,14 @@ class SwipableRecyclerView : RecyclerView {
             override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
                 if (viewHolder is com.bortolan.iquadriv2.Views.ViewHolder) {
                     if (actionState == ACTION_STATE_SWIPE) {
-                        viewHolder.handleSwipeGesture(dX)
+                        viewHolder.setProgress(dX)
                     }
                 }
             }
         }
     }
 
-    internal interface OnSwipeActionListener {
+    interface OnSwipeActionListener {
 
         fun onSwipe(position: Int, @SwipeDirection direction: Int)
 

@@ -9,16 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import com.bortolan.iquadriv2.Adapters.AdapterOrari
 import com.bortolan.iquadriv2.Databases.FavouritesDB
+import com.bortolan.iquadriv2.Databases.RegistroDB
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse
 import com.bortolan.iquadriv2.R
-import com.bortolan.iquadriv2.Tasks.CacheObjectObservable
-import com.bortolan.iquadriv2.Tasks.CacheObjectTask
 import com.bortolan.iquadriv2.Utils.DownloadSchedules
 import com.bortolan.iquadriv2.Utils.Methods
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_orario.*
-import java.io.File
 
 class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextListener {
 
@@ -31,12 +28,10 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
         super.onViewCreated(view, savedInstanceState)
 
         search_view.setOnQueryTextListener(this)
-        search_view.queryHint = "Cerca..."
-        search_view.setIconifiedByDefault(false)
-
-        load()
-        if (Methods.isNetworkAvailable(context)) {
-            DownloadSchedules { response -> addAll(response, true) }.execute()
+        search_view.findViewById(R.id.search_close_btn).setOnClickListener {
+            search_view.clearFocus()
+            preferiti.requestFocus()
+            search_view.setQuery("", true)
         }
     }
 
@@ -44,26 +39,32 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
         super.onResume()
 
         preferiti.setData("preferiti", FavouritesDB.getInstance(context).all, FavouritesDB.getInstance(context), this, false)
+        load()
+        download()
     }
 
-    fun addAll(response: GitHubResponse, doCache: Boolean) {
+    fun addAll(response: GitHubResponse) {
         classi?.setData("classi", response.classi, FavouritesDB.getInstance(context), this, true)
-        prof?.setData("prof", response.prof, FavouritesDB.getInstance(context), this, true)
+        prof?.setData("professori", response.prof, FavouritesDB.getInstance(context), this, true)
         aule?.setData("aule", response.aule, FavouritesDB.getInstance(context), this, true)
 
-        if (doCache) {
-            CacheObjectTask(context?.cacheDir, TAG).execute(response)
+    }
+
+    fun download() {
+        if (Methods.isNetworkAvailable(context)) {
+            DownloadSchedules { response ->
+                save(response)
+                load()
+            }.execute()
         }
     }
 
     fun load() {
-        CacheObjectObservable(File(context.cacheDir, TAG)).getCachedObject(GitHubResponse::class.java)
-                .subscribeOn(Schedulers.io())
-                .subscribe({ t ->
-                    classi.setData("classi", t.classi, FavouritesDB.getInstance(context), this, true)
-                    prof.setData("prof", t.prof, FavouritesDB.getInstance(context), this, true)
-                    aule.setData("aule", t.aule, FavouritesDB.getInstance(context), this, true)
-                }, { it.printStackTrace() })
+        addAll(RegistroDB.getInstance(context).schedules)
+    }
+
+    fun save(response: GitHubResponse) {
+        RegistroDB.getInstance(context).addSchedules(response)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -72,6 +73,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     }
 
     override fun onQueryTextChange(newText: String): Boolean {
+
         preferiti.filter(newText)
         classi.filter(newText)
         prof.filter(newText)

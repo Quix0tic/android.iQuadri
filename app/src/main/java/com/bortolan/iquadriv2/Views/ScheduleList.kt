@@ -53,7 +53,7 @@ open class ScheduleList : LinearLayout {
         this.items!!.clear()
 
         //set title
-        if (!title.isBlank()) this.title.text = title.toUpperCase()
+        if (!title.isNullOrEmpty()) this.title.text = title.toUpperCase()
 
         if (items.isNotEmpty()) {
             if (order) {
@@ -92,8 +92,7 @@ open class ScheduleList : LinearLayout {
     }
 
     fun filter(s: String) {
-        if (adapter != null)
-            adapter!!.filter.filter(s)
+        adapter?.filter?.filter(s)
     }
 
 

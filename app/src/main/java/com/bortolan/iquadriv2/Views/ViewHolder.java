@@ -2,13 +2,11 @@ package com.bortolan.iquadriv2.Views;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.TextView;
 
 import com.bortolan.iquadriv2.R;
-import com.transitionseverywhere.TransitionManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +47,7 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         return view;
     }
 
-    void handleSwipeGesture(float dX) {
+    void setProgress(float dX) {
         float height = main_content.getHeight();
         float maxAbsXDiff = main_content.getWidth() / 2f;
         float factor = interpolator.getInterpolation(Math.min(Math.abs(dX), maxAbsXDiff) / maxAbsXDiff);
@@ -60,13 +58,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
             leftImage.setAlpha(factor);
             leftImage.setTranslationX(Math.abs(height - diffX) / -2f);
         }
-    }
-
-    public void reset() {
-        TransitionManager.beginDelayedTransition((ViewGroup) view.getRootView());
-        main_content.setTranslationX(0);
-        leftImage.setAlpha(1f);
-        leftImage.setTranslationX(0);
     }
 }
 

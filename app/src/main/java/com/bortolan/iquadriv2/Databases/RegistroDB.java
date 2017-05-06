@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.bortolan.iquadriv2.Interfaces.Average;
+import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
+import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse;
 import com.bortolan.iquadriv2.Interfaces.Mark;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
 
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegistroDB extends SQLiteOpenHelper {
-    private static int VERSION = 1;
+    private static int VERSION = 3;
     private static RegistroDB instance = null;
 
     public RegistroDB(Context c) {
@@ -38,7 +40,8 @@ public class RegistroDB extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if (oldVersion < 3)
+            db.execSQL("CREATE TABLE schedules(`name` TEXT NOT NULL,`url` TEXT NOT NULL,`group` TEXT NOT NULL)");
     }
 
     public void addMarks(List<MarkSubject> markSubjects) {
@@ -49,7 +52,7 @@ public class RegistroDB extends SQLiteOpenHelper {
         for (MarkSubject subject : markSubjects) {
             name = subject.getName();
             for (Mark mark : subject.getMarks()) {
-                db.execSQL("INSERT OR IGNORE INTO marks VALUES(?,(?),?,?,?,?,?,?)", new Object[]{mark.getHash(), name, mark.getMark(), mark.getDesc(), mark.getDate().getTime(), mark.getType(), mark.getQ(), mark.isNs() ? 1 : 0});
+                db.execSQL("INSERT OR IGNORE INTO marks VALUES(?,?,?,?,?,?,?,?)", new Object[]{mark.getHash(), name, mark.getMark(), mark.getDesc(), mark.getDate().getTime(), mark.getType(), mark.getQ(), mark.isNs() ? 1 : 0});
             }
         }
         db.setTransactionSuccessful();
@@ -77,6 +80,53 @@ public class RegistroDB extends SQLiteOpenHelper {
         second = c.moveToFirst();
         c.close();
         return second;
+    }
+
+    public void addSchedules(GitHubResponse gitHubResponse) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        db.delete("schedules", null, null);
+        for (GitHubItem item : gitHubResponse.getClassi()) {
+            db.execSQL("INSERT INTO schedules VALUES(?,?,'classe')", new Object[]{item.getName(), item.getUrl()});
+        }
+        for (GitHubItem item : gitHubResponse.getAule()) {
+            db.execSQL("INSERT INTO schedules VALUES(?,?,'aula')", new Object[]{item.getName(), item.getUrl()});
+        }
+        for (GitHubItem item : gitHubResponse.getProf()) {
+            db.execSQL("INSERT INTO schedules VALUES(?,?,'prof')", new Object[]{item.getName(), item.getUrl()});
+        }
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    public GitHubResponse getSchedules() {
+        SQLiteDatabase db = getReadableDatabase();
+        GitHubResponse schedules = new GitHubResponse();
+        List<GitHubItem> temp = new ArrayList<>();
+
+        Cursor c = db.rawQuery("SELECT name, url FROM schedules WHERE `group`='classe'", null);
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext())
+            temp.add(new GitHubItem(c.getString(0), c.getString(1)));
+        schedules.setClassi(new ArrayList<>(temp));
+        temp.clear();
+        c.close();
+
+        c = db.rawQuery("SELECT name, url FROM schedules WHERE `group`='prof'", null);
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext())
+            temp.add(new GitHubItem(c.getString(0), c.getString(1)));
+        schedules.setProf(new ArrayList<>(temp));
+        temp.clear();
+        c.close();
+
+        c = db.rawQuery("SELECT name, url FROM schedules WHERE `group`='aula'", null);
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext())
+            temp.add(new GitHubItem(c.getString(0), c.getString(1)));
+        schedules.setAule(new ArrayList<>(temp));
+        temp.clear();
+        c.close();
+
+        return schedules;
     }
 
     public enum Period {
