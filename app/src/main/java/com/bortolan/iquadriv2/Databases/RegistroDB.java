@@ -36,6 +36,7 @@ public class RegistroDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE marks (id TEXT PRIMARY KEY, subject TEXT NOT NULL, mark TEXT NOT NULL, description TEXT, date INTEGER NOT NULL, type TEXT NOT NULL, period TEXT NOT NULL, not_significant INTEGER NOT NULL)");
+        onUpgrade(db, 1, VERSION);
     }
 
     @Override

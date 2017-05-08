@@ -106,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
                 break;
             case R.id.tab_libri:
                 fragment = new Libri();
+                Bundle b = new Bundle();
+                b.putString("query", getIntent().getStringExtra("query"));
+                fragment.setArguments(b);
                 break;
         }
         if (fragment != null)

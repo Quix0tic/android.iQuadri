@@ -67,6 +67,6 @@
 
     <string name="action_settings">Apri nel browser</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="powered_by">Powered by <b>Scambio Libri</b></string>
+    <string name="tienimi_aggiornato">Tienimi aggiornato</string>
 </resources>

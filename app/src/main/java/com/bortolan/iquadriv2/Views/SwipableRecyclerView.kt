@@ -44,11 +44,8 @@ class SwipableRecyclerView : RecyclerView {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                //Reset the state
                 adapter.notifyItemChanged(position)
-                if (listener != null) {
-                    listener!!.onSwipe(position, RIGHT)
-                }
+                listener?.onSwipe(position, RIGHT)
             }
 
             override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
