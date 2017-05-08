@@ -94,6 +94,7 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
         recycler.listener = this
 
         search_view.setOnQueryTextListener(this)
+        search_view.setQuery(arguments["query"].toString(), true)
         search_view.findViewById(R.id.search_close_btn).setOnClickListener {
             search_view.clearFocus()
             search_card.requestFocus()
@@ -110,7 +111,8 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
                 .subscribe({
                     adapter?.clear()
                     adapter?.addAll(it)
-                    if (!search_view.query.isNullOrEmpty()) search_view.setQuery(search_view.query, true)
+                    adapter?.filter?.filter(search_view.query)
+                    search_view.setQuery(search_view.query, true)
                 }, Throwable::printStackTrace)
     }
 }
