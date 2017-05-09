@@ -1,4 +1,4 @@
-package com.bortolan.iquadriv2.API;
+package com.bortolan.iquadriv2.API.Spaggiari;
 
 import android.content.Context;
 

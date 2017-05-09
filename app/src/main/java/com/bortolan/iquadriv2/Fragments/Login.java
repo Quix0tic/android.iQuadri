@@ -14,7 +14,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.bortolan.iquadriv2.API.SpiaggiariApiClient;
+import com.bortolan.iquadriv2.API.Spaggiari.SpiaggiariApiClient;
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DeviceUuidFactory;
 

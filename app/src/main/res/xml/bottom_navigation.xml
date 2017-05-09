@@ -23,5 +23,5 @@
     <tab
         icon="@drawable/ic_import_contacts_black_24dp"
         id="@+id/tab_libri"
-        title="Libri Usati" />
+        title="Libri" />
 </tabs>

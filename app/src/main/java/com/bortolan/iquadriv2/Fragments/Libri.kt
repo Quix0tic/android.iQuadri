@@ -7,21 +7,22 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
+import com.bortolan.iquadriv2.API.Libri.LibriAPI
+import com.bortolan.iquadriv2.Activities.AddBook
+import com.bortolan.iquadriv2.Activities.LibriLogin
 import com.bortolan.iquadriv2.Adapters.AdapterLibri
-import com.bortolan.iquadriv2.LibriAPI.LibriAPI
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods.dpToPx
 import com.bortolan.iquadriv2.Views.SwipableRecyclerView
-import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -73,7 +74,7 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.w("FIREBASE", FirebaseInstanceId.getInstance().token!!)
+        //Log.w("FIREBASE", FirebaseInstanceId.getInstance().token!!)
         place_holder.setOnClickListener {
             input = search_view.query.toString()
             MaterialDialog.Builder(context)
@@ -84,21 +85,29 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
                     .content("Riceverai una notifica quando verrà pubblicato l'annuncio di un libro avente l'ISBN inserito")
                     .positiveText("Sì")
                     .negativeText("No")
-                    .onPositive { _, _ -> FirebaseMessaging.getInstance().subscribeToTopic(PreferenceManager.getDefaultSharedPreferences(context).getString("city", "vicenza").plus("_").plus(input).toLowerCase());Log.w("TOPIC", PreferenceManager.getDefaultSharedPreferences(context).getString("city", "vicenza").plus("_").plus(input).toLowerCase()) }
+                    .onPositive { _, _ -> FirebaseMessaging.getInstance().subscribeToTopic(PreferenceManager.getDefaultSharedPreferences(context).getString("city", "vicenza").plus("_").plus(input).toLowerCase()) }
                     .show().inputEditText?.addTextChangedListener(this)
         }
         adapter = AdapterLibri(recycler, place_holder)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.addItemDecoration(HorizontalDividerItemDecoration.Builder(context).size(dpToPx(1f).toInt()).build())
+        recycler.addOnScrollListener(FabBehavior())
         recycler.listener = this
 
         search_view.setOnQueryTextListener(this)
-        search_view.setQuery(arguments["query"]?.toString(), true)
+
+        //filter adapter when first load from db
+        if (arguments["query"] != null) search_view.setQuery(arguments["query"].toString(), true)
+
         search_view.findViewById(R.id.search_close_btn).setOnClickListener {
             search_view.clearFocus()
             search_card.requestFocus()
             search_view.setQuery("", true)
+        }
+
+        fab.setOnClickListener {
+            context.startActivity(Intent(context, if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("libri_api_logged", false)) AddBook::class.java else LibriLogin::class.java))
         }
 
         download()
@@ -114,5 +123,24 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
                     adapter?.filter?.filter(search_view.query)
                     search_view.setQuery(search_view.query, true)
                 }, Throwable::printStackTrace)
+    }
+
+    inner class FabBehavior : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (dy > 0) {
+                if (fab.isShown) {
+                    fab.hide()
+                }
+            } else if (dy < 0) {
+                if (!fab.isShown) {
+                    fab.show()
+                }
+            }
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+        }
     }
 }

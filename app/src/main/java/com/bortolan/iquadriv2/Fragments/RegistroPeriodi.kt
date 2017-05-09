@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bortolan.iquadriv2.API.SpiaggiariApiClient
+import com.bortolan.iquadriv2.API.Spaggiari.SpiaggiariApiClient
 import com.bortolan.iquadriv2.Databases.RegistroDB
 import com.bortolan.iquadriv2.Interfaces.MarkSubject
 import com.bortolan.iquadriv2.R

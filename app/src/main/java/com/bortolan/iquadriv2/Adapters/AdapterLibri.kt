@@ -69,7 +69,8 @@ class AdapterLibri(internal var recycler: View, internal var placeholder: View) 
         }
 
         override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-            announcements = results?.values as MutableList<Announcement>
+            announcements.clear()
+            announcements.addAll(results?.values as MutableList<Announcement>)
             notifyDataSetChanged()
             if (announcements.isEmpty()) {
                 recycler.visibility = View.GONE

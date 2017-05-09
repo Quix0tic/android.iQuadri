@@ -1,4 +1,4 @@
-package com.bortolan.iquadriv2.LibriAPI;
+package com.bortolan.iquadriv2.API.Libri;
 
 import android.content.Context;
 
@@ -19,7 +19,7 @@ public class LibriAPI {
 
     public LibriAPI(Context context) {
         CookieJar cookieJar =
-                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context.getSharedPreferences("CookiesLibriAPI", Context.MODE_PRIVATE)));
         try {
             //Installa il supporto al TSL se non è presente
             ProviderInstaller.installIfNeeded(context);

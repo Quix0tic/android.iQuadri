@@ -2,7 +2,7 @@ package com.bortolan.iquadriv2.Interfaces;
 
 import android.util.Log;
 
-import com.bortolan.iquadriv2.API.SpiaggiariAPI;
+import com.bortolan.iquadriv2.API.Spaggiari.SpiaggiariAPI;
 
 import java.io.Serializable;
 import java.util.List;
