@@ -8,17 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.bortolan.iquadriv2.Interfaces.Average;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse;
+import com.bortolan.iquadriv2.Interfaces.Libri.Announcement;
 import com.bortolan.iquadriv2.Interfaces.Mark;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RegistroDB extends SQLiteOpenHelper {
-    private static int VERSION = 3;
+    private static int VERSION = 4;
     private static RegistroDB instance = null;
 
-    public RegistroDB(Context c) {
+    private RegistroDB(Context c) {
         super(c, "RegistroDB", null, VERSION);
     }
 
@@ -43,6 +45,8 @@ public class RegistroDB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 3)
             db.execSQL("CREATE TABLE schedules(`name` TEXT NOT NULL,`url` TEXT NOT NULL,`group` TEXT NOT NULL)");
+        if (oldVersion < 4)
+            db.execSQL("CREATE TABLE announcements(uuid TEXT PRIMARY KEY, title TEXT, isbn TEXT, subject TEXT, edition TEXT, grade TEXT, notes TEXT, price INTEGER, createdAt INTEGER, updatedAt INTEGER)");
     }
 
     public void addMarks(List<MarkSubject> markSubjects) {
@@ -128,6 +132,30 @@ public class RegistroDB extends SQLiteOpenHelper {
         c.close();
 
         return schedules;
+    }
+
+    public void addAnnouncements(List<Announcement> announcements) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        db.delete("announcements", null, null);
+        for (Announcement a : announcements) {
+            db.execSQL("INSERT OR IGNORE INTO announcements VALUES(?,?,?,?,?,?,?,?,?,?)", new Object[]{a.getUnique_id(), a.getTitle(), a.getIsbn(), a.getSubject(), a.getEdition(), a.getGrade(), a.getNotes(), a.getPrice(), a.getCreatedAt().getTime(), a.getUpdatedAt().getTime()});
+        }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }
+
+    public List<Announcement> getAnnouncements() {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.rawQuery("SELECT * FROM announcements", null);
+        List<Announcement> announcements = new ArrayList<>();
+
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+            announcements.add(new Announcement(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6), c.getInt(7), new Date(c.getLong(8))));
+        }
+
+        c.close();
+        return announcements;
     }
 
     public enum Period {

@@ -20,6 +20,7 @@ import com.bortolan.iquadriv2.API.Libri.LibriAPI
 import com.bortolan.iquadriv2.Activities.AddBook
 import com.bortolan.iquadriv2.Activities.LibriLogin
 import com.bortolan.iquadriv2.Adapters.AdapterLibri
+import com.bortolan.iquadriv2.Databases.RegistroDB
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods.dpToPx
 import com.bortolan.iquadriv2.Views.SwipableRecyclerView
@@ -110,7 +111,15 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
             context.startActivity(Intent(context, if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("libri_api_logged", false)) AddBook::class.java else LibriLogin::class.java))
         }
 
+        load()
         download()
+    }
+
+    fun load() {
+        adapter?.clear()
+        adapter?.addAll(RegistroDB.getInstance(context ?: return).announcements)
+        adapter?.filter?.filter(search_view.query)
+        search_view.setQuery(search_view.query, true)
     }
 
     fun download() {
@@ -118,10 +127,8 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    adapter?.clear()
-                    adapter?.addAll(it)
-                    adapter?.filter?.filter(search_view.query)
-                    search_view.setQuery(search_view.query, true)
+                    RegistroDB.getInstance(context).addAnnouncements(it)
+                    load()
                 }, Throwable::printStackTrace)
     }
 

@@ -65,7 +65,9 @@
         <activity
             android:name=".Activities.LibriLogin"
             android:launchMode="singleInstance" />
-        <activity android:name=".Activities.AddBook"></activity>
+        <activity
+            android:name=".Activities.AddBook"
+            android:theme="@style/AppTheme.Preferences" />
     </application>
 
 </manifest>
