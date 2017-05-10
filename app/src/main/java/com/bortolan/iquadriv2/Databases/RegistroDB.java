@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 public class RegistroDB extends SQLiteOpenHelper {
-    private static int VERSION = 4;
+    private static int VERSION = 5;
     private static RegistroDB instance = null;
 
     private RegistroDB(Context c) {
@@ -47,6 +47,8 @@ public class RegistroDB extends SQLiteOpenHelper {
             db.execSQL("CREATE TABLE schedules(`name` TEXT NOT NULL,`url` TEXT NOT NULL,`group` TEXT NOT NULL)");
         if (oldVersion < 4)
             db.execSQL("CREATE TABLE announcements(uuid TEXT PRIMARY KEY, title TEXT, isbn TEXT, subject TEXT, edition TEXT, grade TEXT, notes TEXT, price INTEGER, createdAt INTEGER, updatedAt INTEGER)");
+        if (oldVersion < 5)
+            db.execSQL("ALTER TABLE announcements ADD COLUMN phone TEXT");
     }
 
     public void addMarks(List<MarkSubject> markSubjects) {
@@ -139,7 +141,7 @@ public class RegistroDB extends SQLiteOpenHelper {
         db.beginTransaction();
         db.delete("announcements", null, null);
         for (Announcement a : announcements) {
-            db.execSQL("INSERT OR IGNORE INTO announcements VALUES(?,?,?,?,?,?,?,?,?,?)", new Object[]{a.getUnique_id(), a.getTitle(), a.getIsbn(), a.getSubject(), a.getEdition(), a.getGrade(), a.getNotes(), a.getPrice(), a.getCreatedAt().getTime(), a.getUpdatedAt().getTime()});
+            db.execSQL("INSERT OR IGNORE INTO announcements(uuid,title,isbn,subject,edition,grade,notes,price,createdAt,updatedAt,phone) VALUES(?,?,?,?,?,?,?,?,?,?,?)", new Object[]{a.getUnique_id(), a.getTitle(), a.getIsbn(), a.getSubject(), a.getEdition(), a.getGrade(), a.getNotes(), a.getPrice(), a.getCreatedAt().getTime(), a.getUpdatedAt().getTime(), a.getPhone()});
         }
         db.setTransactionSuccessful();
         db.endTransaction();
@@ -147,11 +149,11 @@ public class RegistroDB extends SQLiteOpenHelper {
 
     public List<Announcement> getAnnouncements() {
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM announcements", null);
+        Cursor c = db.rawQuery("SELECT uuid,title,isbn,subject,edition,grade,notes,price,createdAt,updatedAt,phone FROM announcements", null);
         List<Announcement> announcements = new ArrayList<>();
 
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-            announcements.add(new Announcement(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6), c.getInt(7), new Date(c.getLong(8))));
+            announcements.add(new Announcement(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4), c.getString(5), c.getString(6), c.getString(10), c.getInt(7), new Date(c.getLong(8))));
         }
 
         c.close();

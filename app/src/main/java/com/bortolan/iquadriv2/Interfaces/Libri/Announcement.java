@@ -7,19 +7,7 @@ public class Announcement {
     private int price;
     private Date createdAt, updatedAt;
 
-    public Announcement(String uuid, String title, String isbn, String subject, String edition, String grade, String notes, int price, Date createdAt) {
-        this.uuid = uuid;
-        this.title = title;
-        this.isbn = isbn;
-        this.subject = subject;
-        this.edition = edition;
-        this.grade = grade;
-        this.notes = notes;
-        this.price = price;
-        this.createdAt = createdAt;
-    }
-
-    public Announcement(String uuid, String title, String isbn, String subject, String edition, String grade, String notes, String phone, String city, String name, int price, Date createdAt, Date updatedAt) {
+    public Announcement(String uuid, String title, String isbn, String subject, String edition, String grade, String notes, String phone, int price, Date createdAt) {
         this.uuid = uuid;
         this.title = title;
         this.isbn = isbn;
@@ -28,11 +16,8 @@ public class Announcement {
         this.grade = grade;
         this.notes = notes;
         this.phone = phone;
-        this.city = city;
-        this.name = name;
         this.price = price;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     public String getUnique_id() {

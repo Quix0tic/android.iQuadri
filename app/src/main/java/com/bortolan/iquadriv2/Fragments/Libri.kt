@@ -12,6 +12,7 @@ import android.support.v7.widget.SearchView
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +26,7 @@ import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods.dpToPx
 import com.bortolan.iquadriv2.Views.SwipableRecyclerView
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -127,6 +129,7 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    Log.d("ANNONCEMENTS", Gson().toJson(it))
                     RegistroDB.getInstance(context).addAnnouncements(it)
                     load()
                 }, Throwable::printStackTrace)
