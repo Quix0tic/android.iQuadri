@@ -58,7 +58,7 @@
             <ImageView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:tint="@android:color/secondary_text_light"
+                android:tint="@color/secondary_text_disabled_material_dark"
                 app:srcCompat="@drawable/ic_observe" />
 
             <TextView
