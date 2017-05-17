@@ -28,6 +28,8 @@ public class ArticleActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
 
+    String url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,7 @@ public class ArticleActivity extends AppCompatActivity {
         }
         ButterKnife.bind(this);
 
+        url = getIntent().getStringExtra("url");
 
         setCollapsingToolbarLayoutTitle(getIntent().getStringExtra("title"));
 
@@ -52,7 +55,7 @@ public class ArticleActivity extends AppCompatActivity {
                 finish();
                 Toast.makeText(this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
             }
-        }).execute(getIntent().getStringExtra("url"));
+        }).execute(url);
 
     }
 

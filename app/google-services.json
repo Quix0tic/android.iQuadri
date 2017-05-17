@@ -15,11 +15,19 @@
       },
       "oauth_client": [
         {
+          "client_id": "1072310095092-9o5gs257icd2neg7c4ap030hkier8fnl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bortolan.iquadriv2",
+            "certificate_hash": "8bdc206962571e0d36c14d125ccf48b2866d02c2"
+          }
+        },
+        {
           "client_id": "1072310095092-obmp6iillte1h90m3n5ketlhqh52pjbc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.bortolan.iquadriv2",
-            "certificate_hash": "1419897550666C6E917D33AB7424F3287457EEE7"
+            "certificate_hash": "1419897550666c6e917d33ab7424f3287457eee7"
           }
         },
         {
