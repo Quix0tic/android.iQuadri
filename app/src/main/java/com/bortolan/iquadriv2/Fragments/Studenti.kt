@@ -25,14 +25,13 @@ import com.crazyhitty.chdev.ks.rssmanager.RssItem
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_circolari.*
 import java.io.File
 
 /**
  * http://studenti.liceoquadri.it/feed/
  */
 class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener, OnRssLoadListener {
-    internal var adapter: AdapterCircolari? = null
+    internal lateinit var adapter: AdapterCircolari
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -66,9 +65,9 @@ class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener, OnRssLoadList
     }
 
     private fun download() {
-        var mContext: Context = context
+        val mContext: Context = context
         DownloadRSSFeed("Studenti", PreferenceManager.getDefaultSharedPreferences(context)) { list ->
-            swipe_refresh?.isRefreshing = false
+            swipe_refresh.isRefreshing = false
             addAnnouncements(list, true)
             if (!list.isEmpty())
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_studenti", list[0].title.toLowerCase().trim { it <= ' ' }).apply()
@@ -89,8 +88,8 @@ class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener, OnRssLoadList
 
     internal fun addAnnouncements(announcements: List<Circolare>, docache: Boolean) {
         if (!announcements.isEmpty()) {
-            adapter!!.clear()
-            adapter!!.addAll(announcements)
+            adapter.clear()
+            adapter.addAll(announcements)
 
             if (docache) {
                 CacheListTask(context?.cacheDir, TAG).execute(announcements as List<*>)

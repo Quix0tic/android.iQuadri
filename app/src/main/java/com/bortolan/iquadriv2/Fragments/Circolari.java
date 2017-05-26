@@ -33,7 +33,7 @@ import static com.bortolan.iquadriv2.Utils.DownloadRSSFeed.CIRCOLARI;
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    static final String TAG = Circolari.class.getSimpleName();
+    static final String TAG = "Circolari";
 
     Context mContext;
 

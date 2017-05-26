@@ -9,7 +9,6 @@ import com.bortolan.iquadriv2.Interfaces.Libri.AnnouncementResponse
 import com.bortolan.iquadriv2.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_add_book.*
 
 class AddBook : AppCompatActivity() {
 
@@ -24,15 +23,15 @@ class AddBook : AppCompatActivity() {
     }
 
     fun addAnnouncement() {
-        if (isTitle().and(isPrice()).and(isISBN()).and(isSubject()).and(isEdition()).and(isClass()).and(isNotes())) {
+        if (isNotes().and(isClass()).and(isEdition()).and(isSubject()).and(isISBN()).and(isPrice()).and(isTitle())) {
             LibriAPI(this).mService.postAnnouncement(
-                    title_book.editText?.text?.toString() ?: return,
-                    isbn.editText?.text?.toString() ?: return,
-                    subject.editText?.text?.toString() ?: return,
-                    edition.editText?.text?.toString() ?: return,
-                    classi.editText?.text?.toString() ?: return,
-                    notes.editText?.text?.toString() ?: return,
-                    price.editText?.text?.toString()?.toIntOrNull() ?: return
+                    title_book.editText.text.toString() ?: return,
+                    isbn.editText.text.toString() ?: return,
+                    subject.editText.text.toString() ?: return,
+                    edition.editText.text.toString() ?: return,
+                    classi.editText.text.toString() ?: return,
+                    notes.editText.text.toString() ?: return,
+                    price.editText.text.toString().toIntOrNull() ?: return
             ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ t: AnnouncementResponse? ->
                         finish()
@@ -41,7 +40,7 @@ class AddBook : AppCompatActivity() {
     }
 
     fun isTitle(): Boolean {
-        if (title_book.editText?.text.isNullOrBlank()) {
+        if (title_book.editText.text.isNullOrBlank()) {
             title_book.isErrorEnabled = true
             title_book.error = "Inserire il titolo!"
             title_book.requestFocus()
@@ -52,7 +51,7 @@ class AddBook : AppCompatActivity() {
     }
 
     fun isPrice(): Boolean {
-        if (price.editText?.text.isNullOrBlank()) {
+        if (price.editText.text.isNullOrBlank()) {
             price.isErrorEnabled = true
             price.error = "Inserire il prezzo!"
             price.requestFocus()
@@ -63,12 +62,12 @@ class AddBook : AppCompatActivity() {
     }
 
     fun isISBN(): Boolean {
-        if (isbn.editText?.text.isNullOrBlank()) {
+        if (isbn.editText.text.isNullOrBlank()) {
             isbn.isErrorEnabled = true
             isbn.error = "Inserire il codice ISBN!"
             isbn.requestFocus()
             return false
-        } else if (isbn.editText?.text?.length != 13) {
+        } else if (isbn.editText.text.length != 13) {
             isbn.isErrorEnabled = true
             isbn.error = "Il codice ISBN deve essere lungo 13 caratteri!"
             isbn.requestFocus()
@@ -79,7 +78,7 @@ class AddBook : AppCompatActivity() {
     }
 
     fun isSubject(): Boolean {
-        if (subject.editText?.text.isNullOrBlank()) {
+        if (subject.editText.text.isNullOrBlank()) {
             subject.isErrorEnabled = true
             subject.error = "Inserire la materia!"
             subject.requestFocus()
@@ -90,12 +89,12 @@ class AddBook : AppCompatActivity() {
     }
 
     fun isEdition(): Boolean {
-        if (edition.editText?.text.isNullOrBlank()) {
+        if (edition.editText.text.isNullOrBlank()) {
             edition.isErrorEnabled = true
             edition.error = "Inserire l'edizione!"
             edition.requestFocus()
             return false
-        } else if (edition.editText?.text?.length != 4) {
+        } else if (edition.editText.text.length != 4) {
             edition.isErrorEnabled = true
             edition.error = "L'edizione deve essere lunga 4 caratteri!"
             edition.requestFocus()
@@ -106,7 +105,7 @@ class AddBook : AppCompatActivity() {
     }
 
     fun isClass(): Boolean {
-        if (classi.editText?.text.isNullOrBlank()) {
+        if (classi.editText.text.isNullOrBlank()) {
             classi.isErrorEnabled = true
             classi.error = "Inserire la classe!"
             classi.requestFocus()
@@ -117,7 +116,7 @@ class AddBook : AppCompatActivity() {
     }
 
     fun isNotes(): Boolean {
-        if (notes.editText?.text.isNullOrBlank()) {
+        if (notes.editText.text.isNullOrBlank()) {
             notes.isErrorEnabled = true
             notes.error = "Inserire maggiori dettagli!"
             notes.requestFocus()

@@ -8,19 +8,14 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.bortolan.iquadriv2.Adapters.AdapterOrari
-import com.bortolan.iquadriv2.Databases.FavouritesDB
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem
 import com.bortolan.iquadriv2.R
-import kotlinx.android.synthetic.main.view_orari.view.*
 import java.util.*
 
 open class ScheduleList : LinearLayout {
     internal var updateFragment: AdapterOrari.UpdateFragment? = null
-    private var adapter: AdapterOrari? = null
-    private var items: MutableList<GitHubItem>? = null
+    private lateinit var adapter: AdapterOrari
     private var order: Boolean = false
-
-    internal var db: FavouritesDB? = null
 
     constructor(context: Context) : super(context) {
         init()
@@ -36,35 +31,33 @@ open class ScheduleList : LinearLayout {
 
     fun init() {
         View.inflate(context, R.layout.view_orari, this)
-        items = LinkedList<GitHubItem>()
 
         recycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recycler.setHasFixedSize(true)
         recycler.layoutManager.isAutoMeasureEnabled = true
+        adapter = AdapterOrari(context)
+        recycler.adapter = adapter
     }
 
-    fun setData(title: String, items: List<GitHubItem>, db: FavouritesDB, updateFragment: AdapterOrari.UpdateFragment, order: Boolean) {
-        this.db = db
+    fun setData(title: String, items: List<GitHubItem>, updateFragment: AdapterOrari.UpdateFragment, order: Boolean) {
         this.updateFragment = updateFragment
         this.order = order
-
-        //clear
-        adapter?.clear()
-        this.items!!.clear()
+        adapter.setUpdateFragment(updateFragment)
 
         //set title
         if (!title.isNullOrEmpty()) this.title.text = title.toUpperCase()
+
+        //title callback
+        recycler.clearOnScrollListeners()
+        recycler.addOnScrollListener(myScrollListener(this.title))
 
         if (items.isNotEmpty()) {
             if (order) {
                 Collections.sort(items) { o1, o2 -> o1.name.compareTo(o2.name, ignoreCase = true) }
             }
-            this.items!!.addAll(items)
 
-            adapter = AdapterOrari(context, db, updateFragment)
-            adapter!!.addAll(items)
-            recycler.adapter = adapter
-            recycler.addOnScrollListener(myScrollListener(this.title))
+            adapter.clear()
+            adapter.addAll(items)
 
             this.visibility = View.VISIBLE
         } else {
@@ -73,26 +66,18 @@ open class ScheduleList : LinearLayout {
     }
 
     fun remove(position: Int) {
-        if (position >= 0 && position < items!!.size) {
-            items!!.removeAt(position)
-            adapter!!.remove(position)
-
-            visibility = if (items!!.isNotEmpty()) View.VISIBLE else View.GONE
-        }
+        adapter.remove(position)
+        visibility = if (adapter.totalItemCount() > 0) View.VISIBLE else View.GONE
     }
 
     fun add(t: GitHubItem, position: Int) {
-        items!!.add(position, t)
-        if (adapter == null) {
-            setData("", listOf(t), FavouritesDB.getInstance(context), updateFragment!!, order)
-        } else {
-            adapter!!.add(t, position)
-            visibility = if (items!!.size > 0) View.VISIBLE else View.GONE
-        }
+        adapter.add(t, position)
+        visibility = if (adapter.totalItemCount() > 0) View.VISIBLE else View.GONE
     }
 
-    fun filter(s: String) {
-        adapter?.filter?.filter(s)
+    fun filter(s: String?) {
+        adapter.filter.filter(s)
+        adapter.query = s
     }
 
 

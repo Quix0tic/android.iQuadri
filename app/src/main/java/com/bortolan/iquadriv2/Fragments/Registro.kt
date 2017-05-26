@@ -5,6 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +13,11 @@ import com.bortolan.iquadriv2.Adapters.AdapterMedie
 import com.bortolan.iquadriv2.Interfaces.Average
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.ItemOffsetDecoration
-import kotlinx.android.synthetic.main.fragment_registro.*
 
 class Registro : Fragment() {
-    internal var adapter: AdapterMedie? = null
-
+    internal lateinit var adapter: AdapterMedie
     internal var periodo: Int = 0
+    var data = ArrayList<Average>()
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,10 +30,16 @@ class Registro : Fragment() {
         logout.setOnClickListener({ this.logout() })
 
         adapter = AdapterMedie(context, periodo)
-        recycler.layoutManager = GridLayoutManager(context, 2)
+        recycler.layoutManager = GridLayoutManager(context, 2) as RecyclerView.LayoutManager?
         recycler.addItemDecoration(ItemOffsetDecoration(context, R.dimen.card_margin))
         recycler.adapter = adapter
         recycler.isNestedScrollingEnabled = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        adapter.clear()
+        adapter.addAll(data)
     }
 
     fun logout() {
@@ -50,8 +56,13 @@ class Registro : Fragment() {
 
     fun addSubjects(markSubjects: List<Average>) {
         if (markSubjects.isNotEmpty()) {
-            adapter?.clear()
-            adapter?.addAll(markSubjects)
+            data.clear()
+            data.addAll(markSubjects)
+            try {
+                adapter.clear()
+                adapter.addAll(data)
+            } catch (e: Exception) {
+            }
         }
     }
 

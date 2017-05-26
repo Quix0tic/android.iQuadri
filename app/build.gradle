@@ -32,8 +32,8 @@ android {
         applicationId "com.bortolan.iquadriv2"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 11
-        versionName "1.1.5"
+        versionCode 13
+        versionName "1.1.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
@@ -97,7 +97,7 @@ dependencies {
     compile 'com.android.support:support-v4:26.0.0-alpha1'
     compile 'com.loopeer.library:itemtouchhelperextension:1.0.4'
     compile 'com.andkulikov:transitionseverywhere:1.7.0'
-    compile 'com.google.android.gms:play-services-safetynet:10.2.4'
+    compile 'com.google.android.gms:play-services-safetynet:10.2.6'
     compile 'net.xpece.android:support-preference:1.2.4'
     compile 'com.crazyhitty.chdev.ks:rss-manager:0.23'
     compile 'com.yqritc:recyclerview-flexibledivider:1.4.0'

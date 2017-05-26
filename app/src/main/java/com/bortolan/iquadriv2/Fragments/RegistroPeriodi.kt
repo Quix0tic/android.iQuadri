@@ -1,6 +1,7 @@
 package com.bortolan.iquadriv2.Fragments
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -16,12 +17,11 @@ import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_registro_periodi.*
 import java.util.*
 
 class RegistroPeriodi : Fragment() {
-    internal var periodiAdapter: PeriodiPager? = null
-
+    internal lateinit var periodiAdapter: PeriodiPager
+    internal lateinit var context: Context
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,6 +30,7 @@ class RegistroPeriodi : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        context = getContext()
         periodiAdapter = PeriodiPager(childFragmentManager)
         pager.adapter = periodiAdapter
         pager.offscreenPageLimit = 2
@@ -56,9 +57,9 @@ class RegistroPeriodi : Fragment() {
     }
 
     private fun load() {
-        (periodiAdapter?.instantiateItem(pager, 0) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.FIRST, "ORDER BY subject"))
-        (periodiAdapter?.instantiateItem(pager, 1) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.SECOND, "ORDER BY subject"))
-        (periodiAdapter?.instantiateItem(pager, 2) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.ALL, "ORDER BY subject"))
+        (periodiAdapter.instantiateItem(pager, 0) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.FIRST, "ORDER BY subject"))
+        (periodiAdapter.instantiateItem(pager, 1) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.SECOND, "ORDER BY subject"))
+        (periodiAdapter.instantiateItem(pager, 2) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.ALL, "ORDER BY subject"))
 
         if (RegistroDB.getInstance(context).isSecondPeriodStarted)
             pager.setCurrentItem(1, true)

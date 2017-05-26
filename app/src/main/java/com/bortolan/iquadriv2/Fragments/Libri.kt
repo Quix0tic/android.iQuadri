@@ -28,10 +28,13 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_libri.*
 
 
 class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.OnSwipeActionListener, TextWatcher {
+
+    internal lateinit var adapter: AdapterLibri
+    var input: String = ""
+
     override fun afterTextChanged(s: Editable?) {
     }
 
@@ -43,13 +46,12 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
     }
 
     override fun onSwipe(position: Int, direction: Int) {
-        val phone = adapter?.getAt(position)?.phone
+        val phone = adapter.getAt(position)?.phone
         val intent = Intent(Intent.ACTION_DIAL)
         intent.data = Uri.parse("tel:" + phone)
         context?.startActivity(intent)
     }
 
-    var input: String = ""
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         search_view.clearFocus()
@@ -57,14 +59,8 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        adapter?.filter?.filter(newText)
+        adapter.filter.filter(newText)
         return true
-    }
-
-    internal var adapter: AdapterLibri? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -116,9 +112,9 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
     }
 
     fun load() {
-        adapter?.clear()
-        adapter?.addAll(RegistroDB.getInstance(context ?: return).announcements)
-        adapter?.filter?.filter(search_view.query)
+        adapter.clear()
+        adapter.addAll(RegistroDB.getInstance(context ?: return).announcements)
+        adapter.filter.filter(search_view.query)
         search_view.setQuery(search_view.query, true)
     }
 

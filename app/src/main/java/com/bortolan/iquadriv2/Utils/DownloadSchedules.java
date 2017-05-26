@@ -44,7 +44,7 @@ public class DownloadSchedules extends AsyncTask<Void, Void, GitHubResponse> {
     @Override
     protected void onPostExecute(GitHubResponse response) {
         super.onPostExecute(response);
-        execute.onPost(response);
+        if (response != null) execute.onPost(response);
     }
 
     public interface Execute {

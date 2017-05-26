@@ -49,3 +49,5 @@
 -keep public class org.jsoup.** {
 public *;
 }
+
+-dontwarn com.google.firebase.messaging.**
