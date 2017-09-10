@@ -37,12 +37,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             id = PreferenceManager.getDefaultSharedPreferences(applicationContext).getInt("notification_id", 0)
             mNotificationManager.notify(id, builder.build())
             PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putInt("notification_id", id + 1).apply()
-        } else if (pref.getBoolean("notify", true) && (pref.getBoolean("notify_circolari", true) || pref.getBoolean("notify_studenti", true))) {
+        } else if (pref.getBoolean("notify", true)) {
             Log.w("FirebaseService", "Shoot Notification")
 
-            if (data["action"]?.equals("circolari") ?: false) {
+            if (data["action"]?.equals("circolari") ?: false && pref.getBoolean("circolari", true)) {
                 startService(Intent(this, CircolariNotification::class.java))
-            } else if (data["action"]?.equals("studenti") ?: false) {
+            } else if (data["action"]?.equals("studenti") ?: false && pref.getBoolean("studenti", true)) {
                 startService(Intent(this, QDSNotification::class.java))
             }
         }
