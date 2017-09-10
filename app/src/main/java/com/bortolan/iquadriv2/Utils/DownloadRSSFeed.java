@@ -25,6 +25,7 @@ import static com.bortolan.iquadriv2.Utils.Methods.removeItemNotInCategory;
 
 public class DownloadRSSFeed extends AsyncTask<String, Void, List<Circolare>> {
     public final static String STUDENTI = "http://studenti.liceoquadri.it/";
+    //TODO: set proper url
     public final static String CIRCOLARI = "https://mail.liceoquadri.it/wp_circolari/wordpress/index.php/category/circolari/feed/";
 
     private String key;

@@ -99,8 +99,8 @@ class AdapterOrari(private val mContext: Context) : RecyclerView.Adapter<Adapter
     }
 
     inner class OrarioHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var title: TextView = itemView.findViewById(R.id.title) as TextView
-        var layout: View = itemView.findViewById(R.id.layout)
+        var title: TextView = itemView.findViewById<TextView>(R.id.title)
+        var layout: View = itemView.findViewById<TextView>(R.id.layout)
     }
 
     private inner class MyFilter : Filter() {

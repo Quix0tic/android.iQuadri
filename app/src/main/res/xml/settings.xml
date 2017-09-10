@@ -1,5 +1,4 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- A 'parent' preference, which enables/disables child preferences (below)
          when checked/unchecked. -->
@@ -9,16 +8,6 @@
             android:key="notify"
             android:persistent="true"
             android:title="@string/pref_title_new_message_notifications" />
-
-        <net.xpece.android.support.preference.ListPreference
-            android:defaultValue="3600000"
-            android:dependency="notify"
-            android:entries="@array/pref_sync_frequency_titles"
-            android:entryValues="@array/pref_sync_frequency_values"
-            android:key="notify_frequency"
-            android:persistent="true"
-            android:title="@string/pref_title_sync_frequency"
-            app:asp_menuMode="simple_dialog" />
 
         <net.xpece.android.support.preference.CheckBoxPreference
             android:defaultValue="true"

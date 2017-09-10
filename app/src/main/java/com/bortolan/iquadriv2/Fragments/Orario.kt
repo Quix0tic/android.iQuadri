@@ -8,6 +8,7 @@ import android.support.v7.widget.SearchView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.bortolan.iquadriv2.Adapters.AdapterOrari
 import com.bortolan.iquadriv2.Databases.FavouritesDB
 import com.bortolan.iquadriv2.Databases.RegistroDB
@@ -16,6 +17,7 @@ import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.DownloadSchedules
 import com.bortolan.iquadriv2.Utils.Methods
+import kotlinx.android.synthetic.main.fragment_orario.*
 
 class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextListener {
 
@@ -28,7 +30,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
         super.onViewCreated(view, savedInstanceState)
 
         search_view.setOnQueryTextListener(this)
-        search_view.findViewById(R.id.search_close_btn).setOnClickListener {
+        search_view.findViewById<ImageView>(R.id.search_close_btn).setOnClickListener {
             search_view.clearFocus()
             preferiti.requestFocus()
             search_view.setQuery(null, true)
@@ -45,9 +47,9 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     }
 
     fun addAll(response: GitHubResponse) {
-        classi.setData("classi", response.classi, this, true)
-        prof.setData("professori", response.prof, this, true)
-        aule.setData("aule", response.aule, this, true)
+        classi?.setData("classi", response.classi, this, true)
+        prof?.setData("professori", response.prof, this, true)
+        aule?.setData("aule", response.aule, this, true)
     }
 
     fun download() {

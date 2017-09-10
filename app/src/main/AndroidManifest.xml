@@ -11,6 +11,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -27,18 +28,10 @@
             android:name="io.fabric.ApiKey"
             android:value="252ed2b733dd81ce76fe61f583737b98a6b5eaf3" />
 
-        <receiver android:name=".Broadcasts.OnBoot">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-                <action android:name="android.intent.action.PACKAGE_RESTARTED" />
-
-                <data
-                    android:path="com.bortolan.iquadriv2"
-                    android:scheme="package" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".Broadcasts.Notifiche" />
+        <service
+            android:name=".Services.CircolariNotification"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".Activities.SettingsActivity"
@@ -54,7 +47,7 @@
             android:theme="@style/AppTheme" />
 
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".Services.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -68,6 +61,11 @@
         <activity
             android:name=".Activities.AddBook"
             android:theme="@style/AppTheme.Preferences" />
+
+        <service
+            android:name=".Services.QDSNotification"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

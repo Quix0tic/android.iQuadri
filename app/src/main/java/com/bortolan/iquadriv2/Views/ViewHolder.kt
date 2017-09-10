@@ -7,9 +7,9 @@ import android.widget.TextView
 import com.bortolan.iquadriv2.R
 
 class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-    var titleTextView: TextView = view.findViewById(R.id.title) as TextView
-    var priceTextView: TextView = view.findViewById(R.id.price) as TextView
-    var isbnTextView: TextView = view.findViewById(R.id.isbn) as TextView
+    var titleTextView: TextView = view.findViewById<TextView>(R.id.title)
+    var priceTextView: TextView = view.findViewById<TextView>(R.id.price)
+    var isbnTextView: TextView = view.findViewById<TextView>(R.id.isbn)
     var leftImage: View = view.findViewById(R.id.left_image)
     var main_content: View = view.findViewById(R.id.content)
     private val interpolator = DecelerateInterpolator(2f)

@@ -15,6 +15,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bortolan.iquadriv2.API.Libri.LibriAPI
 import com.bortolan.iquadriv2.Activities.AddBook
@@ -97,7 +98,7 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
         //filter adapter when first load from db
         if (arguments["query"] != null) search_view.setQuery(arguments["query"].toString(), true)
 
-        search_view.findViewById(R.id.search_close_btn).setOnClickListener {
+        search_view.findViewById<ImageView>(R.id.search_close_btn).setOnClickListener {
             search_view.clearFocus()
             search_card.requestFocus()
             search_view.setQuery("", true)

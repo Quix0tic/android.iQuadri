@@ -1,17 +1,13 @@
 package com.bortolan.iquadriv2.Utils;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -119,14 +115,6 @@ public class Methods {
             toReturn = toReturn.substring(0, toReturn.length() - 2);
         }
         return toReturn;
-    }
-
-    public static void setAlarm(AlarmManager alarmManager, SharedPreferences preferences, PendingIntent operation) {
-        Log.d("ALARM", "SET NOTIFICATION INEXACT REPEATING");
-
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES, Long.parseLong(preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR))), operation);
-
-        //alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10, 60000, operation);
     }
 
     private static int getMarkColor(float voto, float voto_obiettivo) {

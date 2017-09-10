@@ -1,18 +1,11 @@
 package com.bortolan.iquadriv2.Activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
-import com.bortolan.iquadriv2.Broadcasts.Notifiche;
 import com.bortolan.iquadriv2.BuildConfig;
 import com.bortolan.iquadriv2.Databases.FavouritesDB;
 import com.bortolan.iquadriv2.Databases.RegistroDB;
@@ -26,14 +19,13 @@ import com.bortolan.iquadriv2.Fragments.Studenti;
 import com.bortolan.iquadriv2.R;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
-
-import static com.bortolan.iquadriv2.Utils.Methods.setAlarm;
 
 public class MainActivity extends AppCompatActivity implements OnTabSelectListener {
     public final static int NOTIFICATION_ID = 447124;
@@ -57,30 +49,14 @@ public class MainActivity extends AppCompatActivity implements OnTabSelectListen
                     .build();
             Fabric.with(fabric);
         }
-        //Log.d("FIREBASE TOKEN", FirebaseInstanceId.getInstance().getToken());
 
-        checkNotifications();
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("android_" + (BuildConfig.VERSION_CODE - 1));
+        FirebaseMessaging.getInstance().subscribeToTopic("android_" + (BuildConfig.VERSION_CODE));
 
         navigation_bar.setOnTabSelectListener(this);
         navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
     }
 
-    private void checkNotifications() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        PendingIntent operation = PendingIntent.getBroadcast(this, NOTIFICATION_ID, new Intent(this, Notifiche.class), 0);
-
-
-        if (preferences.getBoolean("first_run", true)) {
-            preferences.edit().putBoolean("first_run", false).apply();
-            if (preferences.getBoolean("notify", true) && ((preferences.getBoolean("notify_circolari", true) || preferences.getBoolean("notify_studenti", true)))) {
-                Log.d("NOTIFICATION", "MAIN/check - INTERVAL: " + preferences.getString("notify_frequency", String.valueOf(AlarmManager.INTERVAL_HOUR)));
-                setAlarm(alarmManager, preferences, operation);
-            } else {
-                alarmManager.cancel(operation);
-            }
-        }
-    }
 
     @Override
     public void onTabSelected(@IdRes int tabId) {
