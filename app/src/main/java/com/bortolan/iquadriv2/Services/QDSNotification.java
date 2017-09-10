@@ -19,7 +19,6 @@ import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadRSSFeed;
 
-import static com.bortolan.iquadriv2.Utils.DownloadRSSFeed.STUDENTI;
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class QDSNotification extends Service {
@@ -51,7 +50,7 @@ public class QDSNotification extends Service {
             new DownloadRSSFeed(last_studenti, preferences, list -> {
                 if (!list.isEmpty() && list.size() > 0)
                     checkUpdates(context, list.get(0), preferences, last_studenti, preferences.getBoolean("notify_studenti", true));
-            }).execute(STUDENTI);
+            }).execute(DownloadRSSFeed.Companion.getSTUDENTI());
         }
     }
 
@@ -68,7 +67,7 @@ public class QDSNotification extends Service {
                 i.putExtra("tab", R.id.tab_avvisi);
                 PendingIntent intent = PendingIntent.getActivity(context, MainActivity.STUDENTI_ID, i, 0);
 
-                mBuilder = new NotificationCompat.Builder(context)
+                mBuilder = new NotificationCompat.Builder(context, "iQuadri")
                         .setSmallIcon(R.drawable.ic_stat_name)
                         .setContentText(content)
                         .setContentTitle(title)

@@ -68,7 +68,7 @@ public class AdapterCircolari extends RecyclerView.Adapter<AdapterCircolari.Circ
         notifyDataSetChanged();
     }
 
-    public void addAll(List<Circolare> list) {
+    public void addAll(List<? extends Circolare> list) {
         data.addAll(list);
         notifyDataSetChanged();
     }

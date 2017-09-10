@@ -27,9 +27,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             intent.putExtra("tab", R.id.tab_libri)
             intent.putExtra("query", data["isbn"].toString())
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_ONE_SHOT)
-            val builder = NotificationCompat.Builder(applicationContext).setContentTitle(data["title"].toString()).setContentText(data["body"].toString()).setSmallIcon(R.mipmap.ic_launcher).setLights(Color.argb(255, 0, 0, 240), 1000, 1000).setAutoCancel(true)
+            val builder = NotificationCompat.Builder(applicationContext, "iQuadri").setContentTitle(data["title"].toString()).setContentText(data["body"].toString()).setSmallIcon(R.mipmap.ic_launcher).setLights(Color.argb(255, 0, 0, 240), 1000, 1000).setAutoCancel(true)
             builder.setContentIntent(pendingIntent)
 
             val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

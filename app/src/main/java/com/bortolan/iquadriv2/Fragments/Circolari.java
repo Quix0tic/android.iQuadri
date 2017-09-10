@@ -29,7 +29,6 @@ import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.bortolan.iquadriv2.Utils.DownloadRSSFeed.CIRCOLARI;
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
@@ -90,10 +89,10 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
             addAnnouncements(list, true);
             if (!list.isEmpty())
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", list.get(0).getTitle().toLowerCase().trim()).apply();
-        }).execute(CIRCOLARI);
+        }).execute(DownloadRSSFeed.Companion.getCIRCOLARI());
     }
 
-    void addAnnouncements(List<Circolare> announcements, boolean docache) {
+    void addAnnouncements(List<? extends Circolare> announcements, boolean docache) {
         if (!announcements.isEmpty()) {
             adapter.clear();
             adapter.addAll(announcements);
