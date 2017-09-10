@@ -10,6 +10,7 @@ import android.widget.TextView
 import com.bortolan.iquadriv2.Adapters.AdapterOrari
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem
 import com.bortolan.iquadriv2.R
+import kotlinx.android.synthetic.main.view_orari.view.*
 import java.util.*
 
 open class ScheduleList : LinearLayout {

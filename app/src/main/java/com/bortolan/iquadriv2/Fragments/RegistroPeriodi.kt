@@ -17,6 +17,7 @@ import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_registro_periodi.*
 import java.util.*
 
 class RegistroPeriodi : Fragment() {

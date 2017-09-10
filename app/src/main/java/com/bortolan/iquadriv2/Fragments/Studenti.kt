@@ -25,6 +25,7 @@ import com.crazyhitty.chdev.ks.rssmanager.RssItem
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_circolari.*
 import java.io.File
 
 /**
