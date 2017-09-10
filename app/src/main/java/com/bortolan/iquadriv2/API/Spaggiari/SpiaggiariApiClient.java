@@ -11,6 +11,8 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.File;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.CookieJar;
@@ -55,6 +57,7 @@ public class SpiaggiariApiClient {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
                 .cache(cache)
+                .hostnameVerifier((s, sslSession) -> HttpsURLConnection.getDefaultHostnameVerifier().verify("daniele.ml", sslSession))
                 .addNetworkInterceptor(REWRITE_CACHE_CONTROL_INTERCEPTOR)
                 .build();
 
