@@ -46,7 +46,7 @@ class ActivityLibriLogin : AppCompatActivity() {
         login.setOnClickListener {
             MaterialDialog.Builder(this)
                     .title("Continuare?")
-                    .content(Html.fromHtml(String.format("%1s, usufruirai del servizio promosso dall'applicazione <b>Scambio Libri</b>, disponibile nel Play Store.", if (register) "Registrandoti" else "Accedendo"), 0))
+                    .content(Html.fromHtml(String.format("%1s, usufruirai del servizio promosso dall'applicazione <b>Scambio Libri</b>, disponibile nel Play Store.", if (register) "Registrandoti" else "Accedendo")))
                     .negativeText("No")
                     .positiveText("Sì")
                     .onPositive { _, _ ->
@@ -82,7 +82,7 @@ class ActivityLibriLogin : AppCompatActivity() {
         enableAll(false)
         if (isName() && isPhone() && isPassword()) {
             LibriAPI(this).mService.postSignup(phone.text.toString(), password.text.toString(), "Vicenza", name.text.toString()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ t: UserResponse? ->
+                    .subscribe({
                         PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("libri_api_logged", true).putString("city", "Vicenza").apply()
                         if (!BuildConfig.DEBUG) Answers.getInstance()?.logSignUp(SignUpEvent().putSuccess(true))
                         enableAll(true)

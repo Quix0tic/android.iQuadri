@@ -28,20 +28,19 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import kotlin.Unit;
 
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     static final String TAG = "Circolari";
-
     Context mContext;
-
     @BindView(R.id.recycler)
     RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
-
     AdapterCircolari adapter;
+    private boolean active = false;
 
     public Circolari() {
     }
@@ -54,7 +53,7 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
 
         mContext = getContext();
 
-        adapter = new AdapterCircolari(mContext, true);
+        adapter = new AdapterCircolari(mContext, AdapterCircolari.Companion.getMODE_CIRCOLARE());
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(mContext).color(Color.parseColor("#BDBDBD")).size(1).build());
         recyclerView.setAdapter(adapter);
@@ -71,6 +70,15 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
     public void onResume() {
         super.onResume();
         bindAnnouncementsCache();
+
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        active = false;
     }
 
     @Override
@@ -85,10 +93,13 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
     //load feeds
     private void loadFeeds() {
         new DownloadRSSFeed("Circolari", PreferenceManager.getDefaultSharedPreferences(mContext), list -> {
-            swipeRefreshLayout.setRefreshing(false);
-            addAnnouncements(list, true);
+            if (active) {
+                swipeRefreshLayout.setRefreshing(false);
+                addAnnouncements(list, true);
+            }
             if (!list.isEmpty())
                 PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", list.get(0).getTitle().toLowerCase().trim()).apply();
+            return Unit.INSTANCE;
         }).execute(DownloadRSSFeed.Companion.getCIRCOLARI());
     }
 

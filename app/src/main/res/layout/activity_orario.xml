@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    tools:context="com.bortolan.iquadriv2.Activities.OrarioActivity">
+    tools:context="com.bortolan.iquadriv2.Activities.ActivityOrario">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -29,29 +29,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:gravity="center"
             android:background="@color/black_overlay"
+            android:gravity="center"
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
             <ImageSwitcher
                 android:id="@+id/favourite_switcher"
                 style="?metaButtonBarButtonStyle"
-                android:theme="@style/AppTheme.Dark"
-                android:background="?selectableItemBackgroundBorderless"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="?selectableItemBackgroundBorderless"
+                android:theme="@style/AppTheme.Dark">
 
                 <ImageView
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
 
                 <ImageView
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     app:srcCompat="@drawable/ic_favorite_black_24dp" />
             </ImageSwitcher>
 

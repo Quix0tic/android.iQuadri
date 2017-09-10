@@ -19,6 +19,8 @@ import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadRSSFeed;
 
+import kotlin.Unit;
+
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class CircolariNotification extends Service {
@@ -50,6 +52,7 @@ public class CircolariNotification extends Service {
             new DownloadRSSFeed(last_circolare, preferences, list -> {
                 if (!list.isEmpty() && list.size() > 0)
                     checkUpdates(context, list.get(0), preferences, last_circolare, preferences.getBoolean("notify_circolari", true));
+                return Unit.INSTANCE;
             }).execute(DownloadRSSFeed.Companion.getCIRCOLARI());
         }
     }

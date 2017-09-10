@@ -19,6 +19,8 @@ import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadRSSFeed;
 
+import kotlin.Unit;
+
 import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class QDSNotification extends Service {
@@ -50,6 +52,7 @@ public class QDSNotification extends Service {
             new DownloadRSSFeed(last_studenti, preferences, list -> {
                 if (!list.isEmpty() && list.size() > 0)
                     checkUpdates(context, list.get(0), preferences, last_studenti, preferences.getBoolean("notify_studenti", true));
+                return Unit.INSTANCE;
             }).execute(DownloadRSSFeed.Companion.getSTUDENTI());
         }
     }

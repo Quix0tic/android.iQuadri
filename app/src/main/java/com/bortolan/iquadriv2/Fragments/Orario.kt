@@ -20,7 +20,7 @@ import com.bortolan.iquadriv2.Utils.Methods
 import kotlinx.android.synthetic.main.fragment_orario.*
 
 class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextListener {
-
+    var active = false
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_orario, container, false)
@@ -44,6 +44,14 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
         preferiti.setData("preferiti", FavouritesDB.getInstance(context).all, this, false)
         load()
         download()
+
+        active = true
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        active = false
     }
 
     fun addAll(response: GitHubResponse) {
@@ -57,7 +65,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
         if (Methods.isNetworkAvailable(mContext)) {
             DownloadSchedules { response ->
                 RegistroDB.getInstance(mContext).addSchedules(response)
-                addAll(RegistroDB.getInstance(mContext).schedules)
+                if (active) addAll(RegistroDB.getInstance(mContext).schedules)
             }.execute()
         }
     }

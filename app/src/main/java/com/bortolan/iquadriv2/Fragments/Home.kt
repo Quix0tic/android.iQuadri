@@ -10,8 +10,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bortolan.iquadriv2.Activities.ActivityOrario
 import com.bortolan.iquadriv2.Activities.ActivitySettings
-import com.bortolan.iquadriv2.Activities.OrarioActivity
 import com.bortolan.iquadriv2.Databases.FavouritesDB
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem
 import com.bortolan.iquadriv2.R
@@ -43,7 +43,7 @@ class Home : Fragment() {
         itemList = FavouritesDB.getInstance(context).all
         if (!itemList.isEmpty()) {
             favourite.visibility = View.VISIBLE
-            favourite.setOnClickListener { _ -> startActivity(Intent(context, OrarioActivity::class.java).putExtra("name", itemList[0].name).putExtra("url", itemList[0].url)) }
+            favourite.setOnClickListener { _ -> startActivity(Intent(context, ActivityOrario::class.java).putExtra("name", itemList[0].name).putExtra("url", itemList[0].url)) }
         } else {
             favourite.visibility = View.GONE
         }

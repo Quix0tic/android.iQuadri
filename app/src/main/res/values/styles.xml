@@ -52,10 +52,11 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="FullscreenTheme" parent="AppTheme">
+    <style name="FullscreenTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/black_overlay</item>
+        <item name="colorPrimaryDark">#333</item>
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
         <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
         <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
     </style>

@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import com.bortolan.iquadriv2.Activities.OrarioActivity
+import com.bortolan.iquadriv2.Activities.ActivityOrario
 import com.bortolan.iquadriv2.Databases.FavouritesDB
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem
 import com.bortolan.iquadriv2.R
@@ -39,7 +39,7 @@ class AdapterOrari(private val mContext: Context) : RecyclerView.Adapter<Adapter
     override fun onBindViewHolder(holder: OrarioHolder, position: Int) {
         val item = items[position]
         holder.title.text = capitalize(item.name)
-        holder.layout.setOnClickListener { _ -> mContext.startActivity(Intent(mContext, OrarioActivity::class.java).putExtra("url", item.url).putExtra("name", item.name)) }
+        holder.layout.setOnClickListener { _ -> mContext.startActivity(Intent(mContext, ActivityOrario::class.java).putExtra("url", item.url).putExtra("name", item.name)) }
         holder.layout.setOnLongClickListener { _ ->
             v.vibrate(30)
 
@@ -100,7 +100,7 @@ class AdapterOrari(private val mContext: Context) : RecyclerView.Adapter<Adapter
 
     inner class OrarioHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title: TextView = itemView.findViewById<TextView>(R.id.title)
-        var layout: View = itemView.findViewById<TextView>(R.id.layout)
+        var layout: View = itemView.findViewById(R.id.layout)
     }
 
     private inner class MyFilter : Filter() {

@@ -11,7 +11,7 @@ import java.io.InputStream
 import java.net.URL
 import java.util.*
 
-class DownloadRSSFeed(private val key: String, private val preferences: SharedPreferences, private val execute: PostExecute) : AsyncTask<String, Void, List<Circolare>>() {
+class DownloadRSSFeed(private val key: String, private val preferences: SharedPreferences, private val execute: (List<Circolare>) -> Unit) : AsyncTask<String, Void, List<Circolare>>() {
 
 
     override fun doInBackground(vararg strings: String): List<Circolare> {
@@ -69,12 +69,9 @@ class DownloadRSSFeed(private val key: String, private val preferences: SharedPr
 
     override fun onPostExecute(list: List<Circolare>) {
         super.onPostExecute(list)
-        execute.postExecute(list)
+        execute.invoke(list)
     }
 
-    interface PostExecute {
-        fun postExecute(list: List<Circolare>)
-    }
 
     companion object {
         val STUDENTI = "http://studenti.liceoquadri.it/"

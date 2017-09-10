@@ -34,7 +34,7 @@
             android:name=".Activities.ActivitySettings"
             android:theme="@style/AppTheme.Preferences" />
         <activity
-            android:name=".Activities.OrarioActivity"
+            android:name=".Activities.ActivityOrario"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_orario"
             android:theme="@style/FullscreenTheme" />
@@ -64,7 +64,11 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Activities.ActivityCircolari"></activity>
+        <activity
+            android:name=".Activities.ActivityCircolari"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_circolari"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>

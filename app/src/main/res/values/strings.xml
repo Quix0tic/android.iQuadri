@@ -69,4 +69,8 @@
 
     <string name="powered_by">Powered by <b>Scambio Libri</b></string>
     <string name="tienimi_aggiornato">Tienimi aggiornato</string>
+
+    <string name="title_activity_circolari">Circolare</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
