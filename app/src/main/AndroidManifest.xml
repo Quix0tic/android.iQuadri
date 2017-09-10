@@ -69,6 +69,11 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_circolari"
             android:theme="@style/FullscreenTheme" />
+        <activity
+            android:name=".Activities.ActivityImage"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_image"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

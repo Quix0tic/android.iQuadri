@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -14,10 +15,13 @@ import android.widget.Toast;
 
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadArticle;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.bortolan.iquadriv2.Utils.Methods.getDisplaySize;
 
 public class ActivityArticle extends AppCompatActivity {
 
@@ -49,7 +53,19 @@ public class ActivityArticle extends AppCompatActivity {
 
         new DownloadArticle(article -> {
             if (article != null) {
-                Picasso.with(this).load(article.getImage()).resize(600, 0).onlyScaleDown().into(image);
+                Picasso.with(this).load(article.getImage()).resize(getDisplaySize(this).x, 0).onlyScaleDown().into(image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        image.setOnClickListener(view -> {
+                            Log.d("IMAGE", "CLICK");
+                        });
+                    }
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
                 content.setText(article.getBody());
             } else {
                 finish();

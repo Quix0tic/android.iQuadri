@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.bortolan.iquadriv2.API.Libri.LibriAPI
-import com.bortolan.iquadriv2.Interfaces.Libri.AnnouncementResponse
 import com.bortolan.iquadriv2.R
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -34,7 +33,7 @@ class ActivityAddBook : AppCompatActivity() {
                     notes.editText?.text.toString(),
                     price.editText?.text.toString().toIntOrNull() ?: return
             ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ t: AnnouncementResponse? ->
+                    .subscribe({
                         finish()
                     }, Throwable::printStackTrace)
         }

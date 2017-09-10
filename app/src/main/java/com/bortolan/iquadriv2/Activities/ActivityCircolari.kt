@@ -10,9 +10,13 @@ import android.view.View
 import android.widget.Toast
 import com.bortolan.iquadriv2.R
 import kotlinx.android.synthetic.main.activity_circolari.*
+import java.io.BufferedReader
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.regex.Pattern
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -55,14 +59,12 @@ class ActivityCircolari : AppCompatActivity() {
 
         mVisible = true
 
-        DownloadTask(this).execute("https://mail.liceoquadri.it/wp_circolari/wordpress/wp-content/uploads/2017/08/305-Riunioni-avvio-anno-signed.pdf")
+        DownloadLink(applicationContext) {
+            res: String ->
+            DownloadDocument(applicationContext).execute(res)
+        }.execute(intent.getStringExtra("url"))
 
-        // Set up the user interaction to manually show or hide the system UI.
         pdfView.setOnClickListener { toggle() }
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -73,9 +75,6 @@ class ActivityCircolari : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
         delayedHide(100)
     }
 
@@ -88,11 +87,9 @@ class ActivityCircolari : AppCompatActivity() {
     }
 
     private fun hide() {
-        // Hide UI first
         supportActionBar?.hide()
         mVisible = false
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable)
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
@@ -100,7 +97,6 @@ class ActivityCircolari : AppCompatActivity() {
     private fun show() {
         // Show the system bar
         pdfView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-
         mVisible = true
 
         // Schedule a runnable to display UI elements after a delay
@@ -108,10 +104,6 @@ class ActivityCircolari : AppCompatActivity() {
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
 
-    /**
-     * Schedules a call to hide() in [delayMillis], canceling any
-     * previously scheduled calls.
-     */
     private fun delayedHide(delayMillis: Int) {
         mHideHandler.removeCallbacks(mHideRunnable)
         mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
@@ -137,8 +129,60 @@ class ActivityCircolari : AppCompatActivity() {
         private val UI_ANIMATION_DELAY = 300
     }
 
+    inner class DownloadLink(val context: Context, val ex: (res: String) -> Unit) : AsyncTask<String, Void, String?>() {
+        var pat = Pattern.compile("(<p class=\"gde-text\"><a href=\")(.+)(\" class=\"gde-link\">Download)")
 
-    inner class DownloadTask(val context: Context) : AsyncTask<String, Int, ByteArray?>() {
+        override fun doInBackground(vararg urls: String?): String? {
+            var result: String? = null
+            try {
+                val u = URL(urls[0])
+                val conn = u.openConnection() as HttpURLConnection
+                conn.readTimeout = 70000 //milliseconds
+                conn.connectTimeout = 7000 // milliseconds
+                conn.requestMethod = "GET"
+
+                conn.connect()
+
+                if (conn.responseCode == HttpURLConnection.HTTP_OK) {
+
+                    val reader = BufferedReader(InputStreamReader(
+                            conn.inputStream, "iso-8859-1"), 8)
+                    val sb = StringBuilder()
+                    var line: String?
+                    while (true) {
+                        line = reader.readLine()
+                        if (line == null) break
+
+                        sb.append(line + "\n")
+
+                    }
+                    result = sb.toString()
+
+                    val matcher = pat.matcher(result)
+
+                    if (matcher.find()) {
+                        return matcher.group(2)
+                    }
+
+                } else {
+                    return null
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return "error"
+            }
+            return result
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            ex.invoke(result.orEmpty())
+        }
+
+    }
+
+    inner class DownloadDocument(val context: Context) : AsyncTask<String, Int, ByteArray?>() {
         override fun doInBackground(vararg urls: String?): ByteArray? {
             var input: InputStream? = null
             var connection: HttpURLConnection? = null
@@ -163,7 +207,6 @@ class ActivityCircolari : AppCompatActivity() {
                 Toast.makeText(context, "Non è possibile scaricare la circolare", Toast.LENGTH_SHORT).show()
                 e.printStackTrace()
                 finish()
-                return null
             } finally {
                 input?.close()
                 connection?.disconnect()
@@ -178,5 +221,4 @@ class ActivityCircolari : AppCompatActivity() {
                     .enableDoubletap(true).load()
         }
     }
-
 }

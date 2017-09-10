@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import com.bortolan.iquadriv2.Interfaces.Mark;
@@ -44,6 +47,16 @@ public class Methods {
 
     private static boolean isEmptyOrNull(String string) {
         return string == null || string.isEmpty();
+    }
+
+    public static Point getDisplaySize(Context c) {
+        WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
+        Point point = new Point();
+        if (wm != null) {
+            Display display = wm.getDefaultDisplay();
+            display.getSize(point);
+        }
+        return point;
     }
 
     public static boolean isAppInstalled(Context c, String uri) {

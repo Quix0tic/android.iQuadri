@@ -35,7 +35,7 @@ class AdapterCircolari(private val mContext: Context, private val mode: Int) : R
             if (mode == MODE_QDS)
                 mContext.startActivity(Intent(mContext, ActivityArticle::class.java).putExtra("url", row.link).putExtra("title", row.title))
             else {
-                mContext.startActivity(Intent(mContext, ActivityCircolari::class.java))
+                mContext.startActivity(Intent(mContext, ActivityCircolari::class.java).putExtra("url", row.link))
             }
         }
 
