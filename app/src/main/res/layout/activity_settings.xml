@@ -4,10 +4,10 @@
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bortolan.iquadriv2.Activities.SettingsActivity">
+    tools:context="com.bortolan.iquadriv2.Activities.ActivitySettings">
 
     <FrameLayout
-        android:layout_width="match_parent"
         android:id="@+id/content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </android.support.design.widget.CoordinatorLayout>

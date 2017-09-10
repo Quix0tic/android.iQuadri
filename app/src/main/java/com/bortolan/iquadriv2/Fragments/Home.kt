@@ -10,8 +10,8 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bortolan.iquadriv2.Activities.ActivitySettings
 import com.bortolan.iquadriv2.Activities.OrarioActivity
-import com.bortolan.iquadriv2.Activities.SettingsActivity
 import com.bortolan.iquadriv2.Databases.FavouritesDB
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem
 import com.bortolan.iquadriv2.R
@@ -35,7 +35,7 @@ class Home : Fragment() {
 
         val catBitmap = GaussianBlur.with(context).radius(15).noScaleDown(false).render(bitmap)
         image.setImageBitmap(catBitmap)
-        settings.setOnClickListener { _ -> startActivity(Intent(context, SettingsActivity::class.java)) }
+        settings.setOnClickListener { _ -> startActivity(Intent(context, ActivitySettings::class.java)) }
     }
 
     override fun onResume() {

@@ -25,7 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import it.sephiroth.android.library.tooltip.Tooltip
 import kotlinx.android.synthetic.main.activity_libri_login.*
 
-class LibriLogin : AppCompatActivity() {
+class ActivityLibriLogin : AppCompatActivity() {
     var register: Boolean = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ class LibriLogin : AppCompatActivity() {
         login.setOnClickListener {
             MaterialDialog.Builder(this)
                     .title("Continuare?")
-                    .content(Html.fromHtml(String.format("%1s, usufruirai del servizio promosso dall'applicazione <b>Scambio Libri</b>, disponibile nel Play Store.", if (register) "Registrandoti" else "Accedendo")))
+                    .content(Html.fromHtml(String.format("%1s, usufruirai del servizio promosso dall'applicazione <b>Scambio Libri</b>, disponibile nel Play Store.", if (register) "Registrandoti" else "Accedendo"), 0))
                     .negativeText("No")
                     .positiveText("Sì")
                     .onPositive { _, _ ->

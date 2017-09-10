@@ -7,7 +7,7 @@ import android.view.MenuItem;
 import com.bortolan.iquadriv2.Fragments.SettingsNotifications;
 import com.bortolan.iquadriv2.R;
 
-public class SettingsActivity extends AppCompatActivity {
+public class ActivitySettings extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

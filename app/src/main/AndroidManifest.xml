@@ -8,14 +8,11 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:persistent="true"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".Activities.ActivityMain"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +31,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".Activities.SettingsActivity"
+            android:name=".Activities.ActivitySettings"
             android:theme="@style/AppTheme.Preferences" />
         <activity
             android:name=".Activities.OrarioActivity"
@@ -42,7 +39,7 @@
             android:label="@string/title_activity_orario"
             android:theme="@style/FullscreenTheme" />
         <activity
-            android:name=".Activities.ArticleActivity"
+            android:name=".Activities.ActivityArticle"
             android:label="@string/title_activity_article"
             android:theme="@style/AppTheme" />
 
@@ -56,16 +53,18 @@
         </service>
 
         <activity
-            android:name=".Activities.LibriLogin"
+            android:name=".Activities.ActivityLibriLogin"
             android:launchMode="singleInstance" />
         <activity
-            android:name=".Activities.AddBook"
+            android:name=".Activities.ActivityAddBook"
             android:theme="@style/AppTheme.Preferences" />
 
         <service
             android:name=".Services.QDSNotification"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".Activities.ActivityCircolari"></activity>
     </application>
 
 </manifest>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bortolan.iquadriv2.Activities.LibriLogin">
+    tools:context="com.bortolan.iquadriv2.Activities.ActivityLibriLogin">
 
     <LinearLayout
         android:id="@+id/view_group"

@@ -21,19 +21,16 @@ import butterknife.ButterKnife;
 
 public class OrarioActivity extends AppCompatActivity {
 
-    @BindView(R.id.favourite_switcher)
-    ImageSwitcher switcher;
-    private View mContentView;
-
-    FavouritesDB db;
-    GitHubItem item;
-    Vibrator v;
-
     private static final boolean AUTO_HIDE = true;
-
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 50;
     private final Handler mHideHandler = new Handler();
+    @BindView(R.id.favourite_switcher)
+    ImageSwitcher switcher;
+    FavouritesDB db;
+    GitHubItem item;
+    Vibrator v;
+    private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -59,12 +56,12 @@ public class OrarioActivity extends AppCompatActivity {
         }
     };
     private boolean mVisible;
-    private final Runnable mHideRunnable = () -> hide();
-
+    private final Runnable mHideRunnable = this::hide;
     private final View.OnTouchListener mDelayHideTouchListener = (view, motionEvent) -> {
         if (AUTO_HIDE) {
             delayedHide(AUTO_HIDE_DELAY_MILLIS);
         }
+        view.performClick();
         return false;
     };
 

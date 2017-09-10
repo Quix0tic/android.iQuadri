@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
-import com.bortolan.iquadriv2.Activities.MainActivity;
+import com.bortolan.iquadriv2.Activities.ActivityMain;
 import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadRSSFeed;
@@ -63,9 +63,9 @@ public class CircolariNotification extends Service {
 
                 String title = "Quadri - Circolari";
                 String content = "Nuove circolari da leggere";
-                Intent i = new Intent(context, MainActivity.class);
+                Intent i = new Intent(context, ActivityMain.class);
                 i.putExtra("tab", R.id.tab_circolari);
-                PendingIntent intent = PendingIntent.getActivity(context, MainActivity.CIRCOLARI_ID, i, 0);
+                PendingIntent intent = PendingIntent.getActivity(context, ActivityMain.CIRCOLARI_ID, i, 0);
 
                 mBuilder = new NotificationCompat.Builder(context, "iQuadri")
                         .setSmallIcon(R.drawable.ic_stat_name)

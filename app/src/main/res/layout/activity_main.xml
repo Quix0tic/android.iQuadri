@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bortolan.iquadriv2.Activities.MainActivity">
+    tools:context="com.bortolan.iquadriv2.Activities.ActivityMain">
 
     <FrameLayout
         android:id="@+id/content"
@@ -19,6 +19,6 @@
         android:layout_height="60dp"
         android:layout_gravity="bottom"
         app:bb_showShadow="true"
-        app:bb_titleTextAppearance="@style/BB_BottomBarItem_TitleStyle"
-        app:bb_tabXmlResource="@xml/bottom_navigation" />
+        app:bb_tabXmlResource="@xml/bottom_navigation"
+        app:bb_titleTextAppearance="@style/BB_BottomBarItem_TitleStyle" />
 </android.support.design.widget.CoordinatorLayout>

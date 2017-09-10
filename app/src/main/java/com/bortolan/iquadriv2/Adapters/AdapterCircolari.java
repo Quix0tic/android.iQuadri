@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bortolan.iquadriv2.Activities.ArticleActivity;
+import com.bortolan.iquadriv2.Activities.ActivityArticle;
 import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
 
@@ -20,14 +20,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AdapterCircolari extends RecyclerView.Adapter<AdapterCircolari.CircolariHolder> {
+    public final static int MODE_QDS = 1;
+    private final static int MODE_CIRCOLARE = 0;
     private List<Circolare> data;
     private Context mContext;
-    private boolean openbrowser;
+    private int mode;
 
-    public AdapterCircolari(Context c, boolean openbrowser) {
+    public AdapterCircolari(Context c, int mode) {
         data = new ArrayList<>();
         mContext = c;
-        this.openbrowser = openbrowser;
+        this.mode = mode;
     }
 
     @Override
@@ -43,8 +45,8 @@ public class AdapterCircolari extends RecyclerView.Adapter<AdapterCircolari.Circ
         holder.description.setText(row.getDescription().trim());
 
         holder.surface.setOnClickListener((view) -> {
-            if (!openbrowser)
-                mContext.startActivity(new Intent(mContext, ArticleActivity.class).putExtra("url", row.getLink()).putExtra("title", row.getTitle()));
+            if (mode == MODE_CIRCOLARE)
+                mContext.startActivity(new Intent(mContext, ActivityArticle.class).putExtra("url", row.getLink()).putExtra("title", row.getTitle()));
             else
                 openBrowser(row.getLink());
         });

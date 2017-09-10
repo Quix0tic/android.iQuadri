@@ -27,7 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity implements OnTabSelectListener {
+public class ActivityMain extends AppCompatActivity implements OnTabSelectListener {
     public final static int NOTIFICATION_ID = 447124;
     public static final int CIRCOLARI_ID = 446123;
     public static final int STUDENTI_ID = 561231;

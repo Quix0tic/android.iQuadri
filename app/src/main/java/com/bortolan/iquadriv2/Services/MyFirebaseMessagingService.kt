@@ -8,7 +8,7 @@ import android.graphics.Color
 import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import com.bortolan.iquadriv2.Activities.MainActivity
+import com.bortolan.iquadriv2.Activities.ActivityMain
 import com.bortolan.iquadriv2.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -23,7 +23,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         if (!data["isbn"].isNullOrEmpty()) {
 
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, ActivityMain::class.java)
             intent.putExtra("tab", R.id.tab_libri)
             intent.putExtra("query", data["isbn"].toString())
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

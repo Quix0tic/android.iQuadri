@@ -18,8 +18,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bortolan.iquadriv2.API.Libri.LibriAPI
-import com.bortolan.iquadriv2.Activities.AddBook
-import com.bortolan.iquadriv2.Activities.LibriLogin
+import com.bortolan.iquadriv2.Activities.ActivityAddBook
+import com.bortolan.iquadriv2.Activities.ActivityLibriLogin
 import com.bortolan.iquadriv2.Adapters.AdapterLibri
 import com.bortolan.iquadriv2.Databases.RegistroDB
 import com.bortolan.iquadriv2.R
@@ -106,7 +106,7 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
         }
 
         fab.setOnClickListener {
-            context.startActivity(Intent(context, if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("libri_api_logged", false)) AddBook::class.java else LibriLogin::class.java))
+            context.startActivity(Intent(context, if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("libri_api_logged", false)) ActivityAddBook::class.java else ActivityLibriLogin::class.java))
         }
 
         load()
