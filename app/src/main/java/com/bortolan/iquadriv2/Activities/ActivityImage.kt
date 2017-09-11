@@ -1,12 +1,15 @@
 package com.bortolan.iquadriv2.Activities
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import android.transition.Fade
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
+import android.view.animation.DecelerateInterpolator
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods
 import com.squareup.picasso.Callback
@@ -35,8 +38,13 @@ class ActivityImage : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.exitTransition = Fade().addTarget(R.id.action_bar).setDuration(200).setInterpolator(DecelerateInterpolator(1.5f))
+            window.enterTransition = Fade().addTarget(R.id.action_bar).setDuration(200).setInterpolator(DecelerateInterpolator(1.5f))
+        }
         setContentView(R.layout.activity_image)
+        title = "Immagine"
+
         supportPostponeEnterTransition()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

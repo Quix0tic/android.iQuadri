@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,8 +52,8 @@ public class ActivityArticle extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setExitTransition(new Explode().excludeTarget(R.id.app_bar, true));
-            getWindow().setEnterTransition(new Explode().excludeTarget(R.id.app_bar, true));
+            getWindow().setExitTransition(new Explode().excludeTarget(R.id.app_bar, true).excludeTarget(android.R.id.navigationBarBackground, true).setDuration(200).setInterpolator(new DecelerateInterpolator(1.5f)));
+            getWindow().setEnterTransition(new Explode().excludeTarget(R.id.app_bar, true).excludeTarget(android.R.id.navigationBarBackground, true).setDuration(200).setInterpolator(new DecelerateInterpolator(1.5f)));
         }
 
         setContentView(R.layout.activity_article);
