@@ -12,6 +12,19 @@
         <item name="asp_preferenceDialogIconTint">?asp_preferenceIconTint</item>
         <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif</item>
     </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme.TranslucentStatus" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBarOverlay">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Material</item>
+        <!-- Default icon tint for preferences. -->
+        <item name="asp_preferenceIconTint">?colorAccent</item>
+        <item name="asp_preferenceDialogIconTint">?asp_preferenceIconTint</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif</item>
+    </style>
 
     <style name="AppTheme.Dark" parent="Base.ThemeOverlay.AppCompat.Dark" />
 
@@ -52,9 +65,9 @@
         <item name="android:gravity">center_horizontal</item>
     </style>
 
-    <style name="FullscreenTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/black_overlay</item>
-        <item name="colorPrimaryDark">#333</item>
+    <style name="FullscreenTheme" parent="Base.Theme.AppCompat">
+        <item name="colorPrimary">#444</item>
+        <item name="colorPrimaryDark">#e333</item>
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>
         <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
@@ -63,6 +76,7 @@
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
         <item name="android:background">@color/black_overlay</item>
+        <item name="background">@color/black_overlay</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

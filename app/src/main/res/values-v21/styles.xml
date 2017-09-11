@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Material</item>
+        <!-- Default icon tint for preferences. -->
+        <item name="asp_preferenceIconTint">?colorAccent</item>
+        <item name="asp_preferenceDialogIconTint">?asp_preferenceIconTint</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif</item>
+
+        <item name="android:windowContentTransitions">true</item>
+
+        <item name="android:windowEnterTransition">@transition/change_image_transform</item>
+        <item name="android:windowExitTransition">@transition/change_image_transform</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform
+        </item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform
+        </item>
+    </style>
+
+    <style name="AppTheme.TranslucentStatus" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="windowActionBarOverlay">true</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.Material</item>
+        <!-- Default icon tint for preferences. -->
+        <item name="asp_preferenceIconTint">?colorAccent</item>
+        <item name="asp_preferenceDialogIconTint">?asp_preferenceIconTint</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">sans-serif</item>
+
+        <item name="android:windowContentTransitions">true</item>
+
+        <item name="android:windowEnterTransition">@transition/change_image_transform</item>
+        <item name="android:windowExitTransition">@transition/change_image_transform</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform
+        </item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform
+        </item>
+    </style>
+
+    <style name="FullscreenTheme" parent="Base.Theme.AppCompat">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">#e333</item>
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+
+        <item name="android:windowContentTransitions">true</item>
+
+        <!-- specify enter and exit transitions -->
+        <!-- options are: explode, slide, fade -->
+        <item name="android:windowEnterTransition">@transition/change_image_transform</item>
+        <item name="android:windowExitTransition">@transition/change_image_transform</item>
+
+        <!-- specify shared element transitions -->
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_image_transform
+        </item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_image_transform
+        </item>
+    </style>
+</resources>

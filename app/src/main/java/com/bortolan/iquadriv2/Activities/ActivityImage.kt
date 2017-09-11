@@ -3,22 +3,21 @@ package com.bortolan.iquadriv2.Activities
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.view.MenuItem
 import android.view.View
+import android.view.ViewTreeObserver
 import com.bortolan.iquadriv2.R
+import com.bortolan.iquadriv2.Utils.Methods
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_image.*
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
+
 class ActivityImage : AppCompatActivity() {
+
     private val mHideHandler = Handler()
     private val mHidePart2Runnable = Runnable {
-        // Delayed removal of status and navigation bar
-
-        // Note that some of these constants are new as of API 16 (Jelly Bean)
-        // and API 19 (KitKat). It is safe to use them, as they are inlined
-        // at compile-time and do nothing on earlier devices.
         image.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LOW_PROFILE or
                         View.SYSTEM_UI_FLAG_FULLSCREEN or
@@ -33,33 +32,49 @@ class ActivityImage : AppCompatActivity() {
     }
     private var mVisible: Boolean = false
     private val mHideRunnable = Runnable { hide() }
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private val mDelayHideTouchListener = View.OnTouchListener { _, _ ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_image)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportPostponeEnterTransition()
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        image.setOnClickListener { toggle() }
         mVisible = true
 
-        // Set up the user interaction to manually show or hide the system UI.
-        image.setOnClickListener { toggle() }
+        Log.w("ActivityB", "Download started")
+        Picasso.with(this).load(intent.getStringExtra("url")).resize(Methods.getDisplaySize(this).x * 2, 0).onlyScaleDown().noFade().into(image, object : Callback {
+            override fun onSuccess() {
+                Log.w("ActivityB", "Download complete")
+                supportStartPostponedEnterTransition()
+            }
+
+            override fun onError() {
+                supportStartPostponedEnterTransition()
+            }
+        })
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+        // Respond to the action bar's Up/Home button
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        image.attacher.setScale(1f, true)
+        super.onBackPressed()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        delayedHide(100)
     }
 
     private fun toggle() {
@@ -71,20 +86,16 @@ class ActivityImage : AppCompatActivity() {
     }
 
     private fun hide() {
-        // Hide UI first
         supportActionBar?.hide()
         mVisible = false
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
         mHideHandler.removeCallbacks(mShowPart2Runnable)
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
 
     private fun show() {
         // Show the system bar
-        image.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+        image.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         mVisible = true
 
         // Schedule a runnable to display UI elements after a delay
@@ -92,32 +103,25 @@ class ActivityImage : AppCompatActivity() {
         mHideHandler.postDelayed(mShowPart2Runnable, UI_ANIMATION_DELAY.toLong())
     }
 
-    /**
-     * Schedules a call to hide() in [delayMillis], canceling any
-     * previously scheduled calls.
-     */
     private fun delayedHide(delayMillis: Int) {
         mHideHandler.removeCallbacks(mHideRunnable)
         mHideHandler.postDelayed(mHideRunnable, delayMillis.toLong())
     }
 
+    private fun scheduleStartPostponedTransition(sharedElement: View) {
+        sharedElement.viewTreeObserver.addOnPreDrawListener(
+                object : ViewTreeObserver.OnPreDrawListener {
+                    override fun onPreDraw(): Boolean {
+                        sharedElement.viewTreeObserver.removeOnPreDrawListener(this)
+                        supportStartPostponedEnterTransition()
+                        return true
+                    }
+                })
+    }
+
     companion object {
-        /**
-         * Whether or not the system UI should be auto-hidden after
-         * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
-         */
         private val AUTO_HIDE = true
-
-        /**
-         * If [AUTO_HIDE] is set, the number of milliseconds to wait after
-         * user interaction before hiding the system UI.
-         */
         private val AUTO_HIDE_DELAY_MILLIS = 3000
-
-        /**
-         * Some older devices needs a small delay between UI widget updates
-         * and a change of the status and navigation bar.
-         */
         private val UI_ANIMATION_DELAY = 300
     }
 }

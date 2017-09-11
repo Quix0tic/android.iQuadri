@@ -2,19 +2,26 @@ package com.bortolan.iquadriv2.Activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadArticle;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -26,17 +33,27 @@ import static com.bortolan.iquadriv2.Utils.Methods.getDisplaySize;
 public class ActivityArticle extends AppCompatActivity {
 
     @BindView(R.id.image)
-    ImageView image;
+    PhotoView image;
     @BindView(R.id.content)
     TextView content;
     @BindView(R.id.toolbar_layout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.shadow)
+    View shadow;
+
+    boolean wasPaused = false;
+
+    PhotoViewAttacher attacher;
 
     String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(new Explode().excludeTarget(R.id.app_bar, true));
+            getWindow().setEnterTransition(new Explode().excludeTarget(R.id.app_bar, true));
+        }
 
         setContentView(R.layout.activity_article);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -50,29 +67,61 @@ public class ActivityArticle extends AppCompatActivity {
         url = getIntent().getStringExtra("url");
 
         setCollapsingToolbarLayoutTitle(getIntent().getStringExtra("title"));
-
+        image.setZoomable(false);
+        image.getAttacher().setScaleType(ImageView.ScaleType.FIT_CENTER);
+        Log.d("ARTICLE", "ENTER");
         new DownloadArticle(article -> {
             if (article != null) {
                 Picasso.with(this).load(article.getImage()).resize(getDisplaySize(this).x, 0).onlyScaleDown().into(image, new Callback() {
                     @Override
                     public void onSuccess() {
-                        image.setOnClickListener(view -> {
-                            Log.d("IMAGE", "CLICK");
+                        content.setText(article.getBody());
+                        shadow.setOnClickListener(view -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                startActivity(new Intent(ActivityArticle.this, ActivityImage.class).putExtra("url", article.getImage()), ActivityOptionsCompat.makeSceneTransitionAnimation(ActivityArticle.this, view, "image").toBundle());
+                            } else {
+                                startActivity(new Intent(ActivityArticle.this, ActivityImage.class));
+                            }
                         });
                     }
 
                     @Override
                     public void onError() {
-
                     }
                 });
-                content.setText(article.getBody());
             } else {
                 finish();
                 Toast.makeText(this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
             }
         }).execute(url);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (wasPaused) {
+
+        }
+        wasPaused = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wasPaused = true;
+    }
+
+    private void scheduleStartPostponedTransition(View sharedElement) {
+        sharedElement.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        sharedElement.getViewTreeObserver().removeOnPreDrawListener(this);
+                        supportStartPostponedEnterTransition();
+                        return true;
+                    }
+                });
     }
 
     private void setCollapsingToolbarLayoutTitle(String title) {

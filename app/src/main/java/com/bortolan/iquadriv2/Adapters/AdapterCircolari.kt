@@ -31,7 +31,7 @@ class AdapterCircolari(private val mContext: Context, private val mode: Int) : R
         holder.title.text = row.title.trim { it <= ' ' }
         holder.description.text = row.description.trim { it <= ' ' }
 
-        holder.surface.setOnClickListener { view ->
+        holder.surface.setOnClickListener {
             if (mode == MODE_QDS)
                 mContext.startActivity(Intent(mContext, ActivityArticle::class.java).putExtra("url", row.link).putExtra("title", row.title))
             else {

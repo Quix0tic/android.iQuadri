@@ -51,3 +51,5 @@ public *;
 }
 
 -dontwarn com.google.firebase.messaging.**
+
+-dontwarn okhttp3.**

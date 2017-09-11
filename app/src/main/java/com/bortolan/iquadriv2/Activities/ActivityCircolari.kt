@@ -23,6 +23,9 @@ import java.util.regex.Pattern
  * status bar and navigation/system bar) with user interaction.
  */
 class ActivityCircolari : AppCompatActivity() {
+
+    var lastOffset = 0f
+
     private val mHideHandler = Handler()
     private val mHidePart2Runnable = Runnable {
         pdfView.systemUiVisibility =
@@ -35,21 +38,12 @@ class ActivityCircolari : AppCompatActivity() {
     }
     private val mShowPart2Runnable = Runnable {
         // Delayed display of UI elements
-        supportActionBar?.show()
+        if (!(supportActionBar?.isShowing ?: true))
+            supportActionBar?.show()
     }
     private var mVisible: Boolean = false
     private val mHideRunnable = Runnable { hide() }
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    private val mDelayHideTouchListener = View.OnTouchListener { _, _ ->
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS)
-        }
-        false
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +69,6 @@ class ActivityCircolari : AppCompatActivity() {
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
 
-        delayedHide(100)
     }
 
     private fun toggle() {
@@ -87,7 +80,8 @@ class ActivityCircolari : AppCompatActivity() {
     }
 
     private fun hide() {
-        supportActionBar?.hide()
+        if (supportActionBar?.isShowing ?: true)
+            supportActionBar?.hide()
         mVisible = false
 
         mHideHandler.removeCallbacks(mShowPart2Runnable)
@@ -133,7 +127,7 @@ class ActivityCircolari : AppCompatActivity() {
         var pat = Pattern.compile("(<p class=\"gde-text\"><a href=\")(.+)(\" class=\"gde-link\">Download)")
 
         override fun doInBackground(vararg urls: String?): String? {
-            var result: String? = null
+            var result: String?
             try {
                 val u = URL(urls[0])
                 val conn = u.openConnection() as HttpURLConnection
@@ -218,6 +212,16 @@ class ActivityCircolari : AppCompatActivity() {
             super.onPostExecute(result)
             pdfView.fromBytes(result)
                     .enableSwipe(true)
+                    .spacing(3)
+                    .onPageScroll({
+                        _, positionOffset ->
+                        if (lastOffset < positionOffset) hide()
+                        else if (lastOffset > positionOffset) {
+                            show()
+                        }
+                        lastOffset = positionOffset
+                    })
+                    .enableAntialiasing(true)
                     .enableDoubletap(true).load()
         }
     }
