@@ -41,9 +41,11 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     override fun onResume() {
         super.onResume()
 
-        preferiti.setData("preferiti", FavouritesDB.getInstance(context).all, this, false)
-        load()
-        download()
+        if (!search_view.query.isNotEmpty()) {
+            preferiti.setData("preferiti", FavouritesDB.getInstance(context).all, this, false)
+            load()
+            download()
+        }
 
         active = true
     }

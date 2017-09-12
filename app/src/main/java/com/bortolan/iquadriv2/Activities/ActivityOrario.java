@@ -7,13 +7,17 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageSwitcher;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bortolan.iquadriv2.Databases.FavouritesDB;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
 import com.bortolan.iquadriv2.R;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -25,17 +29,23 @@ public class ActivityOrario extends AppCompatActivity {
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 50;
     private final Handler mHideHandler = new Handler();
+    private final View.OnTouchListener mDelayHideTouchListener = (view, motionEvent) -> {
+        if (AUTO_HIDE) {
+            delayedHide(AUTO_HIDE_DELAY_MILLIS);
+        }
+        view.performClick();
+        return false;
+    };
     @BindView(R.id.favourite_switcher)
     ImageSwitcher switcher;
     FavouritesDB db;
-    GitHubItem item;
-    Vibrator v;
-    private View mContentView;
+    @BindView(R.id.fullscreen_content)
+    PhotoView image;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
         public void run() {
-            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+            image.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
                     | View.SYSTEM_UI_FLAG_FULLSCREEN
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -43,6 +53,10 @@ public class ActivityOrario extends AppCompatActivity {
                     | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     };
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
+    GitHubItem item;
+    Vibrator v;
     private View mControlsView;
     private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
@@ -57,15 +71,9 @@ public class ActivityOrario extends AppCompatActivity {
     };
     private boolean mVisible;
     private final Runnable mHideRunnable = this::hide;
-    private final View.OnTouchListener mDelayHideTouchListener = (view, motionEvent) -> {
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS);
-        }
-        view.performClick();
-        return false;
-    };
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -74,18 +82,39 @@ public class ActivityOrario extends AppCompatActivity {
         db = new FavouritesDB(this);
         item = new GitHubItem(getIntent().getStringExtra("name"), getIntent().getStringExtra("url"));
 
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_content);
 
-        mContentView.setOnClickListener(view -> toggle());
+        image.setOnClickListener(view -> toggle());
 
         setTitle(item.getName());
+
+        progressBar.setVisibility(View.VISIBLE);
+        image.setVisibility(View.GONE);
+
         Picasso.with(this)
                 .load("http://wp.liceoquadri.it/wp-content/archivio/orario/" + item.getUrl())
-                .into((ImageView) findViewById(R.id.fullscreen_content));
+                .into(image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
+                        image.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(getApplicationContext(), "Impossibile scaricare l'immagine", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    }
+                });
+
+
+        image.setZoomable(true);
 
 
         if (db.isFavourite(item)) switcher.showNext();
@@ -105,6 +134,15 @@ public class ActivityOrario extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
 
         delayedHide(3000);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void toggle() {
@@ -132,7 +170,7 @@ public class ActivityOrario extends AppCompatActivity {
     @SuppressLint("InlinedApi")
     private void show() {
         // Show the system bar
-        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        image.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
         mVisible = true;
 

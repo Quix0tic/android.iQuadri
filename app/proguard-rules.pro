@@ -49,6 +49,8 @@
 -keep public class org.jsoup.** {
 public *;
 }
+-keepattributes com.afollestad.materialdialogs.** { *; }
+
 
 -dontwarn com.google.firebase.messaging.**
 

@@ -53,7 +53,7 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
 
         mContext = getContext();
 
-        adapter = new AdapterCircolari(mContext, AdapterCircolari.Companion.getMODE_CIRCOLARE());
+        adapter = new AdapterCircolari(getActivity(), AdapterCircolari.Companion.getMODE_CIRCOLARE());
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(mContext).color(Color.parseColor("#BDBDBD")).size(1).build());
         recyclerView.setAdapter(adapter);

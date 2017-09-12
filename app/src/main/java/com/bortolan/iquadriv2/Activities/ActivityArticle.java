@@ -16,13 +16,13 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bortolan.iquadriv2.R;
 import com.bortolan.iquadriv2.Utils.DownloadArticle;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -41,10 +41,10 @@ public class ActivityArticle extends AppCompatActivity {
     CollapsingToolbarLayout mCollapsingToolbarLayout;
     @BindView(R.id.shadow)
     View shadow;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
 
     boolean wasPaused = false;
-
-    PhotoViewAttacher attacher;
 
     String url;
 
@@ -71,11 +71,13 @@ public class ActivityArticle extends AppCompatActivity {
         image.setZoomable(false);
         image.getAttacher().setScaleType(ImageView.ScaleType.FIT_CENTER);
         Log.d("ARTICLE", "ENTER");
+        progressBar.setVisibility(View.VISIBLE);
         new DownloadArticle(article -> {
             if (article != null) {
                 Picasso.with(this).load(article.getImage()).resize(getDisplaySize(this).x, 0).onlyScaleDown().into(image, new Callback() {
                     @Override
                     public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
                         content.setText(article.getBody());
                         shadow.setOnClickListener(view -> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
