@@ -71,8 +71,8 @@ open class ScheduleList : LinearLayout {
         visibility = if (adapter.totalItemCount() > 0) View.VISIBLE else View.GONE
     }
 
-    fun add(t: GitHubItem, position: Int) {
-        adapter.add(t, position)
+    fun add(t: GitHubItem) {
+        adapter.add(t)
         visibility = if (adapter.totalItemCount() > 0) View.VISIBLE else View.GONE
     }
 

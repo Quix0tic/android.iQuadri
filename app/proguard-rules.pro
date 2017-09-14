@@ -49,9 +49,10 @@
 -keep public class org.jsoup.** {
 public *;
 }
--keepattributes com.afollestad.materialdialogs.** { *; }
-
 
 -dontwarn com.google.firebase.messaging.**
 
 -dontwarn okhttp3.**
+
+-dontwarn com.afollestad.materialdialogs.DefaultAdapter
+-dontwarn com.afollestad.materialdialogs.AlertDialogWrapper$Builder

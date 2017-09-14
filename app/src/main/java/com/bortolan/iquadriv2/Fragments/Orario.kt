@@ -90,7 +90,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     }
 
     override fun add(item: GitHubItem, position: Int) {
-        preferiti.add(item, position)
+        preferiti.add(item)
     }
 
     override fun remove(item: GitHubItem, position: Int) {

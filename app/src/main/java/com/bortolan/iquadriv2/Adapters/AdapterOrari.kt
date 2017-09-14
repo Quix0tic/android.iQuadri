@@ -70,7 +70,7 @@ class AdapterOrari(private val mContext: Context) : RecyclerView.Adapter<Adapter
         notifyDataSetChanged()
     }
 
-    fun add(t: GitHubItem, position: Int) {
+    fun add(t: GitHubItem) {
         all.add(totalItemCount(), t)
         items.add(itemCount, t)
         filter.filter(query)

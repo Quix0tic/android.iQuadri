@@ -15,7 +15,7 @@ import com.bortolan.iquadriv2.Utils.ItemOffsetDecoration
 import kotlinx.android.synthetic.main.fragment_registro.*
 
 class Registro : Fragment() {
-    internal lateinit var adapter: AdapterMedie
+    internal var adapter: AdapterMedie? = null
     internal var periodo: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -49,8 +49,8 @@ class Registro : Fragment() {
 
     fun addSubjects(markSubjects: List<Average>) {
         if (markSubjects.isNotEmpty()) {
-            adapter.clear()
-            adapter.addAll(markSubjects)
+            adapter?.clear()
+            adapter?.addAll(markSubjects)
         }
     }
 

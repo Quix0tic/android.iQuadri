@@ -1,6 +1,7 @@
 package com.bortolan.iquadriv2.Activities;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,9 @@ import com.bortolan.iquadriv2.Fragments.Studenti;
 import com.bortolan.iquadriv2.R;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -36,6 +40,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
     BottomBar navigation_bar;
 
     FragmentManager fragmentManager;
+    InterstitialAd interstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,26 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
                     .build();
             Fabric.with(fabric);
         }
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getLong("next_interstitial_date", 0L) < System.currentTimeMillis()) {
+            interstitialAd = new InterstitialAd(this);
+            interstitialAd.setAdUnitId("ca-app-pub-6428554832398906/7348876488");
+            interstitialAd.loadAd(new AdRequest.Builder().build());
+            interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    interstitialAd.show();
+                }
+
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    PreferenceManager.getDefaultSharedPreferences(ActivityMain.this).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 2 * 60 * 60 * 1000L).apply();
+                }
+            });
+        }
+
         if (BuildConfig.VERSION_CODE < 14) {
             //FirebaseMessaging.getInstance().unsubscribeFromTopic("android_" + (BuildConfig.VERSION_CODE - 1));
             FirebaseMessaging.getInstance().subscribeToTopic("android_" + (BuildConfig.VERSION_CODE));
