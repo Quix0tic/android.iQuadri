@@ -74,10 +74,9 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
             });
         }
 
-        if (BuildConfig.VERSION_CODE < 14) {
-            //FirebaseMessaging.getInstance().unsubscribeFromTopic("android_" + (BuildConfig.VERSION_CODE - 1));
-            FirebaseMessaging.getInstance().subscribeToTopic("android_" + (BuildConfig.VERSION_CODE));
-        }
+        //FirebaseMessaging.getInstance().unsubscribeFromTopic("android_" + (BuildConfig.VERSION_CODE - 1));
+        FirebaseMessaging.getInstance().subscribeToTopic("android_14");
+
         navigation_bar.setOnTabSelectListener(this);
         navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
     }

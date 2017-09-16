@@ -89,6 +89,8 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_orario_info" />
         </receiver>
+
+        <activity android:name=".Activities.IntentFilter.ActivityChooseOrario" />
     </application>
 
 </manifest>
