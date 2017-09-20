@@ -1,10 +1,14 @@
 package com.bortolan.iquadriv2.Activities;
 
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.bortolan.iquadriv2.BuildConfig;
@@ -74,8 +78,19 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
             });
         }
 
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic("android_" + (BuildConfig.VERSION_CODE - 1));
-        FirebaseMessaging.getInstance().subscribeToTopic("android_14");
+        if ("huawei".equalsIgnoreCase(android.os.Build.MANUFACTURER) && !PreferenceManager.getDefaultSharedPreferences(this).getBoolean("protected", false)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.huawei_headline).setMessage(R.string.huawei_text)
+                    .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
+                        Intent intent = new Intent();
+                        intent.setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+                        startActivity(intent);
+                        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("protected", true).apply();
+                    }).setNegativeButton(android.R.string.cancel, null).create().show();
+        }
+
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("android_14");
+        FirebaseMessaging.getInstance().subscribeToTopic("android_15");
 
         navigation_bar.setOnTabSelectListener(this);
         navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
@@ -123,6 +138,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
         RegistroDB.getInstance(this).close();
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //No call for super(). Bug on API Level > 11.
