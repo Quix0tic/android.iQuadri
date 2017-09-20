@@ -1,4 +1,4 @@
-package com.bortolan.iquadriv2.Tasks;
+package com.bortolan.iquadriv2.Tasks.Cache;
 
 import android.util.Log;
 

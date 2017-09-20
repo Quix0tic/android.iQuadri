@@ -77,4 +77,6 @@
     <string name="title_activity_image">ActivityImage</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="huawei_text">Vuoi aggiungere l\'app fra le app protette in modo da ricevere notifiche?</string>
+    <string name="huawei_headline">Aggiungere ad \'App protette\'?</string>
 </resources>
