@@ -22,7 +22,6 @@ class DownloadArticle(private val post: (Article) -> Unit) : AsyncTask<String, V
             e.printStackTrace()
             return null
         }
-
     }
 
     override fun onPostExecute(article: Article) {
