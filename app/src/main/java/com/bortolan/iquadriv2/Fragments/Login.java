@@ -37,6 +37,7 @@ public class Login extends Fragment {
     @BindView(R.id.login_btn)
     Button mButtonLogin;
     private Context mContext;
+    private Boolean enable = false;
 
     public Login() {
         // Required empty public constructor
@@ -47,6 +48,8 @@ public class Login extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mContext = getActivity();
+
+        enable = true;
 
         View layout = inflater.inflate(R.layout.fragment_login, container, false);
         ButterKnife.bind(this, layout);
@@ -91,34 +94,42 @@ public class Login extends Fragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(login -> {
+                    if (enable) {
+                        SharedPreferences settings = mContext.getSharedPreferences("registro", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putBoolean("logged", true);
+                        editor.apply();
 
-                    SharedPreferences settings = mContext.getSharedPreferences("registro", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putBoolean("logged", true);
-                    editor.apply();
-
-                    getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, new RegistroPeriodi()).commit();
-                    Toast.makeText(mContext, R.string.login_msg, Toast.LENGTH_SHORT).show();
+                        getFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, new RegistroPeriodi()).commit();
+                        Toast.makeText(mContext, R.string.login_msg, Toast.LENGTH_SHORT).show();
+                    }
                 }, error -> {
-                    if (error instanceof HttpException) {
-                        Log.e("LOGIN", "HTTPEXCEPTION");
-                        if (!((HttpException) error).response().isSuccessful()) {
-                            Toast.makeText(getActivity().getApplicationContext(), "Server non raggiungibile, riprovare più tardi", Toast.LENGTH_LONG).show();
-                            Log.e("LOGIN", "Server non raggiungibile, riprovare più tardi");
-                            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putLong("spiaggiari_next_try", System.currentTimeMillis() + 5 * 60000).apply();
+                    if (enable) {
+                        if (error instanceof HttpException) {
+                            Log.e("LOGIN", "HTTPEXCEPTION");
+                            if (!((HttpException) error).response().isSuccessful()) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Server non raggiungibile, riprovare più tardi", Toast.LENGTH_LONG).show();
+                                Log.e("LOGIN", "Server non raggiungibile, riprovare più tardi");
+                                PreferenceManager.getDefaultSharedPreferences(mContext).edit().putLong("spiaggiari_next_try", System.currentTimeMillis() + 5 * 60000).apply();
+                            }
+                        } else {
+                            error.printStackTrace();
+                            mButtonLogin.setText(R.string.login);
+                            Toast.makeText(mContext, R.string.login_msg_failer, Toast.LENGTH_SHORT).show();
+
+                            mEditTextMail.setEnabled(true);
+                            mEditTextPassword.setEnabled(true);
+                            mButtonLogin.setEnabled(true);
+
+                            mEditTextPassword.setText("");
                         }
-                    } else {
-                        error.printStackTrace();
-                        mButtonLogin.setText(R.string.login);
-                        Toast.makeText(mContext, R.string.login_msg_failer, Toast.LENGTH_SHORT).show();
-
-                        mEditTextMail.setEnabled(true);
-                        mEditTextPassword.setEnabled(true);
-                        mButtonLogin.setEnabled(true);
-
-                        mEditTextPassword.setText("");
                     }
                 });
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        enable = false;
+    }
 }

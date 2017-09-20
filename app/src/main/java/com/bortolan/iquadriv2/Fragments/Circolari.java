@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import com.bortolan.iquadriv2.Adapters.AdapterCircolari;
 import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
-import com.bortolan.iquadriv2.Tasks.CacheListObservable;
-import com.bortolan.iquadriv2.Tasks.CacheListTask;
-import com.bortolan.iquadriv2.Utils.DownloadRSSFeed;
+import com.bortolan.iquadriv2.Tasks.Cache.CacheListObservable;
+import com.bortolan.iquadriv2.Tasks.Cache.CacheListTask;
+import com.bortolan.iquadriv2.Tasks.Remote.DownloadCircolari;
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.io.File;
@@ -90,17 +90,17 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
         }
     }
 
-    //load feeds
     private void loadFeeds() {
-        new DownloadRSSFeed("Circolari", PreferenceManager.getDefaultSharedPreferences(mContext), list -> {
+        new DownloadCircolari(PreferenceManager.getDefaultSharedPreferences(mContext), list -> {
             if (active) {
                 swipeRefreshLayout.setRefreshing(false);
                 addAnnouncements(list, true);
+                if (!list.isEmpty())
+                    PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", list.get(0).getTitle().toLowerCase().trim()).apply();
+
             }
-            if (!list.isEmpty())
-                PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", list.get(0).getTitle().toLowerCase().trim()).apply();
             return Unit.INSTANCE;
-        }).execute(DownloadRSSFeed.Companion.getCIRCOLARI());
+        }).execute();
     }
 
     void addAnnouncements(List<? extends Circolare> announcements, boolean docache) {

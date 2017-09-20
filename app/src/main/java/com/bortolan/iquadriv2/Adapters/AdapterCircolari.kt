@@ -59,7 +59,7 @@ class AdapterCircolari(private val activity: Activity, private val mode: Int) : 
 
     private fun downloadCircolare(url: String) {
         loading = true
-        snackBar.view.minimumHeight = Methods.dpToPx(48 + 56f).toInt()
+        snackBar.view.minimumHeight = Methods.dp(48 + 56f)
         snackBar.show()
         DownloadLink {
             res: String ->
@@ -190,7 +190,7 @@ class AdapterCircolari(private val activity: Activity, private val mode: Int) : 
             } catch (e: Exception) {
                 with(activity) {
                     runOnUiThread {
-                        Toast.makeText(this, "Non è possibile scaricare la circolare", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Non è possibile scaricare la circolare", Toast.LENGTH_SHORT).show()
                     }
                 }
                 e.printStackTrace()

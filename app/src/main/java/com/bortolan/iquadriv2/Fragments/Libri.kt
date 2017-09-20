@@ -23,7 +23,7 @@ import com.bortolan.iquadriv2.Activities.ActivityLibriLogin
 import com.bortolan.iquadriv2.Adapters.AdapterLibri
 import com.bortolan.iquadriv2.Databases.RegistroDB
 import com.bortolan.iquadriv2.R
-import com.bortolan.iquadriv2.Utils.Methods.dpToPx
+import com.bortolan.iquadriv2.Utils.Methods.dp
 import com.bortolan.iquadriv2.Views.SwipableRecyclerView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
@@ -90,7 +90,7 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
         adapter = AdapterLibri(recycler, place_holder)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.addItemDecoration(HorizontalDividerItemDecoration.Builder(context).size(dpToPx(1f).toInt()).build())
+        recycler.addItemDecoration(HorizontalDividerItemDecoration.Builder(context).size(dp(1f).toInt()).build())
         recycler.addOnScrollListener(FabBehavior())
         recycler.listener = this
 

@@ -14,9 +14,9 @@ import android.view.ViewGroup
 import com.bortolan.iquadriv2.Adapters.AdapterCircolari
 import com.bortolan.iquadriv2.Interfaces.Circolare
 import com.bortolan.iquadriv2.R
-import com.bortolan.iquadriv2.Tasks.CacheListObservable
-import com.bortolan.iquadriv2.Tasks.CacheListTask
-import com.bortolan.iquadriv2.Utils.DownloadRSSFeed
+import com.bortolan.iquadriv2.Tasks.Cache.CacheListObservable
+import com.bortolan.iquadriv2.Tasks.Cache.CacheListTask
+import com.bortolan.iquadriv2.Tasks.Remote.DownloadArticles
 import com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable
 import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -70,15 +70,15 @@ class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun download() {
         val mContext: Context = context
-        DownloadRSSFeed("Studenti", PreferenceManager.getDefaultSharedPreferences(context)) { list: List<Circolare> ->
+        DownloadArticles {
+            elements: List<Circolare> ->
             if (active) {
                 swipe_refresh.isRefreshing = false
-                addAnnouncements(list, true)
+                addAnnouncements(elements, true)
+                if (elements.isNotEmpty())
+                    PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_studenti", elements[0].title.toLowerCase().trim { it <= ' ' }).apply()
             }
-            if (!list.isEmpty())
-                PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_studenti", list[0].title.toLowerCase().trim { it <= ' ' }).apply()
-        }.execute(DownloadRSSFeed.STUDENTI)
-
+        }.execute()
     }
 
     internal fun addAnnouncements(announcements: List<Circolare>, docache: Boolean) {

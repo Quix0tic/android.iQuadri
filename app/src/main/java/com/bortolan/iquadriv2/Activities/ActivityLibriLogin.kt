@@ -27,9 +27,13 @@ import kotlinx.android.synthetic.main.activity_libri_login.*
 
 class ActivityLibriLogin : AppCompatActivity() {
     var register: Boolean = false
+    var enable = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_libri_login)
+
+        enable = true
 
         checkbox.setOnCheckedChangeListener { _, isChecked ->
             register = isChecked
@@ -63,18 +67,22 @@ class ActivityLibriLogin : AppCompatActivity() {
         enableAll(false)
         LibriAPI(this).mService.postLogin(phone.text.toString(), password.text.toString()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ t: UserResponse? ->
-                    PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("libri_api_logged", true).putString("city", t?.user?.city ?: "Vicenza").apply()
-                    enableAll(true)
-                    if (!BuildConfig.DEBUG) Answers.getInstance()?.logLogin(LoginEvent().putSuccess(true))
-                    finish()
-                }, { t ->
-                    if (t is HttpException) run {
-                        if (t.code() == 401)
-                            Toast.makeText(this, "Login fallito", Toast.LENGTH_SHORT).show()
+                    if (enable) {
+                        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("libri_api_logged", true).putString("city", t?.user?.city ?: "Vicenza").apply()
+                        enableAll(true)
+                        if (!BuildConfig.DEBUG) Answers.getInstance()?.logLogin(LoginEvent().putSuccess(true))
+                        finish()
                     }
-                    t.printStackTrace()
-                    enableAll(true)
-                    if (!BuildConfig.DEBUG) Answers.getInstance()?.logLogin(LoginEvent().putSuccess(true).putCustomAttribute("error", t.localizedMessage))
+                }, { t ->
+                    if (enable) {
+                        if (t is HttpException) run {
+                            if (t.code() == 401)
+                                Toast.makeText(this, "Login fallito", Toast.LENGTH_SHORT).show()
+                        }
+                        t.printStackTrace()
+                        enableAll(true)
+                        if (!BuildConfig.DEBUG) Answers.getInstance()?.logLogin(LoginEvent().putSuccess(true).putCustomAttribute("error", t.localizedMessage))
+                    }
                 })
     }
 
@@ -83,23 +91,28 @@ class ActivityLibriLogin : AppCompatActivity() {
         if (isName() && isPhone() && isPassword()) {
             LibriAPI(this).mService.postSignup(phone.text.toString(), password.text.toString(), "Vicenza", name.text.toString()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("libri_api_logged", true).putString("city", "Vicenza").apply()
-                        if (!BuildConfig.DEBUG) Answers.getInstance()?.logSignUp(SignUpEvent().putSuccess(true))
-                        enableAll(true)
-                        finish()
-                    }, { t ->
-                        if (t is HttpException) run {
-                            if (t.code() == 401)
-                                Toast.makeText(this, "Registrazione fallita", Toast.LENGTH_SHORT).show()
+                        if (enable) {
+                            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("libri_api_logged", true).putString("city", "Vicenza").apply()
+                            if (!BuildConfig.DEBUG) Answers.getInstance()?.logSignUp(SignUpEvent().putSuccess(true))
+                            enableAll(true)
+                            finish()
                         }
-                        t.printStackTrace()
-                        if (!BuildConfig.DEBUG) Answers.getInstance()?.logSignUp(SignUpEvent().putSuccess(false).putCustomAttribute("error", t.localizedMessage))
-                        enableAll(true)
+                    }, { t ->
+                        if (enable) {
+                            if (t is HttpException) run {
+                                if (t.code() == 401)
+                                    Toast.makeText(this, "Registrazione fallita", Toast.LENGTH_SHORT).show()
+                            }
+                            t.printStackTrace()
+                            if (!BuildConfig.DEBUG) Answers.getInstance()?.logSignUp(SignUpEvent().putSuccess(false).putCustomAttribute("error", t.localizedMessage))
+                            enableAll(true)
+                        }
                     })
         } else {
             enableAll(true)
         }
         return true
+
     }
 
     fun enableAll(e: Boolean) {
@@ -144,5 +157,10 @@ class ActivityLibriLogin : AppCompatActivity() {
             return false
         }
         return true
+    }
+
+    override fun onStop() {
+        super.onStop()
+        enable = false
     }
 }

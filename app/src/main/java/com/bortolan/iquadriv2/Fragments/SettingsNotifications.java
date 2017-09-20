@@ -50,7 +50,7 @@ public class SettingsNotifications extends XpPreferenceFragment implements Share
             if (!key.equals("notify_circolari") && !key.equals("notify_studenti") && !key.equals("studenti") && !key.equals("genitori") && !key.equals("docenti") && !key.equals("ata")) {
                 preference.setSummary(sharedPreferences.getBoolean(key, true) ? "On" : "Off");
             }
-        } else {
+        } else if (preference != null) {
             preference.setSummary(sharedPreferences.getString(key, ""));
         }
     }

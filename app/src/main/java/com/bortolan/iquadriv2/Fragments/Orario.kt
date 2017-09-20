@@ -15,7 +15,7 @@ import com.bortolan.iquadriv2.Databases.RegistroDB
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse
 import com.bortolan.iquadriv2.R
-import com.bortolan.iquadriv2.Utils.DownloadSchedules
+import com.bortolan.iquadriv2.Tasks.Remote.DownloadSchedules
 import com.bortolan.iquadriv2.Utils.Methods
 import kotlinx.android.synthetic.main.fragment_orario.*
 
@@ -65,7 +65,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     fun download() {
         val mContext: Context = context
         if (Methods.isNetworkAvailable(mContext)) {
-            DownloadSchedules { response ->
+            DownloadSchedules { response: GitHubResponse ->
                 RegistroDB.getInstance(mContext).addSchedules(response)
                 if (active) addAll(RegistroDB.getInstance(mContext).schedules)
             }.execute()
