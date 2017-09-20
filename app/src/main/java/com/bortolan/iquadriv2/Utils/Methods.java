@@ -172,7 +172,7 @@ public class Methods {
         return remove;
     }
 
-    private static Set<String> getCategoriesSettings(SharedPreferences preferences) {
+    public static Set<String> getCategoriesSettings(SharedPreferences preferences) {
         List<String> settings = new ArrayList<>();
 
         if (preferences.getBoolean("studenti", true)) settings.add("Studenti");
@@ -235,10 +235,16 @@ public class Methods {
         return getMediaColor(media, "Generale", voto_obiettivo);
     }
 
-    public static float dpToPx(float dp) {
+    public static int dp(float dp) {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return Math.round(px);
+    }
+
+    public static int px(float px) {
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        float dp = px * (metrics.densityDpi / 160);
+        return Math.round(dp);
     }
 
     private void hideKeyboard(View view) {
