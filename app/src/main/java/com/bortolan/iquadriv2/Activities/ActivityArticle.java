@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.transition.Fade;
+import android.support.transition.TransitionManager;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
@@ -21,13 +24,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bortolan.iquadriv2.R;
-import com.bortolan.iquadriv2.Utils.DownloadArticle;
+import com.bortolan.iquadriv2.Tasks.Remote.DownloadArticle;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.Unit;
 
 import static com.bortolan.iquadriv2.Utils.Methods.getDisplaySize;
 
@@ -74,11 +78,16 @@ public class ActivityArticle extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         new DownloadArticle(article -> {
             if (article != null) {
+                runOnUiThread(() -> {
+                    content.setText(article.getBody());
+                    TransitionManager.beginDelayedTransition((ViewGroup) content.getRootView(), new Fade());
+                });
+
                 Picasso.with(this).load(article.getImage()).resize(getDisplaySize(this).x, 0).onlyScaleDown().into(image, new Callback() {
                     @Override
                     public void onSuccess() {
                         progressBar.setVisibility(View.GONE);
-                        content.setText(article.getBody());
+
                         shadow.setOnClickListener(view -> {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                 startActivity(new Intent(ActivityArticle.this, ActivityImage.class).putExtra("url", article.getImage()), ActivityOptionsCompat.makeSceneTransitionAnimation(ActivityArticle.this, view, "image").toBundle());
@@ -96,6 +105,7 @@ public class ActivityArticle extends AppCompatActivity {
                 finish();
                 Toast.makeText(this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
             }
+            return Unit.INSTANCE;
         }).execute(url);
 
     }
