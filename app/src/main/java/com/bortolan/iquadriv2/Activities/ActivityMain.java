@@ -46,6 +46,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
     FragmentManager fragmentManager;
     InterstitialAd interstitialAd;
     Boolean showAd = false;
+    AdRequest myRequest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,33 +54,49 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         fragmentManager = getSupportFragmentManager();
+
         if (!BuildConfig.DEBUG) {
             final Fabric fabric = new Fabric.Builder(this)
                     .kits(new Crashlytics(), new Answers())
                     .build();
             Fabric.with(fabric);
+            myRequest = new AdRequest.Builder().build();
+        } else {
+            myRequest = new AdRequest.Builder().addTestDevice("66FFAE1B2C386120B0D503E13F65ED71").build();
         }
 
-        //if (PreferenceManager.getDefaultSharedPreferences(this).getLong("next_interstitial_date", 0L) < System.currentTimeMillis()) {
-            interstitialAd = new InterstitialAd(this);
-            interstitialAd.setAdUnitId("ca-app-pub-6428554832398906/7348876488");
-            interstitialAd.loadAd(new AdRequest.Builder().build());
-            interstitialAd.setAdListener(new AdListener() {
-                @Override
-                public void onAdLoaded() {
-                    super.onAdLoaded();
-                    showAd = true;
-                }
+        prepareInterstitial();
 
-                @Override
-                public void onAdClosed() {
-                    super.onAdClosed();
-                    showAd = false;
-                    //          PreferenceManager.getDefaultSharedPreferences(ActivityMain.this).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 2 * 60 * 60 * 1000L).apply();
-                }
-            });
-        //}
+        ifHuaweiAlert();
 
+        //FirebaseMessaging.getInstance().unsubscribeFromTopic("android_14");
+        FirebaseMessaging.getInstance().subscribeToTopic("android_14");
+
+        navigation_bar.setOnTabSelectListener(this);
+        navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
+    }
+
+    private void prepareInterstitial() {
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId("ca-app-pub-6428554832398906/7348876488");
+        interstitialAd.loadAd(myRequest);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                showAd = true;
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                showAd = false;
+                PreferenceManager.getDefaultSharedPreferences(ActivityMain.this).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 2 * 60 * 60 * 1000L).apply();
+            }
+        });
+    }
+
+    private void ifHuaweiAlert() {
         if ("huawei".equalsIgnoreCase(android.os.Build.MANUFACTURER) && !PreferenceManager.getDefaultSharedPreferences(this).getBoolean("protected", false)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.huawei_headline).setMessage(R.string.huawei_text)
@@ -90,14 +107,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
                         PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("protected", true).apply();
                     }).setNegativeButton(android.R.string.cancel, null).create().show();
         }
-
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic("android_14");
-        FirebaseMessaging.getInstance().subscribeToTopic("android_14");
-
-        navigation_bar.setOnTabSelectListener(this);
-        navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
     }
-
 
     @Override
     public void onTabSelected(@IdRes int tabId) {
@@ -113,7 +123,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
                 fragment = new Studenti();
                 break;
             case R.id.tab_registro:
-                if (getSharedPreferences("registro", MODE_PRIVATE).getBoolean("logged", false))
+                if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("spaggiari-logged", false))
                     fragment = new RegistroPeriodi();
                 else
                     fragment = new Login();
@@ -135,7 +145,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
 
     @Override
     public void onBackPressed() {
-        if (showAd)
+        if (showAd && interstitialAd.isLoaded())
             interstitialAd.show();
         else
             super.onBackPressed();

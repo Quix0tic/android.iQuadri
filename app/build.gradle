@@ -25,14 +25,17 @@ repositories {
 apply plugin: 'com.jakewharton.butterknife'
 
 android {
+    dexOptions {
+        jumboMode true
+    }
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.bortolan.iquadriv2"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 16
-        versionName "1.2.2"
+        versionCode 17
+        versionName "1.2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true

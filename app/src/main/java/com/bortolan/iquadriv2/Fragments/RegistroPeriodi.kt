@@ -3,6 +3,7 @@ package com.bortolan.iquadriv2.Fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -10,9 +11,9 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bortolan.iquadriv2.API.Spaggiari.SpiaggiariApiClient
+import com.bortolan.iquadriv2.API.SpaggiariREST.APIClient
+import com.bortolan.iquadriv2.API.SpaggiariREST.models.Grade
 import com.bortolan.iquadriv2.Databases.RegistroDB
-import com.bortolan.iquadriv2.Interfaces.MarkSubject
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,7 +45,7 @@ class RegistroPeriodi : Fragment() {
 
     private fun download() {
         if (isNetworkAvailable(context)) {
-            SpiaggiariApiClient(context).mService.marks
+            APIClient.create(context).getGrades(PreferenceManager.getDefaultSharedPreferences(context).getString("spaggiari-id", ""))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ t -> save(t); load() }, { it.printStackTrace() })
@@ -53,8 +54,8 @@ class RegistroPeriodi : Fragment() {
         }
     }
 
-    private fun save(marks: List<MarkSubject>) {
-        RegistroDB.getInstance(context).addMarks(marks)
+    private fun save(marks: List<Grade>) {
+        //RegistroDB.getInstance(context).addMarks(marks)
     }
 
     private fun load() {
