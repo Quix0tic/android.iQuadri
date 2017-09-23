@@ -1,7 +1,10 @@
 package com.bortolan.iquadriv2.Fragments
 
 
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.SearchView
@@ -17,7 +20,9 @@ import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Tasks.Remote.DownloadSchedules
 import com.bortolan.iquadriv2.Utils.Methods
+import com.bortolan.iquadriv2.Widget.WidgetOrario
 import kotlinx.android.synthetic.main.fragment_orario.*
+
 
 class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextListener {
     var active = false
@@ -52,8 +57,9 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
 
     override fun onStop() {
         super.onStop()
-
         active = false
+        context.sendBroadcast(Intent(context, WidgetOrario::class.java).setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE).putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
+                AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, WidgetOrario::class.java))))
     }
 
     fun addAll(response: GitHubResponse) {
