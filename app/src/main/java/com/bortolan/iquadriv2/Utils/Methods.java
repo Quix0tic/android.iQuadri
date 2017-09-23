@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -17,6 +18,11 @@ import android.view.inputmethod.InputMethodManager;
 import com.bortolan.iquadriv2.Interfaces.Mark;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
 import com.bortolan.iquadriv2.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +37,42 @@ public class Methods {
 
     public final static String[] CATEGORY = new String[]{"genitori", "studenti", "ata", "docenti"};
     public final static String[] PERIOD = new String[]{"q1", "q3"};
+
+    public static void disableAds(Context c, AdRequest myRequest) {
+        RewardedVideoAd rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(c);
+        rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+            @Override
+            public void onRewardedVideoAdLoaded() {
+                rewardedVideoAd.show();
+            }
+
+            @Override
+            public void onRewardedVideoAdOpened() {
+            }
+
+            @Override
+            public void onRewardedVideoStarted() {
+            }
+
+            @Override
+            public void onRewardedVideoAdClosed() {
+            }
+
+            @Override
+            public void onRewarded(RewardItem rewardItem) {
+                PreferenceManager.getDefaultSharedPreferences(c).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 14 * 24 * 60 * 60 * 1000L).apply();
+            }
+
+            @Override
+            public void onRewardedVideoAdLeftApplication() {
+            }
+
+            @Override
+            public void onRewardedVideoAdFailedToLoad(int i) {
+            }
+        });
+        rewardedVideoAd.loadAd("ca-app-pub-6428554832398906/3073286210", myRequest);
+    }
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
@@ -113,21 +155,21 @@ public class Methods {
             return "Obiettivo non raggiungibile";
         }
         // Stampa
-        String toReturn;
+        StringBuilder toReturn;
         if (votiMinimi[0] <= 2)
             return "Puoi stare tranquillo"; // Quando i voti da prendere sono negativi
         if (votiMinimi[0] <= Obb)
-            toReturn = "Non prendere meno di " + votiMinimi[0];
+            toReturn = new StringBuilder("Non prendere meno di " + votiMinimi[0]);
         else {
-            toReturn = "Devi prendere almeno ";
+            toReturn = new StringBuilder("Devi prendere almeno ");
             for (double aVotiMinimi : votiMinimi) {
                 if (aVotiMinimi != 0) {
-                    toReturn = toReturn + aVotiMinimi + ", ";
+                    toReturn.append(aVotiMinimi).append(", ");
                 }
             }
-            toReturn = toReturn.substring(0, toReturn.length() - 2);
+            toReturn = new StringBuilder(toReturn.substring(0, toReturn.length() - 2));
         }
-        return toReturn;
+        return toReturn.toString();
     }
 
     private static int getMarkColor(float voto, float voto_obiettivo) {
@@ -161,11 +203,9 @@ public class Methods {
         Set<String> user_categories = getCategoriesSettings(preferences);
         boolean remove = true;
         for (int j = 0; j < cat.length() && remove; j++) {                            //PER OGNI CATEGORIA IN UN ITEM
-            if (user_categories != null) {
-                for (int k = 0; k < user_categories.size() && remove; k++) {              //PER OGNI CATEGORIA IN PREFERENCES
-                    if (user_categories.contains((cat.getJSONObject(j)).getString("content"))) {
-                        remove = false;
-                    }
+            for (int k = 0; k < user_categories.size() && remove; k++) {              //PER OGNI CATEGORIA IN PREFERENCES
+                if (user_categories.contains((cat.getJSONObject(j)).getString("content"))) {
+                    remove = false;
                 }
             }
         }
@@ -213,11 +253,7 @@ public class Methods {
         if (delimiters == null) {
             return Character.isWhitespace(ch);
         } else {
-            char[] arr$ = delimiters;
-            int len$ = delimiters.length;
-
-            for (int i$ = 0; i$ < len$; ++i$) {
-                char delimiter = arr$[i$];
+            for (char delimiter : delimiters) {
                 if (ch == delimiter) {
                     return true;
                 }
@@ -251,6 +287,8 @@ public class Methods {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

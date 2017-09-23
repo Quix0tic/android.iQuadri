@@ -5,20 +5,23 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.bortolan.iquadriv2.API.SpaggiariREST.models.Grade;
 import com.bortolan.iquadriv2.Interfaces.Average;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse;
 import com.bortolan.iquadriv2.Interfaces.Libri.Announcement;
-import com.bortolan.iquadriv2.Interfaces.Mark;
-import com.bortolan.iquadriv2.Interfaces.MarkSubject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class RegistroDB extends SQLiteOpenHelper {
     private static int VERSION = 5;
     private static RegistroDB instance = null;
+    private SimpleDateFormat YMD = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     private RegistroDB(Context c) {
         super(c, "RegistroDB", null, VERSION);
@@ -51,7 +54,7 @@ public class RegistroDB extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE announcements ADD COLUMN phone TEXT");
     }
 
-    public void addMarks(List<MarkSubject> markSubjects) {
+    /*public void addMarks(List<MarkSubject> markSubjects) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
         String name;
@@ -62,6 +65,22 @@ public class RegistroDB extends SQLiteOpenHelper {
                 db.execSQL("INSERT OR IGNORE INTO marks VALUES(?,?,?,?,?,?,?,?)", new Object[]{mark.getHash(), name, mark.getMark(), mark.getDesc(), mark.getDate().getTime(), mark.getType(), mark.getQ(), mark.isNs() ? 1 : 0});
             }
         }
+        db.setTransactionSuccessful();
+        db.endTransaction();
+    }*/
+
+    public void addMarks(List<Grade> grades) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        db.delete("marks", null, null);
+        for (Grade mark : grades) {
+            try {
+                db.execSQL("INSERT OR IGNORE INTO marks VALUES(?,?,?,?,?,?,?,?)", new Object[]{mark.getHash(), mark.getSubjectDesc(), mark.getDecimalValue(), mark.getNotesForFamily(), YMD.parse(mark.getEvtDate()).getTime(), mark.getComponentDesc(), mark.getPeriodPos(), mark.getColor().equals("blue") ? 1 : 0});
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
         db.setTransactionSuccessful();
         db.endTransaction();
     }
@@ -83,7 +102,7 @@ public class RegistroDB extends SQLiteOpenHelper {
     public boolean isSecondPeriodStarted() {
         boolean second;
         SQLiteDatabase db = getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM marks WHERE period='q3'", null);
+        Cursor c = db.rawQuery("SELECT * FROM marks WHERE period != '1'", null);
         second = c.moveToFirst();
         c.close();
         return second;

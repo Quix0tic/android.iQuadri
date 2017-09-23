@@ -1,8 +1,8 @@
 package com.bortolan.iquadriv2.Fragments
 
 
-import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -36,8 +36,7 @@ class Registro : Fragment() {
     }
 
     fun logout() {
-        val settings = context.getSharedPreferences("registro", MODE_PRIVATE)
-        settings.edit().putBoolean("logged", false).apply()
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("spaggiari-logged", false).apply()
 
         activity.supportFragmentManager
                 .beginTransaction()

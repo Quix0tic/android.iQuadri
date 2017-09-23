@@ -55,7 +55,7 @@ class RegistroPeriodi : Fragment() {
     }
 
     private fun save(marks: List<Grade>) {
-        //RegistroDB.getInstance(context).addMarks(marks)
+        RegistroDB.getInstance(context).addMarks(marks)
     }
 
     private fun load() {

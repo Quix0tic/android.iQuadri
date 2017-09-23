@@ -82,7 +82,6 @@ class Login : Fragment() {
                                 .apply()
 
                         fragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, RegistroPeriodi()).commit()
-                        Toast.makeText(context, R.string.login_msg, Toast.LENGTH_SHORT).show()
                     }
                 }, { error ->
                     if (enable) {
@@ -95,7 +94,14 @@ class Login : Fragment() {
                                     Log.e("LOGIN", "Server non raggiungibile, riprovare più tardi")
                                     PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("spiaggiari_next_try", System.currentTimeMillis() + 5 * 60000).apply()
                                 } else {
-                                    Toast.makeText(activity.applicationContext, "Login fallito", Toast.LENGTH_LONG).show()
+                                    login_btn.setText(R.string.login)
+                                    Toast.makeText(context, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
+
+                                    mail.isEnabled = true
+                                    password.isEnabled = true
+                                    login_btn.isEnabled = true
+
+                                    password.setText("")
                                 }
                             }
                         } else {

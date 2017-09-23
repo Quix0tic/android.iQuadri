@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bortolan.iquadriv2.BuildConfig;
 import com.bortolan.iquadriv2.Databases.FavouritesDB;
 import com.bortolan.iquadriv2.Databases.RegistroDB;
@@ -34,6 +35,8 @@ import com.roughike.bottombar.OnTabSelectListener;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+
+import static com.bortolan.iquadriv2.Utils.Methods.disableAds;
 
 public class ActivityMain extends AppCompatActivity implements OnTabSelectListener {
     public final static int NOTIFICATION_ID = 447124;
@@ -77,23 +80,36 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
     }
 
     private void prepareInterstitial() {
-        interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId("ca-app-pub-6428554832398906/7348876488");
-        interstitialAd.loadAd(myRequest);
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                showAd = true;
-            }
+        if (PreferenceManager.getDefaultSharedPreferences(ActivityMain.this).getLong("next_interstitial_date", 0L) < System.currentTimeMillis()) {
+            interstitialAd = new InterstitialAd(this);
+            interstitialAd.setAdUnitId("ca-app-pub-6428554832398906/7348876488");
+            interstitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    showAd = true;
+                }
 
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                showAd = false;
-                PreferenceManager.getDefaultSharedPreferences(ActivityMain.this).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 2 * 60 * 60 * 1000L).apply();
-            }
-        });
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    showAd = false;
+                    //PreferenceManager.getDefaultSharedPreferences(ActivityMain.this).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 2 * 60 * 60 * 1000L).apply();
+                }
+            });
+            interstitialAd.loadAd(myRequest);
+        }
+
+        if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_v17", true)) {
+            new MaterialDialog.Builder(this)
+                    .title("Vuoi tenere le pubblicità?")
+                    .content("Con l'ultimo aggiornamento, per supportare i costi dello sviluppo e del mantenimento dell'app, sono state implementate le pubblicità a schermo intero in chiusura all'app.\nSe ciò ti da' fastidio, puoi sempre disattivarle per 2 settimane guardando un breve video.")
+                    .positiveText("SI").negativeText("NO")
+                    .onNegative((dialog, which) -> disableAds(this, myRequest))
+                    .show();
+
+            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("first_v17", false).apply();
+        }
     }
 
     private void ifHuaweiAlert() {
@@ -145,7 +161,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
 
     @Override
     public void onBackPressed() {
-        if (showAd && interstitialAd.isLoaded())
+        if (showAd)
             interstitialAd.show();
         else
             super.onBackPressed();
