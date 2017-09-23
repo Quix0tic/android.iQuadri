@@ -1,12 +1,12 @@
 package com.bortolan.iquadriv2.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -14,6 +14,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.bortolan.iquadriv2.Interfaces.Mark;
 import com.bortolan.iquadriv2.Interfaces.MarkSubject;
@@ -38,7 +39,7 @@ public class Methods {
     public final static String[] CATEGORY = new String[]{"genitori", "studenti", "ata", "docenti"};
     public final static String[] PERIOD = new String[]{"q1", "q3"};
 
-    public static void disableAds(Context c, AdRequest myRequest) {
+    public static void disableAds(Activity c, AdRequest myRequest) {
         RewardedVideoAd rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(c);
         rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
@@ -69,16 +70,16 @@ public class Methods {
 
             @Override
             public void onRewardedVideoAdFailedToLoad(int i) {
+                Toast.makeText(c, "Pubblicità non disponibile, riprova più tardi", Toast.LENGTH_SHORT).show();
             }
         });
-        rewardedVideoAd.loadAd("ca-app-pub-6428554832398906/3073286210", myRequest);
+        rewardedVideoAd.loadAd("ca-app-pub-6428554832398906/3073286210", new AdRequest.Builder().build());
     }
 
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null;
+        return (connectivityManager != null ? connectivityManager.getActiveNetworkInfo() : null) != null;
     }
 
     public static String beautifyName(String name) {

@@ -34,7 +34,7 @@ public class CircolariNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.w("NotificationService", "Shoot Notification");
+        Log.w("CircolariNotification", "Shoot Notification");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         download(preferences, this);
         this.intent = intent;
@@ -50,7 +50,8 @@ public class CircolariNotification extends Service {
     private void download(SharedPreferences preferences, Context context) {
         if (isNetworkAvailable(context)) {
             new DownloadCircolari(preferences, list -> {
-                if (!list.isEmpty() && list.size() > 0)
+                Log.d("CircolariNotification", list.get(0).getTitle());
+                if (!list.isEmpty())
                     checkUpdates(context, list.get(0), preferences, last_circolare, preferences.getBoolean("notify_circolari", true));
                 return Unit.INSTANCE;
             }).execute();

@@ -2,7 +2,6 @@ package com.bortolan.iquadriv2.Services
 
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.preference.PreferenceManager
@@ -32,7 +31,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val builder = NotificationCompat.Builder(applicationContext, "iQuadri").setContentTitle(data["title"].toString()).setContentText(data["body"].toString()).setSmallIcon(R.mipmap.ic_launcher).setLights(Color.argb(255, 0, 0, 240), 1000, 1000).setAutoCancel(true)
             builder.setContentIntent(pendingIntent)
 
-            val mNotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val mNotificationManager = getSystemService(NotificationManager::class.java)
             // mId allows you to update the notification later on.
             id = PreferenceManager.getDefaultSharedPreferences(applicationContext).getInt("notification_id", 0)
             mNotificationManager.notify(id, builder.build())

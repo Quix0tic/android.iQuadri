@@ -28,6 +28,7 @@ import com.crashlytics.android.answers.Answers;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -68,12 +69,13 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
             myRequest = new AdRequest.Builder().addTestDevice("66FFAE1B2C386120B0D503E13F65ED71").build();
         }
 
+        MobileAds.initialize(this, "ca-app-pub-6428554832398906~9181852475");
         prepareInterstitial();
 
         ifHuaweiAlert();
 
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic("android_14");
-        FirebaseMessaging.getInstance().subscribeToTopic("android_14");
+        FirebaseMessaging.getInstance().subscribeToTopic((BuildConfig.DEBUG) ? "test" : "android_14");
+        FirebaseMessaging.getInstance().unsubscribeFromTopic((!BuildConfig.DEBUG) ? "test" : "android_14");
 
         navigation_bar.setOnTabSelectListener(this);
         navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
@@ -161,7 +163,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
 
     @Override
     public void onBackPressed() {
-        if (showAd)
+        if (showAd && PreferenceManager.getDefaultSharedPreferences(ActivityMain.this).getLong("next_interstitial_date", 0L) < System.currentTimeMillis())
             interstitialAd.show();
         else
             super.onBackPressed();

@@ -34,7 +34,7 @@ public class QDSNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.w("NotificationService", "Shoot Notification");
+        Log.w("QDSNotification", "Shoot Notification");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         download(preferences, this);
         this.intent = intent;

@@ -42,6 +42,7 @@ android {
 
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled true
+        multiDexEnabled true
     }
     buildTypes {
         debug {
@@ -75,25 +76,21 @@ allprojects {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
-
     compile('com.crazyhitty.chdev.ks:rss-manager:0.23') {
         exclude group: 'com.github.afollestad.material-dialogs'
         exclude group: 'org.jsoup'
         exclude module: 'appcompat-v7'
     }
-
     compile('com.github.afollestad.material-dialogs:core:8869ff6') {
         exclude module: 'appcompat-v7'
     }
-
     compile 'com.github.chrisbanes:PhotoView:2.1.3'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile('it.sephiroth.android.library.targettooltip:target-tooltip-library:1.3.15') {
@@ -129,5 +126,8 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    implementation project(':unity-ads')
+
+    compile 'com.google.ads.mediation:unity:2.1.0.0'
 }
 apply plugin: 'com.google.gms.google-services'
