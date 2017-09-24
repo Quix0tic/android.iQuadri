@@ -40,6 +40,7 @@ public class Methods {
     public final static String[] PERIOD = new String[]{"q1", "q3"};
 
     public static void disableAds(Activity c, AdRequest myRequest) {
+        Context context = c.getApplicationContext();
         RewardedVideoAd rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(c);
         rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
@@ -61,7 +62,7 @@ public class Methods {
 
             @Override
             public void onRewarded(RewardItem rewardItem) {
-                PreferenceManager.getDefaultSharedPreferences(c).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 14 * 24 * 60 * 60 * 1000L).apply();
+                PreferenceManager.getDefaultSharedPreferences(c).edit().putLong("next_interstitial_date", System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000L).apply();
             }
 
             @Override
@@ -70,7 +71,7 @@ public class Methods {
 
             @Override
             public void onRewardedVideoAdFailedToLoad(int i) {
-                Toast.makeText(c, "Pubblicità non disponibile, riprova più tardi", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Pubblicità non disponibile, riprova più tardi", Toast.LENGTH_SHORT).show();
             }
         });
         rewardedVideoAd.loadAd("ca-app-pub-6428554832398906/3073286210", new AdRequest.Builder().build());

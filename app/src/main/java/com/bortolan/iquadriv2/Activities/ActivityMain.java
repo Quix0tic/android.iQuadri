@@ -105,7 +105,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("first_v17", true)) {
             new MaterialDialog.Builder(this)
                     .title("Vuoi tenere le pubblicità?")
-                    .content("Con l'ultimo aggiornamento, per supportare i costi dello sviluppo e del mantenimento dell'app, sono state implementate le pubblicità a schermo intero in chiusura all'app.\nSe ciò ti da' fastidio, puoi sempre disattivarle per 2 settimane guardando un breve video.")
+                    .content("Con l'ultimo aggiornamento, per supportare i costi dello sviluppo e del mantenimento dell'app, sono state implementate le pubblicità a schermo intero in chiusura all'app.\nSe ciò ti da' fastidio, puoi sempre disattivarle per una settimana guardando un breve video.\nAl termine della settimana, potrai ancora disattivarle andando nella sezione 'Impostazioni'")
                     .positiveText("SI").negativeText("NO")
                     .onNegative((dialog, which) -> disableAds(this, myRequest))
                     .show();
