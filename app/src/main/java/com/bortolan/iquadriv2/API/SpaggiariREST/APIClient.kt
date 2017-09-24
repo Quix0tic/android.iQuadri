@@ -20,7 +20,7 @@ import java.util.*
 
 class APIClient {
     companion object {
-        var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault())
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault())
 
         fun create(context: Context): API {
             val sharedPref = PreferenceManager.getDefaultSharedPreferences(context)

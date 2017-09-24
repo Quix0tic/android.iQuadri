@@ -73,7 +73,7 @@ class Login : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ login ->
                     if (enable) {
-
+                        Log.d("DATE", APIClient.dateFormat.parse(login.expire).toString())
                         PreferenceManager.getDefaultSharedPreferences(activity).edit()
                                 .putBoolean("spaggiari-logged", true)
                                 .putString("spaggiari-user", mEmail)
@@ -86,30 +86,29 @@ class Login : Fragment() {
                         fragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, RegistroPeriodi()).commit()
                     }
                 }, { error ->
+                    error.printStackTrace()
                     if (enable) {
                         if (error is HttpException) {
                             error.printStackTrace()
                             Log.e("LOGIN", "HTTPEXCEPTION")
-                            if (!error.response().isSuccessful) {
-                                if (error.code() in 500..600) {
-                                    Toast.makeText(activity.applicationContext, "Server non raggiungibile, riprovare più tardi", Toast.LENGTH_LONG).show()
-                                    Log.e("LOGIN", "Server non raggiungibile, riprovare più tardi")
-                                    PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("spiaggiari_next_try", System.currentTimeMillis() + 5 * 60000).apply()
-                                } else {
-                                    login_btn.setText(R.string.login)
-                                    Toast.makeText(context, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
+                            if (error.code() in 500..600) {
+                                Toast.makeText(activity.applicationContext, "Server non raggiungibile, riprovare più tardi", Toast.LENGTH_LONG).show()
+                                Log.e("LOGIN", "Server non raggiungibile, riprovare più tardi")
+                                PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("spiaggiari_next_try", System.currentTimeMillis() + 5 * 60000).apply()
+                            } else if (error.code() == 422) {
+                                login_btn.setText(R.string.login)
+                                Toast.makeText(activity.applicationContext, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
 
-                                    mail.isEnabled = true
-                                    password.isEnabled = true
-                                    login_btn.isEnabled = true
+                                mail.isEnabled = true
+                                password.isEnabled = true
+                                login_btn.isEnabled = true
 
-                                    password.setText("")
-                                }
+                                password.setText("")
                             }
                         } else {
                             error.printStackTrace()
                             login_btn.setText(R.string.login)
-                            Toast.makeText(context, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity.applicationContext, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
 
                             mail.isEnabled = true
                             password.isEnabled = true
