@@ -3,8 +3,8 @@ package com.bortolan.iquadriv2.API.SpaggiariREST
 import android.content.Context
 import android.preference.PreferenceManager
 import android.util.Log
-import com.bortolan.iquadriv2.API.SpaggiariREST.models.LoginRequest
-import com.bortolan.iquadriv2.API.SpaggiariREST.models.LoginResponse
+import com.bortolan.iquadriv2.Interfaces.models.LoginRequest
+import com.bortolan.iquadriv2.Interfaces.models.LoginResponse
 import com.google.android.gms.security.ProviderInstaller
 import com.google.gson.Gson
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -51,7 +51,6 @@ class APIClient {
                         Log.d("LOGIN INTERCEPTOR", "UPDATE TOKEN: " + loginResponse.token)
 
                         sharedPref.edit()
-                                .putString("spaggiari-id", loginResponse.ident.substring(1))
                                 .putString("spaggiari-token", loginResponse.token)
                                 .putLong("spaggiari-expireDate", dateFormat.parse(loginResponse.expire).time)
                                 .apply()

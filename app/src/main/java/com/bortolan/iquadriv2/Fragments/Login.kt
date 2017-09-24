@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import com.bortolan.iquadriv2.API.SpaggiariREST.APIClient
-import com.bortolan.iquadriv2.API.SpaggiariREST.models.LoginRequest
+import com.bortolan.iquadriv2.Interfaces.models.LoginRequest
 import com.bortolan.iquadriv2.R
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -79,6 +79,8 @@ class Login : Fragment() {
                                 .putString("spaggiari-user", mEmail)
                                 .putString("spaggiari-pass", mPassword)
                                 .putLong("spaggiari-expireDate", APIClient.dateFormat.parse(login.expire).time)
+                                .putString("spaggiari-token", login.token)
+                                .putString("spaggiari-id", login.ident.substring(1))
                                 .apply()
 
                         fragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, RegistroPeriodi()).commit()

@@ -1,4 +1,4 @@
-package com.bortolan.iquadriv2.API.SpaggiariREST.models
+package com.bortolan.iquadriv2.Interfaces.models
 
 import java.util.*
 

@@ -12,8 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bortolan.iquadriv2.API.SpaggiariREST.APIClient
-import com.bortolan.iquadriv2.API.SpaggiariREST.models.Grade
 import com.bortolan.iquadriv2.Databases.RegistroDB
+import com.bortolan.iquadriv2.Interfaces.models.Grade
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,7 +48,7 @@ class RegistroPeriodi : Fragment() {
             APIClient.create(context).getGrades(PreferenceManager.getDefaultSharedPreferences(context).getString("spaggiari-id", ""))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ t -> save(t); load() }, { it.printStackTrace() })
+                    .subscribe({ save(it.grades); load() }, { it.printStackTrace() })
         } else {
             Snackbar.make(coordinator_layout, R.string.nointernet, Snackbar.LENGTH_LONG).show()
         }

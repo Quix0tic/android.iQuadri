@@ -1,4 +1,4 @@
-package com.bortolan.iquadriv2.API.SpaggiariREST.models
+package com.bortolan.iquadriv2.Interfaces.models
 
 data class LoginResponse(
         val ident: String,

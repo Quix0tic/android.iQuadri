@@ -5,11 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.bortolan.iquadriv2.API.SpaggiariREST.models.Grade;
 import com.bortolan.iquadriv2.Interfaces.Average;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubItem;
 import com.bortolan.iquadriv2.Interfaces.GitHub.GitHubResponse;
 import com.bortolan.iquadriv2.Interfaces.Libri.Announcement;
+import com.bortolan.iquadriv2.Interfaces.models.Grade;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.bortolan.iquadriv2.API.SpaggiariREST.models
+package com.bortolan.iquadriv2.Interfaces.models
 
 import android.util.Base64
 import java.security.MessageDigest
