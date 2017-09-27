@@ -8,19 +8,26 @@ import org.jsoup.nodes.Document
 class DownloadArticles(val post: (List<Circolare>) -> Unit) : AsyncTask<String, Void, List<Circolare>>() {
     val list = ArrayList<Circolare>()
 
-    override fun doInBackground(vararg p0: String?): List<Circolare> {
-        var doc: Document = Jsoup.connect(STUDENTI).get() ?: return list
-        var posts = doc.select("div.post")
+    override fun doInBackground(vararg p0: String?): List<Circolare>? {
+        try {
 
-        posts.forEachIndexed { index, element ->
-            list.add(index, Circolare(element.select("h2").text(), element.select("p").text(), element.select("a.continua").attr("href")))
+
+            val doc: Document = Jsoup.connect(STUDENTI).get()
+            val posts = doc.select("div.post")
+
+            posts.forEachIndexed { index, element ->
+                list.add(index, Circolare(element.select("h2").text(), element.select("p").text(), element.select("a.continua").attr("href")))
+            }
+            return list
+        } catch (err: Exception) {
+            err.printStackTrace()
+            return null
         }
-        return list
     }
 
-    override fun onPostExecute(result: List<Circolare>) {
+    override fun onPostExecute(result: List<Circolare>?) {
         super.onPostExecute(result)
-        post.invoke(result)
+        if (result != null) post.invoke(result)
     }
 
     companion object {

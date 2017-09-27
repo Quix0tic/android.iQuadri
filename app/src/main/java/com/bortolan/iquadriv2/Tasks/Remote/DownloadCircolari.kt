@@ -14,28 +14,32 @@ class DownloadCircolari(pref: SharedPreferences, val post: (List<Circolare>) -> 
     val myCategories = Methods.getCategoriesSettings(pref)
 
 
-    override fun doInBackground(vararg p0: String?): List<Circolare> {
-        val doc = Jsoup.connect(CIRCOLARI).ignoreContentType(true).parser(Parser.xmlParser()).get()
+    override fun doInBackground(vararg p0: String?): List<Circolare>? {
+        Log.d("DownloadCircolari", "execute()")
+        try {
+            val doc = Jsoup.connect(CIRCOLARI).ignoreContentType(true).parser(Parser.xmlParser()).get()
 
-        val items = doc.select("item")
-        items.forEach { element: Element ->
-            val itemCategories = element.select("category").text().split(' ')
+            val items = doc.select("item")
+            items.forEach { element: Element ->
+                val itemCategories = element.select("category").text().split(' ')
 
-            for (myCat in myCategories) {
-                if (itemCategories.contains(myCat)) {
-                    Log.d("CIRCOLARI", "in category")
-                    list.add(Circolare(element.select("title").text(), element.select("description").text(), element.select("link").text()))
-                    break
+                for (myCat in myCategories) {
+                    if (itemCategories.contains(myCat)) {
+                        list.add(Circolare(element.select("title").text(), element.select("description").text(), element.select("link").text()))
+                        break
+                    }
                 }
             }
+            return list
+        } catch (err: Exception) {
+            err.printStackTrace()
+            return null
         }
-
-        return list
     }
 
-    override fun onPostExecute(result: List<Circolare>) {
+    override fun onPostExecute(result: List<Circolare>?) {
         super.onPostExecute(result)
-        post.invoke(result)
+        if (result != null) post.invoke(result)
     }
 
     companion object {

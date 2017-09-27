@@ -89,21 +89,22 @@ class Login : Fragment() {
                     error.printStackTrace()
                     if (enable) {
                         if (error is HttpException) {
-                            error.printStackTrace()
-                            Log.e("LOGIN", "HTTPEXCEPTION")
                             if (error.code() in 500..600) {
                                 Toast.makeText(activity.applicationContext, "Server non raggiungibile, riprovare più tardi", Toast.LENGTH_LONG).show()
                                 Log.e("LOGIN", "Server non raggiungibile, riprovare più tardi")
                                 PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("spiaggiari_next_try", System.currentTimeMillis() + 5 * 60000).apply()
                             } else if (error.code() == 422) {
+                                Log.e("LOGIN", "Credenziali non valide")
                                 login_btn.setText(R.string.login)
-                                Toast.makeText(activity.applicationContext, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(activity.applicationContext, "Credenziali non valide", Toast.LENGTH_SHORT).show()
 
                                 mail.isEnabled = true
                                 password.isEnabled = true
                                 login_btn.isEnabled = true
 
                                 password.setText("")
+                            } else {
+                                error.printStackTrace()
                             }
                         } else {
                             error.printStackTrace()

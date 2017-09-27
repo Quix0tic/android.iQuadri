@@ -24,8 +24,8 @@ class DownloadArticle(private val post: (Article) -> Unit) : AsyncTask<String, V
         }
     }
 
-    override fun onPostExecute(article: Article) {
+    override fun onPostExecute(article: Article?) {
         super.onPostExecute(article)
-        post.invoke(article)
+        if (article != null) post.invoke(article)
     }
 }

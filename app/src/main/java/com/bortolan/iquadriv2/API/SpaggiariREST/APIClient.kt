@@ -46,18 +46,20 @@ class APIClient {
                             .build())
 
                     if (loginRes.isSuccessful) {
-                        val loginResponse = Gson().fromJson(loginRes.body().toString(), LoginResponse::class.java)
+                        val loginResponse = Gson().fromJson(loginRes.body()?.string(), LoginResponse::class.java)
 
                         Log.d("LOGIN INTERCEPTOR", "UPDATE TOKEN: " + loginResponse.token)
 
                         sharedPref.edit()
                                 .putString("spaggiari-token", loginResponse.token)
-                                .putLong("spaggiari-expireDate", dateFormat.parse(loginResponse.expire).time)
+                                .putLong("spaggiari-expireDate", APIClient.dateFormat.parse(loginResponse.expire).time)
+                                .putBoolean("spaggiari-logged", false)
                                 .apply()
                         chain.proceed(original)
                     } else {
+                        Log.d("LOGIN INTERCEPTOR", loginRes.body().toString())
                         sharedPref.edit().putBoolean("spaggiari-logged", false).apply()
-                        chain.proceed(null)
+                        chain.proceed(original)
                     }
 
                 } else {
@@ -87,7 +89,7 @@ class APIClient {
 
             val client = OkHttpClient.Builder()
                     .addInterceptor(zorro)
-                    .addNetworkInterceptor(loginInterceptor)
+                    .addInterceptor(loginInterceptor)
                     .build()
 
             val retrofit = Retrofit.Builder()
