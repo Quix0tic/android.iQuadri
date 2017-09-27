@@ -17,7 +17,10 @@ import android.util.Log;
 import com.bortolan.iquadriv2.Activities.ActivityMain;
 import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
+import com.bortolan.iquadriv2.Tasks.Cache.CacheListTask;
 import com.bortolan.iquadriv2.Tasks.Remote.DownloadCircolari;
+
+import java.util.List;
 
 import kotlin.Unit;
 
@@ -34,7 +37,6 @@ public class CircolariNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.w("CircolariNotification", "Shoot Notification");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         download(preferences, this);
         this.intent = intent;
@@ -50,9 +52,12 @@ public class CircolariNotification extends Service {
     private void download(SharedPreferences preferences, Context context) {
         if (isNetworkAvailable(context)) {
             new DownloadCircolari(preferences, list -> {
-                Log.d("CircolariNotification", list.get(0).getTitle());
-                if (!list.isEmpty())
+                Log.d("CircolariNotification", "Download Size: " + list.size());
+                if (!list.isEmpty()) {
+                    Log.d("CircolariNotification", list.get(0).getTitle());
                     checkUpdates(context, list.get(0), preferences, last_circolare, preferences.getBoolean("notify_circolari", true));
+                    new CacheListTask(context.getCacheDir(), "Circolari").execute((List) list);
+                }
                 return Unit.INSTANCE;
             }).execute();
         }
@@ -61,6 +66,7 @@ public class CircolariNotification extends Service {
     private void checkUpdates(Context context, Circolare firstItem, SharedPreferences preferences, String last_item_key_name, boolean notify) {
         if (notify) {
             if (!firstItem.getTitle().toLowerCase().trim().equals(preferences.getString(last_item_key_name, "").toLowerCase().trim())) {
+                Log.w("CircolariNotification", "Shoot Notification -> " + firstItem.getTitle());
 
                 NotificationManagerCompat notificationManager;
                 NotificationCompat.Builder mBuilder;

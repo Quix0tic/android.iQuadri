@@ -57,10 +57,6 @@ public *;
 -dontwarn com.afollestad.materialdialogs.DefaultAdapter
 -dontwarn com.afollestad.materialdialogs.AlertDialogWrapper$Builder
 
--keepclassmembers class com.adcolony.sdk.ADCNative** {
-    *;
- }
-
  -keep public class com.google.android.gms.ads.** {
  public *;
  }

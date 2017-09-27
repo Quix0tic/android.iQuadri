@@ -17,7 +17,10 @@ import android.util.Log;
 import com.bortolan.iquadriv2.Activities.ActivityMain;
 import com.bortolan.iquadriv2.Interfaces.Circolare;
 import com.bortolan.iquadriv2.R;
+import com.bortolan.iquadriv2.Tasks.Cache.CacheListTask;
 import com.bortolan.iquadriv2.Tasks.Remote.DownloadArticles;
+
+import java.util.List;
 
 import kotlin.Unit;
 
@@ -25,6 +28,7 @@ import static com.bortolan.iquadriv2.Utils.Methods.isNetworkAvailable;
 
 public class QDSNotification extends Service {
     private final static String last_circolare = "last_circolare";
+    private final static String TAG = "QDSNotification";
     private final static String last_studenti = "last_studenti";
     Intent intent;
     private int nNotif = 978;
@@ -34,7 +38,6 @@ public class QDSNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.w("QDSNotification", "Shoot Notification");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         download(preferences, this);
         this.intent = intent;
@@ -50,8 +53,12 @@ public class QDSNotification extends Service {
     private void download(SharedPreferences preferences, Context context) {
         if (isNetworkAvailable(context)) {
             new DownloadArticles(list -> {
-                if (!list.isEmpty() && list.size() > 0)
+                Log.d(TAG, "Download Size: " + list.size());
+                if (!list.isEmpty()) {
+                    Log.d(TAG, list.get(0).getTitle());
                     checkUpdates(context, list.get(0), preferences, last_studenti, preferences.getBoolean("notify_studenti", true));
+                    new CacheListTask(context.getCacheDir(), "Studenti").execute((List) list);
+                }
                 return Unit.INSTANCE;
             }).execute();
         }
@@ -60,6 +67,7 @@ public class QDSNotification extends Service {
     private void checkUpdates(Context context, Circolare firstItem, SharedPreferences preferences, String last_item_key_name, boolean notify) {
         if (notify) {
             if (!firstItem.getTitle().toLowerCase().trim().equals(preferences.getString(last_item_key_name, "").toLowerCase().trim())) {
+                Log.w(TAG, "Shoot Notification -> " + firstItem.getTitle());
 
                 NotificationManagerCompat notificationManager;
                 NotificationCompat.Builder mBuilder;

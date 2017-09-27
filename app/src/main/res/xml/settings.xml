@@ -63,7 +63,7 @@
     <PreferenceCategory android:title="Pubblicità">
         <Preference
             android:key="disattiva_pubblicita"
-            android:summary="Se ti da' fastidio visualizzare la pubblicità in chiusura, puoi disattivarla per 2 settimane guardando un breve video."
+            android:summary="Se ti da' fastidio visualizzare la pubblicità in chiusura, puoi disattivarla per una settimana guardando un breve video."
             android:title="Disattiva le pubblicità" />
     </PreferenceCategory>
 </PreferenceScreen>
