@@ -52,12 +52,12 @@ public class CircolariNotification extends Service {
     private void download(SharedPreferences preferences, Context context) {
         if (isNetworkAvailable(context)) {
             new DownloadCircolari(preferences, list -> {
-                Log.d("CircolariNotification", "Download Size: " + list.size());
-                if (!list.isEmpty()) {
-                    Log.d("CircolariNotification", list.get(0).getTitle());
-                    checkUpdates(context, list.get(0), preferences, last_circolare, preferences.getBoolean("notify_circolari", true));
-                    new CacheListTask(context.getCacheDir(), "Circolari").execute((List) list);
-                }
+                if (list == null || list.isEmpty()) return Unit.INSTANCE;
+
+                Log.d("CircolariNotification", list.get(0).getTitle());
+                checkUpdates(context, list.get(0), preferences, last_circolare, preferences.getBoolean("notify_circolari", true));
+                new CacheListTask(context.getCacheDir(), "Circolari").execute((List) list);
+
                 return Unit.INSTANCE;
             }).execute();
         }
@@ -65,37 +65,37 @@ public class CircolariNotification extends Service {
 
     private void checkUpdates(Context context, Circolare firstItem, SharedPreferences preferences, String last_item_key_name, boolean notify) {
         if (notify) {
-            if (!firstItem.getTitle().toLowerCase().trim().equals(preferences.getString(last_item_key_name, "").toLowerCase().trim())) {
-                Log.w("CircolariNotification", "Shoot Notification -> " + firstItem.getTitle());
+            //if (!firstItem.getTitle().toLowerCase().trim().equals(preferences.getString(last_item_key_name, "").toLowerCase().trim())) {
+            Log.w("CircolariNotification", "Shoot Notification -> " + firstItem.getTitle());
 
-                NotificationManagerCompat notificationManager;
-                NotificationCompat.Builder mBuilder;
+            NotificationManagerCompat notificationManager;
+            NotificationCompat.Builder mBuilder;
 
-                String title = "Quadri - Circolari";
-                String content = "Nuove circolari da leggere";
-                Intent i = new Intent(context, ActivityMain.class);
-                i.putExtra("tab", R.id.tab_circolari);
-                PendingIntent intent = PendingIntent.getActivity(context, ActivityMain.CIRCOLARI_ID, i, 0);
+            String title = "Quadri - Circolari";
+            String content = "Nuove circolari da leggere";
+            Intent i = new Intent(context, ActivityMain.class);
+            i.putExtra("tab", R.id.tab_circolari);
+            PendingIntent intent = PendingIntent.getActivity(context, ActivityMain.CIRCOLARI_ID, i, 0);
 
-                mBuilder = new NotificationCompat.Builder(context, "iQuadri")
-                        .setSmallIcon(R.drawable.ic_stat_name)
-                        .setContentText(content)
-                        .setContentTitle(title)
-                        .setContentIntent(intent)
-                        .setLights(Color.BLUE, 3000, 3000)
-                        .setAutoCancel(true);
+            mBuilder = new NotificationCompat.Builder(context, "iQuadri")
+                    .setSmallIcon(R.drawable.ic_stat_name)
+                    .setContentText(content)
+                    .setContentTitle(title)
+                    .setContentIntent(intent)
+                    .setLights(Color.BLUE, 3000, 3000)
+                    .setAutoCancel(true);
 
-                if (preferences.getBoolean("notify_vibrate", true))
-                    mBuilder.setVibrate(new long[]{250, 250, 250, 250});
-                if (preferences.getBoolean("notify_sound", true))
-                    mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            if (preferences.getBoolean("notify_vibrate", true))
+                mBuilder.setVibrate(new long[]{250, 250, 250, 250});
+            if (preferences.getBoolean("notify_sound", true))
+                mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
 
-                notificationManager = NotificationManagerCompat.from(context);
-                notificationManager.notify(nNotif, mBuilder.build());
+            notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.notify(nNotif, mBuilder.build());
 
-                PreferenceManager.getDefaultSharedPreferences(context).edit().putString(last_item_key_name, firstItem.getTitle().toLowerCase().trim()).apply();
-                this.stopService(this.intent);
-            }
+            PreferenceManager.getDefaultSharedPreferences(context).edit().putString(last_item_key_name, firstItem.getTitle().toLowerCase().trim()).apply();
+            this.stopSelf();
+            //}
         }
     }
 }

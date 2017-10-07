@@ -53,12 +53,12 @@ public class QDSNotification extends Service {
     private void download(SharedPreferences preferences, Context context) {
         if (isNetworkAvailable(context)) {
             new DownloadArticles(list -> {
-                Log.d(TAG, "Download Size: " + list.size());
-                if (!list.isEmpty()) {
-                    Log.d(TAG, list.get(0).getTitle());
-                    checkUpdates(context, list.get(0), preferences, last_studenti, preferences.getBoolean("notify_studenti", true));
-                    new CacheListTask(context.getCacheDir(), "Studenti").execute((List) list);
-                }
+                if (list == null || list.isEmpty()) return Unit.INSTANCE;
+
+                Log.d(TAG, list.get(0).getTitle());
+                checkUpdates(context, list.get(0), preferences, last_studenti, preferences.getBoolean("notify_studenti", true));
+                new CacheListTask(context.getCacheDir(), "Studenti").execute((List) list);
+
                 return Unit.INSTANCE;
             }).execute();
         }
@@ -95,7 +95,7 @@ public class QDSNotification extends Service {
                 notificationManager.notify(nNotif, mBuilder.build());
 
                 PreferenceManager.getDefaultSharedPreferences(context).edit().putString(last_item_key_name, firstItem.getTitle().toLowerCase().trim()).apply();
-                this.stopService(this.intent);
+                this.stopSelf();
             }
         }
     }

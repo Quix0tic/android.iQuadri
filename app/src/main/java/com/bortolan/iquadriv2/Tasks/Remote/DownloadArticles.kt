@@ -5,7 +5,7 @@ import com.bortolan.iquadriv2.Interfaces.Circolare
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-class DownloadArticles(val post: (List<Circolare>) -> Unit) : AsyncTask<String, Void, List<Circolare>>() {
+class DownloadArticles(val post: (List<Circolare>?) -> Unit) : AsyncTask<String, Void, List<Circolare>?>() {
     val list = ArrayList<Circolare>()
 
     override fun doInBackground(vararg p0: String?): List<Circolare>? {
@@ -27,7 +27,7 @@ class DownloadArticles(val post: (List<Circolare>) -> Unit) : AsyncTask<String, 
 
     override fun onPostExecute(result: List<Circolare>?) {
         super.onPostExecute(result)
-        if (result != null) post.invoke(result)
+        post.invoke(result)
     }
 
     companion object {

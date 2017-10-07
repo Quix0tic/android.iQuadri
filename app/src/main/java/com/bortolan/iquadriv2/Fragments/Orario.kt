@@ -71,7 +71,8 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     fun download() {
         val mContext: Context = context
         if (Methods.isNetworkAvailable(mContext)) {
-            DownloadSchedules { response: GitHubResponse ->
+            DownloadSchedules { response: GitHubResponse? ->
+                if (response == null) return@DownloadSchedules
                 RegistroDB.getInstance(mContext).addSchedules(response)
                 if (active) addAll(RegistroDB.getInstance(mContext).schedules)
             }.execute()

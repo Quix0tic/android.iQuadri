@@ -7,7 +7,7 @@ import com.bortolan.iquadriv2.Interfaces.Article
 import org.jsoup.Jsoup
 import java.io.IOException
 
-class DownloadArticle(private val post: (Article) -> Unit) : AsyncTask<String, Void, Article>() {
+class DownloadArticle(private val post: (Article?) -> Unit) : AsyncTask<String, Void, Article?>() {
 
     override fun doInBackground(vararg strings: String): Article? {
         try {
@@ -26,6 +26,6 @@ class DownloadArticle(private val post: (Article) -> Unit) : AsyncTask<String, V
 
     override fun onPostExecute(article: Article?) {
         super.onPostExecute(article)
-        if (article != null) post.invoke(article)
+        post.invoke(article)
     }
 }

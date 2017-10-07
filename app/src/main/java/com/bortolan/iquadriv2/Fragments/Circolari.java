@@ -92,13 +92,11 @@ public class Circolari extends Fragment implements SwipeRefreshLayout.OnRefreshL
 
     private void loadFeeds() {
         new DownloadCircolari(PreferenceManager.getDefaultSharedPreferences(mContext), list -> {
-            if (active) {
-                swipeRefreshLayout.setRefreshing(false);
-                addAnnouncements(list, true);
-                if (!list.isEmpty())
-                    PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", list.get(0).getTitle().toLowerCase().trim()).apply();
+            if (!active || list == null || list.isEmpty()) return Unit.INSTANCE;
 
-            }
+            swipeRefreshLayout.setRefreshing(false);
+            addAnnouncements(list, true);
+            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_circolare", list.get(0).getTitle().toLowerCase().trim()).apply();
             return Unit.INSTANCE;
         }).execute();
     }

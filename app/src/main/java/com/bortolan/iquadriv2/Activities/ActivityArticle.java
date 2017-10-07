@@ -76,35 +76,37 @@ public class ActivityArticle extends AppCompatActivity {
         image.getAttacher().setScaleType(ImageView.ScaleType.FIT_CENTER);
         Log.d("ARTICLE", "ENTER");
         progressBar.setVisibility(View.VISIBLE);
+
         new DownloadArticle(article -> {
-            if (article != null) {
-                runOnUiThread(() -> {
-                    content.setText(article.getBody());
-                    TransitionManager.beginDelayedTransition((ViewGroup) content.getRootView(), new Fade());
-                });
-
-                Picasso.with(this).load(article.getImage()).resize(getDisplaySize(this).x, 0).onlyScaleDown().into(image, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        progressBar.setVisibility(View.GONE);
-
-                        shadow.setOnClickListener(view -> {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                startActivity(new Intent(ActivityArticle.this, ActivityImage.class).putExtra("url", article.getImage()), ActivityOptionsCompat.makeSceneTransitionAnimation(ActivityArticle.this, view, "image").toBundle());
-                            } else {
-                                startActivity(new Intent(ActivityArticle.this, ActivityImage.class));
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
-            } else {
+            if (article == null) {
                 finish();
                 Toast.makeText(this, getString(R.string.nointernet), Toast.LENGTH_SHORT).show();
+                return Unit.INSTANCE;
             }
+
+            runOnUiThread(() -> {
+                content.setText(article.getBody());
+                TransitionManager.beginDelayedTransition((ViewGroup) content.getRootView(), new Fade());
+            });
+            Picasso.with(this).load(article.getImage()).resize(getDisplaySize(this).x, 0).onlyScaleDown().into(image, new Callback() {
+                @Override
+                public void onSuccess() {
+                    progressBar.setVisibility(View.GONE);
+
+                    shadow.setOnClickListener(view -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                            startActivity(new Intent(ActivityArticle.this, ActivityImage.class).putExtra("url", article.getImage()), ActivityOptionsCompat.makeSceneTransitionAnimation(ActivityArticle.this, view, "image").toBundle());
+                        } else {
+                            startActivity(new Intent(ActivityArticle.this, ActivityImage.class));
+                        }
+                    });
+                }
+
+                @Override
+                public void onError() {
+                }
+            });
+
             return Unit.INSTANCE;
         }).execute(url);
 

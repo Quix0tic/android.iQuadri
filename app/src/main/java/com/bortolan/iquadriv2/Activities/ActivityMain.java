@@ -1,6 +1,7 @@
 package com.bortolan.iquadriv2.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bortolan.iquadriv2.BuildConfig;
@@ -29,6 +31,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -68,7 +71,7 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
         } else {
             myRequest = new AdRequest.Builder().addTestDevice("66FFAE1B2C386120B0D503E13F65ED71").build();
         }
-
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
         MobileAds.initialize(this, "ca-app-pub-6428554832398906~9181852475");
         prepareInterstitial();
 
@@ -79,6 +82,12 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
 
         navigation_bar.setOnTabSelectListener(this);
         navigation_bar.setDefaultTab(getIntent().getIntExtra("tab", R.id.tab_home));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
     }
 
     private void prepareInterstitial() {
@@ -119,10 +128,14 @@ public class ActivityMain extends AppCompatActivity implements OnTabSelectListen
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(R.string.huawei_headline).setMessage(R.string.huawei_text)
                     .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> {
-                        Intent intent = new Intent();
-                        intent.setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"));
-                        startActivity(intent);
-                        PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("protected", true).apply();
+                        try {
+                            Intent intent = new Intent();
+                            intent.setComponent(new ComponentName("com.huawei.systemmanager", "com.huawei.systemmanager.optimize.process.ProtectActivity"));
+                            startActivity(intent);
+                            PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("protected", true).apply();
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(getApplicationContext(), "Non è possibile aggiungere l'app fra le app protette.", Toast.LENGTH_SHORT).show();
+                        }
                     }).setNegativeButton(android.R.string.cancel, null).create().show();
         }
     }

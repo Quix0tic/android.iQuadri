@@ -9,7 +9,7 @@ import java.io.InputStreamReader
 import java.net.URL
 
 
-class DownloadSchedules(private val execute: (GitHubResponse) -> Unit) : AsyncTask<Void, Void, GitHubResponse?>() {
+class DownloadSchedules(private val execute: (GitHubResponse?) -> Unit) : AsyncTask<Void, Void, GitHubResponse?>() {
 
     override fun doInBackground(vararg voids: Void): GitHubResponse? {
         var response: GitHubResponse? = null
@@ -27,16 +27,16 @@ class DownloadSchedules(private val execute: (GitHubResponse) -> Unit) : AsyncTa
                 }
                 response = Gson().getAdapter(GitHubResponse::class.java).fromJson(total.toString())
             }
+            return response
         } catch (e: Exception) {
             e.printStackTrace()
+            return null
         }
-
-        return response
     }
 
     override fun onPostExecute(response: GitHubResponse?) {
         super.onPostExecute(response)
-        if (response != null) execute.invoke(response)
+        execute.invoke(response)
     }
 
     companion object {

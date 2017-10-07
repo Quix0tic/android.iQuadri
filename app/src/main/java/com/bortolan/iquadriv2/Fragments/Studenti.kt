@@ -70,14 +70,12 @@ class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun download() {
         val mContext: Context = context
-        DownloadArticles {
-            elements: List<Circolare> ->
-            if (active) {
-                swipe_refresh.isRefreshing = false
-                addAnnouncements(elements, true)
-                if (elements.isNotEmpty())
-                    PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_studenti", elements[0].title.toLowerCase().trim { it <= ' ' }).apply()
-            }
+        DownloadArticles { elements: List<Circolare>? ->
+            if (elements == null || elements.isEmpty() || !active) return@DownloadArticles
+
+            swipe_refresh.isRefreshing = false
+            addAnnouncements(elements, true)
+            PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("last_studenti", elements[0].title.toLowerCase().trim { it <= ' ' }).apply()
         }.execute()
     }
 

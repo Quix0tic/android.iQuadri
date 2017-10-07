@@ -9,7 +9,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
 
-class DownloadCircolari(pref: SharedPreferences, val post: (List<Circolare>) -> Unit) : AsyncTask<String, Void, List<Circolare>>() {
+class DownloadCircolari(pref: SharedPreferences, val post: (List<Circolare>?) -> Unit) : AsyncTask<String, Void, List<Circolare>?>() {
     val list = ArrayList<Circolare>()
     val myCategories = Methods.getCategoriesSettings(pref)
 
@@ -39,7 +39,7 @@ class DownloadCircolari(pref: SharedPreferences, val post: (List<Circolare>) -> 
 
     override fun onPostExecute(result: List<Circolare>?) {
         super.onPostExecute(result)
-        if (result != null) post.invoke(result)
+        post.invoke(result)
     }
 
     companion object {

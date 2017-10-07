@@ -39,10 +39,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         } else if (pref.getBoolean("notify", true)) {
             Log.w("FirebaseService", "Shoot Notification")
 
-            if (data["action"]?.equals("circolari") ?: false && pref.getBoolean("circolari", true)) {
+            if (data["action"]?.equals("circolari") == true && pref.getBoolean("circolari", true)) {
                 startService(Intent(this, CircolariNotification::class.java))
-            } else if (data["action"]?.equals("studenti") ?: false && pref.getBoolean("studenti", true)) {
+            } else if (data["action"]?.equals("studenti") == true && pref.getBoolean("studenti", true)) {
                 startService(Intent(this, QDSNotification::class.java))
+
             }
         }
 
