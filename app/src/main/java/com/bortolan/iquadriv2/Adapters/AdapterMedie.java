@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 import com.bortolan.iquadriv2.Interfaces.Average;
 import com.bortolan.iquadriv2.R;
+import com.bortolan.iquadriv2.Views.CircleProgressBar;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,9 +24,9 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import devlight.io.library.ArcProgressStackView;
 
 import static com.bortolan.iquadriv2.Utils.Methods.MessaggioVoto;
+import static com.bortolan.iquadriv2.Utils.Methods.capitalizeEach;
 import static com.bortolan.iquadriv2.Utils.Methods.getMediaColor;
 import static com.bortolan.iquadriv2.Utils.Methods.isAppInstalled;
 
@@ -35,11 +35,9 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
 
     private final List<Average> CVDataList;
     private final Context mContext;
-    private int period;
 
-    public AdapterMedie(Context context, int periodo) {
+    public AdapterMedie(Context context) {
         this.mContext = context;
-        this.period = periodo;
         this.CVDataList = new LinkedList<>();
     }
 
@@ -66,7 +64,7 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
     public void onBindViewHolder(MedieHolder ViewHolder, int position) {
         final Average average = CVDataList.get(position);
 
-        ViewHolder.mTextViewMateria.setText(average.name);
+        ViewHolder.mTextViewMateria.setText(capitalizeEach(average.name));
 
         ViewHolder.mCardViewMedia.setOnClickListener(v -> {
             if (isAppInstalled(mContext, "com.sharpdroid.registroelettronico")) {
@@ -85,9 +83,8 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
         });
 
         ViewHolder.mTextViewMedia.setText(String.format(Locale.getDefault(), "%.2f", average.avg));
-        List<ArcProgressStackView.Model> models = new ArrayList<>();
-        models.add(new ArcProgressStackView.Model("media", average.avg * 10, ContextCompat.getColor(mContext, getMediaColor(average.avg, average.target))));
-        ViewHolder.mArcProgressStackView.setModels(models);
+        ViewHolder.mArcProgressStackView.setColor(ContextCompat.getColor(mContext, getMediaColor(average.avg, average.target)));
+        ViewHolder.mArcProgressStackView.setProgress(average.avg);
         String obbiettivo_string = MessaggioVoto(average.target, average.avg, average.count);
         ViewHolder.mTextViewDesc.setText(obbiettivo_string);
 
@@ -102,7 +99,7 @@ public class AdapterMedie extends RecyclerView.Adapter<AdapterMedie.MedieHolder>
         @BindView(R.id.cardview_medie)
         CardView mCardViewMedia;
         @BindView(R.id.progressvoti)
-        ArcProgressStackView mArcProgressStackView;
+        CircleProgressBar mArcProgressStackView;
         @BindView(R.id.materia)
         TextView mTextViewMateria;
         @BindView(R.id.media)

@@ -39,8 +39,12 @@ class RegistroPeriodi : Fragment() {
         toolbar.setupWithViewPager(pager)
 
         //update data
-        load()
         download()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        load()
     }
 
     private fun download() {
@@ -63,6 +67,8 @@ class RegistroPeriodi : Fragment() {
         (periodiAdapter.instantiateItem(pager, 1) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.SECOND, "ORDER BY subject"))
         (periodiAdapter.instantiateItem(pager, 2) as Registro).addSubjects(RegistroDB.getInstance(context).getAverages(RegistroDB.Period.ALL, "ORDER BY subject"))
 
+        println("LOAD")
+
         if (RegistroDB.getInstance(context).isSecondPeriodStarted)
             pager.setCurrentItem(1, true)
 
@@ -71,13 +77,8 @@ class RegistroPeriodi : Fragment() {
     internal inner class PeriodiPager(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
         override fun getItem(position: Int): Fragment {
-            val fragment = Registro()
-            val bundle = Bundle()
-            bundle.putInt("q", position)
-            fragment.arguments = bundle
-            return fragment
+            return Registro()
         }
-
 
         override fun getPageTitle(position: Int): CharSequence {
             if (position == 2) return "Generale"

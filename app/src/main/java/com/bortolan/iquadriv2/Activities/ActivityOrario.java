@@ -29,13 +29,6 @@ public class ActivityOrario extends AppCompatActivity {
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 50;
     private final Handler mHideHandler = new Handler();
-    private final View.OnTouchListener mDelayHideTouchListener = (view, motionEvent) -> {
-        if (AUTO_HIDE) {
-            delayedHide(AUTO_HIDE_DELAY_MILLIS);
-        }
-        view.performClick();
-        return false;
-    };
     @BindView(R.id.favourite_switcher)
     ImageSwitcher switcher;
     FavouritesDB db;
@@ -71,6 +64,13 @@ public class ActivityOrario extends AppCompatActivity {
     };
     private boolean mVisible;
     private final Runnable mHideRunnable = this::hide;
+    private final View.OnTouchListener mDelayHideTouchListener = (view, motionEvent) -> {
+        if (AUTO_HIDE) {
+            delayedHide(AUTO_HIDE_DELAY_MILLIS);
+        }
+        view.performClick();
+        return false;
+    };
 
     @Override
 
@@ -121,9 +121,10 @@ public class ActivityOrario extends AppCompatActivity {
 
         switcher.setOnClickListener(view -> {
             switcher.showNext();
-            v.vibrate(30);
             if (db.isFavourite(item)) db.remove(item);
             else db.add(item);
+            v.vibrate(30);
+            System.out.println("CLICK");
         });
 
         findViewById(R.id.favourite_switcher).setOnTouchListener(mDelayHideTouchListener);

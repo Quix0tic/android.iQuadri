@@ -15,8 +15,7 @@ import com.bortolan.iquadriv2.Utils.ItemOffsetDecoration
 import kotlinx.android.synthetic.main.fragment_registro.*
 
 class Registro : Fragment() {
-    internal var adapter: AdapterMedie? = null
-    internal var periodo: Int = 0
+    var adapter: AdapterMedie? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -25,10 +24,9 @@ class Registro : Fragment() {
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        periodo = arguments.getInt("q")
         logout.setOnClickListener({ this.logout() })
 
-        adapter = AdapterMedie(context, periodo)
+        adapter = AdapterMedie(context)
         recycler.layoutManager = GridLayoutManager(context, 2)
         recycler.addItemDecoration(ItemOffsetDecoration(context, R.dimen.card_margin))
         recycler.adapter = adapter
@@ -47,10 +45,8 @@ class Registro : Fragment() {
 
 
     fun addSubjects(markSubjects: List<Average>) {
-        if (markSubjects.isNotEmpty()) {
-            adapter?.clear()
-            adapter?.addAll(markSubjects)
-        }
+        adapter?.clear()
+        adapter?.addAll(markSubjects)
     }
 
     companion object {

@@ -33,6 +33,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import kotlin.text.Regex;
 
 public class Methods {
 
@@ -87,6 +90,15 @@ public class Methods {
         if (!isEmptyOrNull(name))
             return name.substring(0, 1).toUpperCase(Locale.getDefault()) + name.substring(1).toLowerCase();
         else return name;
+    }
+
+    public static String capitalizeEach(String input, boolean doSingleLetters) {
+        Regex reg1 = new Regex(Pattern.compile(doSingleLetters ? "([a-z])\\w*" : "([a-z])\\w+"));
+        return reg1.replace(input.toLowerCase(), matchResult -> matchResult.getValue().substring(0, 1).toUpperCase() + matchResult.getValue().substring(1).toLowerCase());
+    }
+
+    public static String capitalizeEach(String input) {
+        return capitalizeEach(input, false);
     }
 
     private static boolean isEmptyOrNull(String string) {

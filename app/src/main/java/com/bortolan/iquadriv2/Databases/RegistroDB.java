@@ -54,21 +54,6 @@ public class RegistroDB extends SQLiteOpenHelper {
             db.execSQL("ALTER TABLE announcements ADD COLUMN phone TEXT");
     }
 
-    /*public void addMarks(List<MarkSubject> markSubjects) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
-        String name;
-        db.delete("marks", null, null);
-        for (MarkSubject subject : markSubjects) {
-            name = subject.getName();
-            for (Mark mark : subject.getMarks()) {
-                db.execSQL("INSERT OR IGNORE INTO marks VALUES(?,?,?,?,?,?,?,?)", new Object[]{mark.getHash(), name, mark.getMark(), mark.getDesc(), mark.getDate().getTime(), mark.getType(), mark.getQ(), mark.isNs() ? 1 : 0});
-            }
-        }
-        db.setTransactionSuccessful();
-        db.endTransaction();
-    }*/
-
     public void addMarks(List<Grade> grades) {
         SQLiteDatabase db = getWritableDatabase();
         db.beginTransaction();
@@ -180,8 +165,8 @@ public class RegistroDB extends SQLiteOpenHelper {
     }
 
     public enum Period {
-        FIRST("q1"),
-        SECOND("q3"),
+        FIRST("1"),
+        SECOND("3"),
         ALL("");
         private final String id;
 
