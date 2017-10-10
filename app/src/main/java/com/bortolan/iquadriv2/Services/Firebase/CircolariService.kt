@@ -18,6 +18,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
 import android.util.Log
 import com.bortolan.iquadriv2.Activities.ActivityMain
+import com.bortolan.iquadriv2.BuildConfig
 import com.bortolan.iquadriv2.Interfaces.Circolare
 import com.bortolan.iquadriv2.R
 import com.bortolan.iquadriv2.Tasks.Cache.CacheListTask
@@ -55,87 +56,83 @@ class CircolariService : JobService() {
 
     @RequiresApi(26)
     private fun checkUpdatesV26(context: Context, firstItem: Circolare, preferences: SharedPreferences, last_item_key_name: String, notify: Boolean) {
-        if (notify) {
-            //TO-DO: uncomment
-            if (!firstItem.title.toLowerCase().trim().equals(preferences.getString(last_item_key_name, "").toLowerCase().trim())) {
-                Log.w("CircolariService", "Shoot Notification -> " + firstItem.title)
+        if (!notify) return
+        if (!BuildConfig.DEBUG && firstItem.title.toLowerCase().trim() != preferences.getString(last_item_key_name, "").toLowerCase().trim()) return
 
-                val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
-                val mBuilder: Notification.Builder
+        Log.w("CircolariService", "Shoot Notification -> " + firstItem.title)
 
-                val title = "Quadri - Circolari"
-                val content = "Nuove circolari da leggere"
-                val i = Intent(context, ActivityMain::class.java)
-                i.putExtra("tab", R.id.tab_circolari)
-                val intent = PendingIntent.getActivity(context, ActivityMain.CIRCOLARI_ID, i, 0)
+        val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
+        val mBuilder: Notification.Builder
 
-                mBuilder = Notification.Builder(context, if (preferences.getBoolean("notify_sound", true)) channelId else channelId_mute)
-                        .setSmallIcon(R.drawable.ic_stat_name)
-                        .setContentText(content)
-                        .setContentTitle(title)
-                        .setContentIntent(intent)
-                        .setAutoCancel(true)
+        val title = "Quadri - Circolari"
+        val content = "Nuove circolari da leggere"
+        val i = Intent(context, ActivityMain::class.java)
+        i.putExtra("tab", R.id.tab_circolari)
+        val intent = PendingIntent.getActivity(context, ActivityMain.CIRCOLARI_ID, i, 0)
+
+        mBuilder = Notification.Builder(context, if (preferences.getBoolean("notify_sound", true)) channelId else channelId_mute)
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentText(content)
+                .setContentTitle(title)
+                .setContentIntent(intent)
+                .setAutoCancel(true)
 
 
-                val channel = NotificationChannel(channelId, "iQuadri", NotificationManager.IMPORTANCE_HIGH)
-                channel.enableLights(true)
-                channel.enableVibration(preferences.getBoolean("notify_vibrate", true))
-                channel.lightColor = Color.BLUE
+        val channel = NotificationChannel(channelId, "iQuadri", NotificationManager.IMPORTANCE_HIGH)
+        channel.enableLights(true)
+        channel.enableVibration(preferences.getBoolean("notify_vibrate", true))
+        channel.lightColor = Color.BLUE
 
-                val channelMute = NotificationChannel(channelId_mute, "iQuadri silent", NotificationManager.IMPORTANCE_LOW)
-                channelMute.enableLights(true)
-                channelMute.enableVibration(preferences.getBoolean("notify_vibrate", true))
-                channelMute.lightColor = Color.BLUE
+        val channelMute = NotificationChannel(channelId_mute, "iQuadri silent", NotificationManager.IMPORTANCE_LOW)
+        channelMute.enableLights(true)
+        channelMute.enableVibration(preferences.getBoolean("notify_vibrate", true))
+        channelMute.lightColor = Color.BLUE
 
-                if (preferences.getBoolean("notify_vibrate", true)) {
-                    channel.vibrationPattern = longArrayOf(250, 250, 250, 250)
-                }
-                if (preferences.getBoolean("notify_sound", true)) {
-                    channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION), AudioAttributes.Builder().setLegacyStreamType(AudioManager.STREAM_NOTIFICATION).build())
-                }
-
-                notificationManager.createNotificationChannel(channel)
-                notificationManager.createNotificationChannel(channelMute)
-                notificationManager.notify(nNotif, mBuilder.build())
-
-                PreferenceManager.getDefaultSharedPreferences(context).edit().putString(last_item_key_name, firstItem.title.toLowerCase().trim { it <= ' ' }).apply()
-            }
+        if (preferences.getBoolean("notify_vibrate", true)) {
+            channel.vibrationPattern = longArrayOf(250, 250, 250, 250)
         }
+        if (preferences.getBoolean("notify_sound", true)) {
+            channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION), AudioAttributes.Builder().setLegacyStreamType(AudioManager.STREAM_NOTIFICATION).build())
+        }
+
+        notificationManager.createNotificationChannel(channel)
+        notificationManager.createNotificationChannel(channelMute)
+        notificationManager.notify(nNotif, mBuilder.build())
+
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(last_item_key_name, firstItem.title.toLowerCase().trim { it <= ' ' }).apply()
     }
 
     private fun checkUpdates(context: Context, firstItem: Circolare, preferences: SharedPreferences, last_item_key_name: String, notify: Boolean) {
-        if (notify) {
-            //TO-DO: uncomment
-            if (!firstItem.title.toLowerCase().trim().equals(preferences.getString(last_item_key_name, "").toLowerCase().trim())) {
-                Log.w("CircolariService", "Shoot Notification -> " + firstItem.title)
+        if (!notify) return
+        if (!BuildConfig.DEBUG && firstItem.title.toLowerCase().trim() != preferences.getString(last_item_key_name, "").toLowerCase().trim()) return
 
-                val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
-                val mBuilder: NotificationCompat.Builder
+        Log.w("CircolariService", "Shoot Notification -> " + firstItem.title)
 
-                val title = "Quadri - Circolari"
-                val content = "Nuove circolari da leggere"
-                val i = Intent(context, ActivityMain::class.java)
-                i.putExtra("tab", R.id.tab_circolari)
-                val intent = PendingIntent.getActivity(context, ActivityMain.CIRCOLARI_ID, i, 0)
+        val notificationManager: NotificationManagerCompat = NotificationManagerCompat.from(context)
+        val mBuilder: NotificationCompat.Builder
 
-                mBuilder = NotificationCompat.Builder(context, "iQuadri")
-                        .setSmallIcon(R.drawable.ic_stat_name)
-                        .setContentText(content)
-                        .setContentTitle(title)
-                        .setContentIntent(intent)
-                        .setLights(Color.BLUE, 3000, 3000)
-                        .setAutoCancel(true)
+        val title = "Quadri - Circolari"
+        val content = "Nuove circolari da leggere"
+        val i = Intent(context, ActivityMain::class.java)
+        i.putExtra("tab", R.id.tab_circolari)
+        val intent = PendingIntent.getActivity(context, ActivityMain.CIRCOLARI_ID, i, 0)
 
-                if (preferences.getBoolean("notify_vibrate", true))
-                    mBuilder.setVibrate(longArrayOf(250, 250, 250, 250))
-                if (preferences.getBoolean("notify_sound", true))
-                    mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+        mBuilder = NotificationCompat.Builder(context, "iQuadri")
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentText(content)
+                .setContentTitle(title)
+                .setContentIntent(intent)
+                .setLights(Color.BLUE, 3000, 3000)
+                .setAutoCancel(true)
 
-                notificationManager.notify(nNotif, mBuilder.build())
+        if (preferences.getBoolean("notify_vibrate", true))
+            mBuilder.setVibrate(longArrayOf(250, 250, 250, 250))
+        if (preferences.getBoolean("notify_sound", true))
+            mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
 
-                PreferenceManager.getDefaultSharedPreferences(context).edit().putString(last_item_key_name, firstItem.title.toLowerCase().trim { it <= ' ' }).apply()
-            }
-        }
+        notificationManager.notify(nNotif, mBuilder.build())
+
+        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(last_item_key_name, firstItem.title.toLowerCase().trim { it <= ' ' }).apply()
     }
 
     companion object {

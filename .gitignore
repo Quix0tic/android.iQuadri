@@ -11,3 +11,5 @@
 keystore.properties
 app/fabric.properties
 app/libs/
+/app/google-services.json
+app/release/

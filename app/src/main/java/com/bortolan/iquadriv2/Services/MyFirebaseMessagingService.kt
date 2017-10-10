@@ -51,10 +51,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             Log.w("FirebaseService", "Shoot Notification")
 
             if (data["action"]?.equals("circolari") == true && pref.getBoolean("circolari", true)) {
-                val job = dispatcher.newJobBuilder().setService(CircolariService::class.java).setTag("iQuadri_service").setRecurring(false).setTrigger(Trigger.executionWindow(0, 20)).build()
+                val job = dispatcher.newJobBuilder().setService(CircolariService::class.java).setTag("iQuadri_circolari").setRecurring(false).setTrigger(Trigger.executionWindow(0, 20)).build()
                 dispatcher.mustSchedule(job)
             } else if (data["action"]?.equals("studenti") == true && pref.getBoolean("studenti", true)) {
-                val job = dispatcher.newJobBuilder().setService(QDSService::class.java).setTag("iQuadri_service").setRecurring(false).setTrigger(Trigger.executionWindow(0, 20)).build()
+                val job = dispatcher.newJobBuilder().setService(QDSService::class.java).setTag("iQuadri_studenti").setRecurring(false).setTrigger(Trigger.executionWindow(0, 20)).build()
                 dispatcher.mustSchedule(job)
             }
         }
