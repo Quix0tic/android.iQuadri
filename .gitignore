@@ -10,3 +10,5 @@
 /app/google-services.json
 libs/
 release/
+.idea/vcs.xml
+unity-ads/
