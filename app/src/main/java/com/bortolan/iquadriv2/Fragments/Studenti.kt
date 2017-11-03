@@ -31,14 +31,14 @@ class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     internal lateinit var adapter: AdapterCircolari
     private var active = false
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_circolari, container, false)
+        return inflater.inflate(R.layout.fragment_circolari, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = AdapterCircolari(activity, AdapterCircolari.MODE_QDS)
+        adapter = AdapterCircolari(activity!!, AdapterCircolari.MODE_QDS)
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.addItemDecoration(HorizontalDividerItemDecoration.Builder(context).color(Color.parseColor("#BDBDBD")).size(1).build())
         recycler.adapter = adapter
@@ -69,7 +69,7 @@ class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun download() {
-        val mContext: Context = context
+        val mContext: Context? = context
         DownloadArticles { elements: List<Circolare>? ->
             if (elements == null || elements.isEmpty() || !active) return@DownloadArticles
 
@@ -91,7 +91,7 @@ class Studenti : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun load() {
-        CacheListObservable(File(context.cacheDir, TAG))
+        CacheListObservable(File(context?.cacheDir, TAG))
                 .getCachedList(Circolare::class.java)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

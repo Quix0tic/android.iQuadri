@@ -17,18 +17,18 @@ import kotlinx.android.synthetic.main.fragment_registro.*
 class Registro : Fragment() {
     var adapter: AdapterMedie? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_registro, container, false)
+        return inflater.inflate(R.layout.fragment_registro, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         logout.setOnClickListener({ this.logout() })
 
         adapter = AdapterMedie(context)
         recycler.layoutManager = GridLayoutManager(context, 2)
-        recycler.addItemDecoration(ItemOffsetDecoration(context, R.dimen.card_margin))
+        recycler.addItemDecoration(ItemOffsetDecoration(context!!, R.dimen.card_margin))
         recycler.adapter = adapter
         recycler.isNestedScrollingEnabled = false
     }
@@ -36,11 +36,11 @@ class Registro : Fragment() {
     fun logout() {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("spaggiari-logged", false).apply()
 
-        activity.supportFragmentManager
-                .beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                .replace(R.id.content, Login())
-                .commit()
+        activity?.supportFragmentManager
+                ?.beginTransaction()
+                ?.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                ?.replace(R.id.content, Login())
+                ?.commit()
     }
 
 

@@ -53,7 +53,7 @@ class APIClient {
                         sharedPref.edit()
                                 .putString("spaggiari-token", loginResponse.token)
                                 .putLong("spaggiari-expireDate", APIClient.dateFormat.parse(loginResponse.expire).time)
-                                .putBoolean("spaggiari-logged", false)
+                                .putBoolean("spaggiari-logged", true)
                                 .apply()
                         chain.proceed(original)
                     } else {

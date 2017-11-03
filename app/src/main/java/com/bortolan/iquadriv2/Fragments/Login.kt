@@ -24,13 +24,13 @@ class Login : Fragment() {
     private var enable: Boolean = false
 
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         enable = true
-        return inflater!!.inflate(R.layout.fragment_login, container, false)
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val next_try = PreferenceManager.getDefaultSharedPreferences(context).getLong("spiaggiari_next_try", 0)
@@ -51,7 +51,7 @@ class Login : Fragment() {
                 false
             }
         } else {
-            Toast.makeText(activity.applicationContext, "Server non raggiungibile, riprovare fra " + Math.ceil((next_try - System.currentTimeMillis()) / 60000.0).toInt() + " minuti", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity?.applicationContext, "Server non raggiungibile, riprovare fra " + Math.ceil((next_try - System.currentTimeMillis()) / 60000.0).toInt() + " minuti", Toast.LENGTH_SHORT).show()
             mail.isEnabled = false
             password.isEnabled = false
             login_btn.isEnabled = false
@@ -68,7 +68,7 @@ class Login : Fragment() {
         login_btn.isEnabled = false
         login_btn.setText(R.string.caricamento)
 
-        APIClient.create(context).doLogin(LoginRequest(mPassword, mEmail))
+        APIClient.create(context!!).doLogin(LoginRequest(mPassword, mEmail))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ login ->
@@ -83,20 +83,24 @@ class Login : Fragment() {
                                 .putString("spaggiari-id", login.ident.substring(1))
                                 .apply()
 
-                        fragmentManager.beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out).replace(R.id.content, RegistroPeriodi()).commit()
+                        fragmentManager
+                                ?.beginTransaction()
+                                ?.setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
+                                ?.replace(R.id.content, RegistroPeriodi())
+                                ?.commit()
                     }
                 }, { error ->
                     error.printStackTrace()
                     if (enable) {
                         if (error is HttpException) {
                             if (error.code() in 500..600) {
-                                Toast.makeText(activity.applicationContext, "Server non raggiungibile, riprovare più tardi", Toast.LENGTH_LONG).show()
+                                Toast.makeText(activity?.applicationContext, "Server non raggiungibile, riprovare più tardi", Toast.LENGTH_LONG).show()
                                 Log.e("LOGIN", "Server non raggiungibile, riprovare più tardi")
                                 PreferenceManager.getDefaultSharedPreferences(context).edit().putLong("spiaggiari_next_try", System.currentTimeMillis() + 5 * 60000).apply()
                             } else if (error.code() == 422) {
                                 Log.e("LOGIN", "Credenziali non valide")
                                 login_btn.setText(R.string.login)
-                                Toast.makeText(activity.applicationContext, "Credenziali non valide", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(activity?.applicationContext, "Credenziali non valide", Toast.LENGTH_SHORT).show()
 
                                 mail.isEnabled = true
                                 password.isEnabled = true
@@ -109,7 +113,7 @@ class Login : Fragment() {
                         } else {
                             error.printStackTrace()
                             login_btn.setText(R.string.login)
-                            Toast.makeText(activity.applicationContext, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(activity?.applicationContext, R.string.login_msg_failer, Toast.LENGTH_SHORT).show()
 
                             mail.isEnabled = true
                             password.isEnabled = true

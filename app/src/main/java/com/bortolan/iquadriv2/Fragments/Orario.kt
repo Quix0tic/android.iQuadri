@@ -26,12 +26,12 @@ import kotlinx.android.synthetic.main.fragment_orario.*
 
 class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextListener {
     var active = false
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_orario, container, false)
+        return inflater.inflate(R.layout.fragment_orario, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         search_view.setOnQueryTextListener(this)
@@ -58,7 +58,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     override fun onStop() {
         super.onStop()
         active = false
-        context.sendBroadcast(Intent(context, WidgetOrario::class.java).setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE).putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
+        context?.sendBroadcast(Intent(context, WidgetOrario::class.java).setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE).putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,
                 AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, WidgetOrario::class.java))))
     }
 
@@ -69,7 +69,7 @@ class Orario : Fragment(), AdapterOrari.UpdateFragment, SearchView.OnQueryTextLi
     }
 
     fun download() {
-        val mContext: Context = context
+        val mContext: Context? = context
         if (Methods.isNetworkAvailable(mContext)) {
             DownloadSchedules { response: GitHubResponse? ->
                 if (response == null) return@DownloadSchedules

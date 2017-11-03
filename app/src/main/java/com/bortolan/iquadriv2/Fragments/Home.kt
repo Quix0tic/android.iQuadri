@@ -23,15 +23,15 @@ import java.io.InputStream
 class Home : Fragment() {
     internal var itemList: MutableList<GitHubItem> = ArrayList()
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val bitmap = getBitmapFromAsset(context, "bg.jpeg")
+        val bitmap = getBitmapFromAsset(context!!, "bg.jpeg")
 
         val catBitmap = GaussianBlur.with(context).radius(15).noScaleDown(false).render(bitmap)
         image.setImageBitmap(catBitmap)

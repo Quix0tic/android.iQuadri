@@ -1,7 +1,6 @@
 package com.bortolan.iquadriv2.Fragments
 
 
-import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.Snackbar
@@ -23,16 +22,14 @@ import java.util.*
 
 class RegistroPeriodi : Fragment() {
     internal lateinit var periodiAdapter: PeriodiPager
-    internal lateinit var context: Context
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_registro_periodi, container, false)
+        return inflater.inflate(R.layout.fragment_registro_periodi, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        context = getContext()
         periodiAdapter = PeriodiPager(childFragmentManager)
         pager.adapter = periodiAdapter
         pager.offscreenPageLimit = 2
@@ -49,7 +46,7 @@ class RegistroPeriodi : Fragment() {
 
     private fun download() {
         if (isNetworkAvailable(context)) {
-            APIClient.create(context).getGrades(PreferenceManager.getDefaultSharedPreferences(context).getString("spaggiari-id", ""))
+            APIClient.create(context!!).getGrades(PreferenceManager.getDefaultSharedPreferences(context).getString("spaggiari-id", ""))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ save(it.grades); load() }, { it.printStackTrace() })

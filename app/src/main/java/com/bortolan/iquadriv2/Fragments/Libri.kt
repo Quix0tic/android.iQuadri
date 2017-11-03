@@ -65,18 +65,18 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
         return true
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater!!.inflate(R.layout.fragment_libri, container, false)
+        return inflater.inflate(R.layout.fragment_libri, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //Log.w("FIREBASE", FirebaseInstanceId.getInstance().token!!)
         place_holder.setOnClickListener {
             input = search_view.query.toString()
-            MaterialDialog.Builder(context)
+            MaterialDialog.Builder(context!!)
                     .title("Ricevere notifiche?")
                     .input("ISBN", search_view.query, false, { _, _ -> })
                     .inputRange(13, 13)
@@ -90,14 +90,14 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
         adapter = AdapterLibri(recycler, place_holder)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.addItemDecoration(HorizontalDividerItemDecoration.Builder(context).size(dp(1f).toInt()).build())
+        recycler.addItemDecoration(HorizontalDividerItemDecoration.Builder(context).size(dp(1f)).build())
         recycler.addOnScrollListener(FabBehavior())
         recycler.listener = this
 
         search_view.setOnQueryTextListener(this)
 
         //filter adapter when first load from db
-        if (arguments["query"] != null) search_view.setQuery(arguments["query"].toString(), true)
+        if (arguments?.get("query") != null) search_view.setQuery(arguments?.get("query").toString(), true)
 
         search_view.findViewById<ImageView>(R.id.search_close_btn).setOnClickListener {
             search_view.clearFocus()
@@ -106,7 +106,7 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
         }
 
         fab.setOnClickListener {
-            context.startActivity(Intent(context, if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("libri_api_logged", false)) ActivityAddBook::class.java else ActivityLibriLogin::class.java))
+            context?.startActivity(Intent(context, if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("libri_api_logged", false)) ActivityAddBook::class.java else ActivityLibriLogin::class.java))
         }
 
         load()
@@ -144,8 +144,5 @@ class Libri : Fragment(), SearchView.OnQueryTextListener, SwipableRecyclerView.O
             }
         }
 
-        override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-        }
     }
 }
